@@ -23,7 +23,7 @@ jobs:
 
     - name: Run Tests and Coverage
       run: |
-        coverage run -m --omit="*/test*" pytest
+        coverage run -m --omit="*/test*" --omit="_version.py" pytest
         coverage xml
 
     - name: Display Coverage
