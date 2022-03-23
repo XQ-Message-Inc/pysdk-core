@@ -1,5 +1,5 @@
 name: test
-on: [pull-reqest]
+on: [pull_reqest]
 
 jobs:
   build:
