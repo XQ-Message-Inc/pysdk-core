@@ -37,7 +37,7 @@ This can be done via:
 - .env file
 
 ```python
-const sdk = XQ(
+xq = XQ(
   api_key="YOUR_XQ_API_KEY",
   dashboard_api_key="YOUR_DASHBOARD_API_KEY"
 )
