@@ -1,2 +1,2 @@
 include versioneer.py
-include xq_sdk/_version.py
+include xq/_version.py

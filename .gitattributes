@@ -1,1 +1,1 @@
-xq_sdk/_version.py export-subst
+xq/_version.py export-subst

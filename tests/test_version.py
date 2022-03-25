@@ -1,5 +1,5 @@
-import xq_sdk
+import xq
 
 
 def test_version():
-    assert xq_sdk.__version__
+    assert xq.__version__

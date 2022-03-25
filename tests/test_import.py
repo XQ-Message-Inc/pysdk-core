@@ -1,4 +1,4 @@
 def test_import():
-    import xq_sdk
+    import xq
 
-    assert xq_sdk
+    assert xq

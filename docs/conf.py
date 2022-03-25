@@ -13,12 +13,12 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath("../xq_sdk"))
+sys.path.insert(0, os.path.abspath("../xq"))
 
 
 # -- Project information -----------------------------------------------------
 
-project = "xq_sdk"
+project = "xq-sdk"
 copyright = "2022, XQ Message"
 author = "XQ Message"
 

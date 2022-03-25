@@ -43,8 +43,8 @@ def get_config():
     cfg.VCS = "git"
     cfg.style = "pep440"
     cfg.tag_prefix = ""
-    cfg.parentdir_prefix = "xq_sdk-"
-    cfg.versionfile_source = "xq_sdk/_version.py"
+    cfg.parentdir_prefix = "xq-"
+    cfg.versionfile_source = "xq/_version.py"
     cfg.verbose = False
     return cfg
 

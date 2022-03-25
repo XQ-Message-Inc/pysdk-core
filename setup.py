@@ -22,7 +22,7 @@ class PostInstallCommand(install):
 
 
 setup(
-    name="xq_sdk",
+    name="xq-sdk",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(
         {"develop": PostDevelopCommand, "install": PostInstallCommand}
