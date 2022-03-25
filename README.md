@@ -32,7 +32,7 @@ In order to utilize the XQ SDK and interact with XQ servers you will need both t
 To initialize an XQ SDK instance in your Python application, provide the generated `XQ_API_KEY` (General) and/or `XQ_DASHBOARD_API_KEY` (Dashboard) API keys to the `XQ` class.
 
 This can be done via:
-- Input parameters
+- Input parameters (shown below)
 - ENVIRONMENT VARS
 - .env file
 

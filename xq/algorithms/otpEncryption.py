@@ -1,0 +1,2 @@
+class OTPEncryption:
+    pass
