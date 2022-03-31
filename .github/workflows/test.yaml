@@ -20,6 +20,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install pytest coverage
+        pip install -e .
 
     - name: Run Tests and Coverage
       run: |
