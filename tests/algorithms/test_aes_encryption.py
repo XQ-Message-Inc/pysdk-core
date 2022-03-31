@@ -33,3 +33,12 @@ def test_roundtrip_seperate_instances(key, plaintextFixiture):
     plaintext = aes.decrypt(ciphertext)
 
     assert plaintext == plaintextFixiture
+
+
+def test_bad_tag(key, plaintextFixiture):
+    with pytest.raises(SDKEncryptionException):
+        aes = AESEncryption(key)
+        ciphertext, nonce, tag = aes.encrypt(plaintextFixiture)
+
+        aes = AESEncryption(key, nonce=nonce)
+        plaintext = aes.decrypt(ciphertext, verificationTag=b"badtag")
