@@ -44,9 +44,10 @@ encrypted_message, nonce, tag = xq.encrypt_message(
 print("\nencrypted_message", encrypted_message)
 
 # get key packet by lookup
-retrieved_key_packet = xq.api.get_packet(
-    locator_token
-)  # packet is always expired when queried?
+# TODO:
+#   this is returning `{"status":"Sorry, this message can no longer be decrypted"}`
+#   despite the default expiration being set to 24
+retrieved_key_packet = xq.api.get_packet(locator_token)
 # retrieved_key_packet = MYSUPERSECRET
 print("\nretrieved_key_packet", retrieved_key_packet)
 # assert retrieved_key_packet == tag
