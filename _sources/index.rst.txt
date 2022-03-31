@@ -1,9 +1,9 @@
-Welcome to xq_sdk's documentation!
+Welcome to xq-sdk's documentation!
 ==============================================
 
 SDK
 ----
-.. automodule:: xq_sdk
+.. automodule:: xq
     :members:
     :undoc-members:
     :show-inheritance:

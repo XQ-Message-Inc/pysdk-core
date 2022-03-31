@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to xq_sdk’s documentation! &mdash; xq_sdk  documentation</title>
+  <title>Welcome to xq-sdk’s documentation! &mdash; xq-sdk  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -25,7 +25,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search"  style="background: white" >
-            <a href="#" class="icon icon-home"> xq_sdk
+            <a href="#" class="icon icon-home"> xq-sdk
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -37,8 +37,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <!-- Local TOC -->
               <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Welcome to xq_sdk’s documentation!</a><ul>
-<li><a class="reference internal" href="#module-xq_sdk">SDK</a></li>
+<li><a class="reference internal" href="#">Welcome to xq-sdk’s documentation!</a><ul>
+<li><a class="reference internal" href="#module-xq">SDK</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: white" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">xq_sdk</a>
+          <a href="#">xq-sdk</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -58,7 +58,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>Welcome to xq_sdk’s documentation!</li>
+      <li>Welcome to xq-sdk’s documentation!</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -69,9 +69,25 @@
            <div itemprop="articleBody">
              
   <section id="welcome-to-xq-sdk-s-documentation">
-<h1>Welcome to xq_sdk’s documentation!<a class="headerlink" href="#welcome-to-xq-sdk-s-documentation" title="Permalink to this headline"></a></h1>
-<section id="module-xq_sdk">
-<span id="sdk"></span><h2>SDK<a class="headerlink" href="#module-xq_sdk" title="Permalink to this headline"></a></h2>
+<h1>Welcome to xq-sdk’s documentation!<a class="headerlink" href="#welcome-to-xq-sdk-s-documentation" title="Permalink to this headline"></a></h1>
+<section id="module-xq">
+<span id="sdk"></span><h2>SDK<a class="headerlink" href="#module-xq" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="xq.XQ">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.</span></span><span class="sig-name descname"><span class="pre">XQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dashboard_api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.XQ.decrypt_message">
+<span class="sig-name descname"><span class="pre">decrypt_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encryptedText:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce:</span> <span class="pre">bytearray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.decrypt_message" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.XQ.encrypt_message">
+<span class="sig-name descname"><span class="pre">encrypt_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients=[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_hours=24</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.encrypt_message" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 <section id="indices-and-tables">
