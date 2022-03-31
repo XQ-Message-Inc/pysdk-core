@@ -30,7 +30,7 @@ setup(
     packages=find_packages(exclude=["tests"]),
     install_requires=[
         "black",
-        "dotenv",
+        "python-dotenv",
         "pre-commit",
         "pycryptodome",
         "python-dotenv",
