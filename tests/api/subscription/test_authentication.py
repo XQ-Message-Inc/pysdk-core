@@ -19,10 +19,12 @@ def validate_api_200():
     )
 
 
-@patch.object(XQAPI, "api_get")
-def test_validate_api_key_200(mock_api_call, validate_api_200):
-    mock_api_call.return_value = validate_api_200
-    assert validate_api_key(XQAPI())
+@mock.patch("xq.XQAPI")
+def test_validate_api_key_200(mock_xqapi, validate_api_200):
+    mock_xqapi.api_get = MagicMock(return_value=validate_api_200)
+    mock_xqapi.api_key = "mockapikey"  # set fake api key
+    mock_xqapi.dashboard_api_key = "mockdashboardkey"  # set fake dashboard key
+    assert validate_api_key(mock_xqapi)
 
 
 @patch.object(XQAPI, "api_get")
