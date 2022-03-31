@@ -1,7 +1,9 @@
 import pytest
 from unittest.mock import patch
+import os
 
 from xq import *
+from xq.api import XQAPI
 from xq.exceptions import SDKConfigurationException
 from xq import config
 
@@ -19,7 +21,7 @@ def key_verify_success():
     )
 
 
-@patch.object(XQ, "api_get")
+@patch.object(XQAPI, "api_get")
 def test_xq_environ(mock_api_call, key_verify_success):
     mock_api_call.return_value = key_verify_success
     os.environ["XQ_API_KEY"] = "mockapikey"
@@ -27,19 +29,19 @@ def test_xq_environ(mock_api_call, key_verify_success):
     assert XQ(api_key="mockapikey", dashboard_api_key="mockdashboardkey")
 
 
-@patch.object(XQ, "api_get")
+@patch.object(XQAPI, "api_get")
 def test_xq_input(mock_api_call, key_verify_success):
     mock_api_call.return_value = key_verify_success
     assert XQ(api_key="mockapikey", dashboard_api_key="mockdashboardkey")
 
 
-@patch.object(XQ, "api_get")
+@patch.object(XQAPI, "api_get")
 def test_valid_api_key(mock_api_call, key_verify_success):
     mock_api_call.return_value = key_verify_success
     XQ(api_key="mockapikey", dashboard_api_key="mockdashboardkey")
 
 
-@patch.object(XQ, "api_get")
+@patch.object(XQAPI, "api_get")
 def test_invalid_api_key(mock_api_call, key_verify_failure):
     mock_api_call.return_value = key_verify_failure
     with pytest.raises(SDKConfigurationException):
