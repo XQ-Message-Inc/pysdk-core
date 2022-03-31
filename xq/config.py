@@ -8,6 +8,6 @@ d = load_dotenv(dotenv_path)
 
 # set global XQ config variables
 API_BASE_URI = "https://subscription.xqmsg.net/v2/"
-API_HEADERS = {"authorization": "Bearer xyz123", "Content-Type": "application/json"}
+# API_HEADERS = {"authorization": "Bearer xyz123", "Content-Type": "application/json"}
 API_KEY = os.environ.get("XQ_API_KEY", None)
 DASHBOARD_API_KEY = os.environ.get("XQ_DASHBOARD_API_KEY", None)

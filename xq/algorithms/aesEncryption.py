@@ -1,26 +1,32 @@
 from Crypto.Cipher import AES
 
 from xq.algorithms import Encryption
+from xq.exceptions import SDKEncryptionException
 
 
 class AESEncryption(Encryption):
-    def __init__(self, text, key):
-        Encryption.__init__(text, key)
+    def __init__(self, key):
+        Encryption.__init__(self, key)
         self.cipher = AES.new(self.key, AES.MODE_EAX)
         self.nonce = self.cipher.nonce
 
-    def encrypt(self):
-        print(self.text, self.key)
+    def encrypt(self, text):
+        print(text, self.key)
 
-        ciphertext, tag = self.cipher.encrypt_and_digest(self.text)
+        ciphertext, tag = self.cipher.encrypt_and_digest(text.encode("utf8"))
 
         return ciphertext, tag
 
-    def decrypt(self, ciphertext, tag):
+    def decrypt(self, ciphertext: bytes, verificationTag=None):
         plaintext = self.cipher.decrypt(ciphertext)
 
-        try:
-            self.cipher.verify(tag)
-            print("The message is authentic:", plaintext)
-        except ValueError:
-            print("Key incorrect or message corrupted")
+        if verificationTag:
+            try:
+                self.cipher.verify(verificationTag)
+                print("The message is authentic:", plaintext)
+            except ValueError:
+                raise SDKEncryptionException(
+                    "Provided key is incorrect or message is corrupted"
+                )
+
+        return plaintext

@@ -1,4 +1,3 @@
 class Encryption:
-    def __init__(self, text: str, key: str):
-        self.text = text
+    def __init__(self, key: str):
         self.key = key

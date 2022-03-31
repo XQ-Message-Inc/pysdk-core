@@ -4,6 +4,4 @@ from xq.algorithms.otpEncryption import OTPEncryption
 from xq.algorithms.aesEncryption import AESEncryption
 
 
-class Algorithms(Enum):
-    OTPv2 = OTPEncryption
-    AES = AESEncryption
+Algorithms = {"OTP": OTPEncryption, "AES": AESEncryption}
