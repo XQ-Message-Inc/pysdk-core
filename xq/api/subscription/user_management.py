@@ -15,7 +15,7 @@ def authorize_user(api, user, firstName, lastName, newsletter=False, notificatio
     )
 
     # update auth header to use new bearer token
-    api.headers["authorization"] = f"Bearer {auth_token}"
+    api.headers.update({"authorization": f"Bearer {auth_token}"})
 
     if status_code == 200:
         return auth_token
