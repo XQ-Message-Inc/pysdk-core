@@ -1,3 +1,6 @@
+from xq.api.subscription import API_SUBDOMAIN
+
+
 def authorize_user(api, user, firstName, lastName, newsletter=False, notifications=0):
     payload = {
         "user": user,
@@ -7,7 +10,9 @@ def authorize_user(api, user, firstName, lastName, newsletter=False, notificatio
         "notifications": notifications,
     }
 
-    status_code, auth_token = api.api_post("authorize", data=payload)
+    status_code, auth_token = api.api_post(
+        "authorize", data=payload, subdomain=API_SUBDOMAIN
+    )
 
     # update auth header to use new bearer token
     api.headers["authorization"] = f"Bearer {auth_token}"
@@ -19,7 +24,8 @@ def authorize_user(api, user, firstName, lastName, newsletter=False, notificatio
 
 
 def authorize_alias(api, alias):
-    status_code, auth_token = api.api_post("authorizealias", data={"user": alias})
+    status_code, auth_token = api.api_post(
+        "authorizealias", data={"user": alias}, subdomain=API_SUBDOMAIN
+    )
 
-    print(status_code, auth_token)
     return auth_token

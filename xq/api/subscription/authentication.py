@@ -1,4 +1,5 @@
 from xq.exceptions import SDKConfigurationException, XQException
+from xq.api.subscription import API_SUBDOMAIN
 
 
 def validate_api_key(api):
@@ -6,7 +7,7 @@ def validate_api_key(api):
 
     :raises SDKConfigurationException: exception for invalid keys
     """
-    status_code, res = api.api_get("apikey")
+    status_code, res = api.api_get("apikey", subdomain=API_SUBDOMAIN)
 
     if status_code == 200:
         return res
@@ -19,7 +20,9 @@ def validate_api_key(api):
 
 
 def code_validate(api, pin):
-    status_code, res = api.api_get("codevalidation", params={"pin": pin})
+    status_code, res = api.api_get(
+        "codevalidation", params={"pin": pin}, subdomain=API_SUBDOMAIN
+    )
 
     if str(status_code).startswith("20"):
         return True
@@ -28,7 +31,7 @@ def code_validate(api, pin):
 
 
 def exchange_key(api):
-    status_code, auth_token = api.api_get("exchange")
+    status_code, auth_token = api.api_get("exchange", subdomain=API_SUBDOMAIN)
 
     if status_code == 200:
         api.headers["authorization"] = f"Bearer {auth_token}"

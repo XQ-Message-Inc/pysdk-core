@@ -1,1 +1,1 @@
-from xq.api.manage.key_management import *
+API_SUBDOMAIN = "manage"
