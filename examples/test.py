@@ -22,36 +22,34 @@ xq.api.code_validate(pin)
 new_key = xq.api.exchange_key()
 
 # create key packet
-print("\n-- creating packet --")
-mysupersecret = b"itissixteenbytes"
+MYSUPERSECRET = b"itissixteenbytes"
 encrypted_key_packet = xq.api.create_packet(
-    recipients="adam@mediocretech.com", key=mysupersecret
+    recipients="adam@mediocretech.com", key=MYSUPERSECRET
 )
 
 # store key packet
-print("\n-- storing packet --")
 locator_token = xq.api.store_packet(encrypted_key_packet)
-import urllib
-
-print("\nlocator_token:", urllib.parse.quote_plus(locator_token))
 
 # encrypt something
-encrypted_message, tag = xq.encrypt_message(
+encrypted_message, nonce, tag = xq.encrypt_message(
     "sometexttoencrypt",
-    key=mysupersecret,
+    key=MYSUPERSECRET,
     algorithm="AES",
     recipients=["adam@mediocretech.com"],
 )
 print("\nencrypted_message", encrypted_message)
 
 # get key packet by lookup
-retrieved_key_packet = xq.api.get_packet(locator_token)  # CORS issue on server?
+retrieved_key_packet = xq.api.get_packet(
+    locator_token
+)  # packet is always expired when queried?
+# retrieved_key_packet = MYSUPERSECRET
 print("\nretrieved_key_packet", retrieved_key_packet)
-assert retrieved_key_packet == tag
-# retrieved_key_packet = tag
+# assert retrieved_key_packet == tag
+
 
 # deycrypt
 decrypted_message = xq.decrypt_message(
-    encrypted_message, key=retrieved_key_packet, algorithm="AES"
+    encrypted_message, key=retrieved_key_packet, algorithm="AES", nonce=nonce
 )
 print("\ndecrypted message:", decrypted_message)

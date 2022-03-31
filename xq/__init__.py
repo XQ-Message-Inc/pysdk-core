@@ -27,14 +27,14 @@ class XQ:
         self, text, key: bytes, algorithm: Algorithms, recipients=[], expires_hours=24
     ):
         encryptionAlgorithm = Algorithms[algorithm](key)
-        print("encrypting:", text, "using:", encryptionAlgorithm)
-        ciphertext, tag = encryptionAlgorithm.encrypt(text)
-        print("-- encrypted text --")
-        print(ciphertext, tag)
-        return ciphertext, tag
+        ciphertext, nonce, tag = encryptionAlgorithm.encrypt(text)
 
-    def decrypt_message(self, encryptedText: bytes, key, algorithm: Algorithms):
-        encryptionAlgorithm = Algorithms[algorithm](key)
-        print("using", encryptionAlgorithm)
+        return ciphertext, nonce, tag
+
+    def decrypt_message(
+        self, encryptedText: bytes, key, algorithm: Algorithms, nonce: bytearray
+    ):
+        encryptionAlgorithm = Algorithms[algorithm](key, nonce=nonce)
         plaintext = encryptionAlgorithm.decrypt(encryptedText)
+
         return plaintext

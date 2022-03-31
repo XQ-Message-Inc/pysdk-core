@@ -41,12 +41,6 @@ class XQAPI:
             self.headers["api-key"] = self.api_key
             self.validate_api_key()
 
-    # def __getattr__(self, attr):
-    #     print(attr, 'not found')
-    #     method_to_call = importlib.import_module(f'xq.api.{attr}')
-    #     print('method_to_call', method_to_call)
-    #     method_to_call(self)  # call submodule as method
-
     def api_get(self, serviceEndpoint, subdomain, params={}):
         """static method for interacting with the XQ API
 
