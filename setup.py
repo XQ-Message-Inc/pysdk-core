@@ -29,11 +29,12 @@ setup(
     ),
     packages=find_packages(exclude=["tests"]),
     install_requires=[
+        "black",
+        "pre-commit",
+        "pycryptodome",
         "python-dotenv",
         "sphinx_rtd_theme",
         "requests",
-        "black",
-        "pre-commit",
     ],
     tests_requires=["coverage", "mock", "pytest"],
 )

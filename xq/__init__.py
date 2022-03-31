@@ -1,9 +1,9 @@
 from ._version import get_versions
-import os
-import requests
 
-from xq.config import API_KEY, DASHBOARD_API_KEY, API_BASE_URI, API_HEADERS
-from xq.exceptions import SDKConfigurationException
+from xq.config import API_KEY, DASHBOARD_API_KEY
+from xq.exceptions import SDKConfigurationException, SDKEncryptionException
+from xq.algorithms import Algorithms
+from xq.api import XQAPI  # import all api endpoint integrations
 
 __version__ = get_versions()["version"]
 del get_versions
@@ -21,46 +21,20 @@ class XQ:
         :param dashboard_api_key: _description_, defaults to ENV value
         :type dashboard_api_key: _type_, optional
         """
-        self.api_key = api_key
-        self.dashboard_api_key = dashboard_api_key
+        self.api = XQAPI(api_key, dashboard_api_key)  # bind api functions as methods
 
-        if not (self.api_key and self.dashboard_api_key):
-            raise SDKConfigurationException
-        else:
-            API_HEADERS["api-key"] = self.api_key
-            self.validate_api_key()
+    def encrypt_message(
+        self, text, key: bytes, algorithm: Algorithms, recipients=[], expires_hours=24
+    ):
+        encryptionAlgorithm = Algorithms[algorithm](key)
+        print("encrypting:", text, "using:", encryptionAlgorithm)
+        ciphertext, tag = encryptionAlgorithm.encrypt(text)
+        print("-- encrypted text --")
+        print(ciphertext, tag)
+        return ciphertext, tag
 
-    def api_call(self, serviceEndpoint, params={}):
-        """static method for interacting with the XQ API
-
-        :param serviceEndpoint: uri service extension to hit
-        :type serviceEndpoint: string
-        :param params: optional parameters to pass, defaults to {}
-        :type params: dict
-        :param headers: optional headers to pass, defaults to {}
-        :type headers: dict
-        :return: requests obj
-        :rtype: requests response
-        """
-        API_HEADERS
-        r = requests.get(
-            f"{API_BASE_URI}{serviceEndpoint}", params=params, headers=API_HEADERS
-        )
-
-        return r.status_code, r.json()
-
-    def validate_api_key(self):
-        """static method for validating provided API keys
-
-        :raises SDKConfigurationException: exception for invalid keys
-        """
-        status_code, res = self.api_call("apikey")
-
-        if status_code == 200:
-            return res
-        if status_code == 401:
-            raise SDKConfigurationException(message="The provided API Key is not valid")
-        else:
-            raise SDKConfigurationException(
-                message=f"Failed to verify API key, error: {status_code} - {res}"
-            )
+    def decrypt_message(self, encryptedText: bytes, key, algorithm: Algorithms):
+        encryptionAlgorithm = Algorithms[algorithm](key)
+        print("using", encryptionAlgorithm)
+        plaintext = encryptionAlgorithm.decrypt(encryptedText)
+        return plaintext
