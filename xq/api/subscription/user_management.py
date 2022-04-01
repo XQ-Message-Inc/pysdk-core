@@ -24,6 +24,7 @@ def authorize_user(api, user, firstName, lastName, newsletter=False, notificatio
 
 
 def authorize_alias(api, alias):
+    # TODO: build authorizealias functionality
     status_code, auth_token = api.api_post(
         "authorizealias", data={"user": alias}, subdomain=API_SUBDOMAIN
     )
