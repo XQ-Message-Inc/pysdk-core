@@ -19,7 +19,7 @@ def validate_api_key(api):
         )
 
 
-def code_validate(api, pin):
+def code_validate(api, pin: int):
     status_code, res = api.api_get(
         "codevalidation", params={"pin": pin}, subdomain=API_SUBDOMAIN
     )
@@ -34,7 +34,7 @@ def exchange_key(api):
     status_code, auth_token = api.api_get("exchange", subdomain=API_SUBDOMAIN)
 
     if status_code == 200:
-        api.headers["authorization"] = f"Bearer {auth_token}"
+        api.headers.update({"authorization": f"Bearer {auth_token}"})
         return True
     else:
         raise XQException(message=f"Key Exchange creation failed: {auth_token}")
