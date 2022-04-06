@@ -66,10 +66,11 @@ class XQAPI:
 
         return r.status_code, res
 
-    def api_post(self, serviceEndpoint, subdomain, data={}):
+    def api_post(self, serviceEndpoint, subdomain, json=None, data=None):
         r = requests.post(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
-            json=data,
+            json=json,
+            data=data,
             headers=self.headers,
         )
 

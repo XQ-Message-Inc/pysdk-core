@@ -11,7 +11,7 @@ def authorize_user(api, user, firstName, lastName, newsletter=False, notificatio
     }
 
     status_code, auth_token = api.api_post(
-        "authorize", data=payload, subdomain=API_SUBDOMAIN
+        "authorize", json=payload, subdomain=API_SUBDOMAIN
     )
 
     # update auth header to use new bearer token
@@ -26,7 +26,7 @@ def authorize_user(api, user, firstName, lastName, newsletter=False, notificatio
 def authorize_alias(api, alias):
     # TODO: build authorizealias functionality
     status_code, auth_token = api.api_post(
-        "authorizealias", data={"user": alias}, subdomain=API_SUBDOMAIN
+        "authorizealias", json={"user": alias}, subdomain=API_SUBDOMAIN
     )
 
     return auth_token
