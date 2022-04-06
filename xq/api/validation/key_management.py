@@ -14,3 +14,15 @@ def get_packet(api, locator_token):
         return res
     else:
         raise XQException(message=f"Packet retrieval failed: {res}")
+
+
+def add_packet(api, encrypted_key_packet):
+    # https://xq.stoplight.io/docs/xqmsg/b3A6NDE4NTY2NDE-add-a-new-key-packet
+    status_code, res = api.api_post(
+        "packet", data=encrypted_key_packet, subdomain=API_SUBDOMAIN
+    )
+
+    if status_code == 200:
+        return res
+    else:
+        raise XQException(message=f"Packet creation failed: {res}")

@@ -32,7 +32,7 @@ encrypted_key_packet = xq.api.create_packet(
 )
 
 # store key packet
-locator_token = xq.api.store_packet(encrypted_key_packet)
+locator_token = xq.api.add_packet(encrypted_key_packet)
 
 # encrypt something
 encrypted_message, nonce, tag = xq.encrypt_message(
@@ -53,8 +53,8 @@ print("\nretrieved_key_packet", retrieved_key_packet)
 # assert retrieved_key_packet == tag
 
 
-# deycrypt
+# deycrypt - TODO: why must we encode the key packet before decrypting?
 decrypted_message = xq.decrypt_message(
-    encrypted_message, key=retrieved_key_packet, algorithm="AES", nonce=nonce
+    encrypted_message, key=retrieved_key_packet.encode(), algorithm="AES", nonce=nonce
 )
 print("\ndecrypted message:", decrypted_message)

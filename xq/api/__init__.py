@@ -18,7 +18,7 @@ class XQAPI:
         create_packet,
         store_packet,
     )
-    from xq.api.validation import get_packet
+    from xq.api.validation import get_packet, add_packet
 
     def __init__(
         self,
