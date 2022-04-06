@@ -26,6 +26,9 @@ class XQ:
     def encrypt_message(
         self, text, key: bytes, algorithm: Algorithms, recipients=[], expires_hours=24
     ):
+        if isinstance(key, str):
+            key = key.encode()
+
         encryptionAlgorithm = Algorithms[algorithm](key)
         ciphertext, nonce, tag = encryptionAlgorithm.encrypt(text)
 
@@ -34,6 +37,9 @@ class XQ:
     def decrypt_message(
         self, encryptedText: bytes, key, algorithm: Algorithms, nonce: bytearray
     ):
+        if isinstance(key, str):
+            key = key.encode()
+
         encryptionAlgorithm = Algorithms[algorithm](key, nonce=nonce)
         plaintext = encryptionAlgorithm.decrypt(encryptedText)
 

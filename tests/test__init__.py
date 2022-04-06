@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 import os
 
 from xq import *
@@ -46,3 +46,38 @@ def test_invalid_api_key(mock_api_call, key_verify_failure):
     mock_api_call.return_value = key_verify_failure
     with pytest.raises(SDKConfigurationException):
         XQ(api_key="mockapikey", dashboard_api_key="mockdashboardkey")
+
+
+def test_encrypt_message(mock_xq):
+    assert mock_xq.encrypt_message(
+        text="sometexttoencrypt",
+        key=b"thisisabytestext",
+        algorithm="AES",
+        recipients=["mock@test.com"],
+    )
+
+
+def test_encrypt_message_stingkey(mock_xq):
+    assert mock_xq.encrypt_message(
+        text="sometexttoencrypt",
+        key="thisisabytestext",
+        algorithm="AES",
+        recipients=["mock@test.com"],
+    )
+
+
+# def test_decrypt_message(mock_xq):
+#     mock_xq.decrypt_message(
+#         "mockencryption",
+#         key=b"thisisabytestext",
+#         algorithm="AES",
+#         nonce=None
+#     )
+
+# def test_decrypt_message_stringkey(mock_xq):
+#     mock_xq.decrypt_message(
+#         "mockencryption",
+#         key="thisisabytestext",
+#         algorithm="AES",
+#         nonce=None
+#     )

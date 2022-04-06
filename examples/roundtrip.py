@@ -32,7 +32,7 @@ encrypted_key_packet = xq.api.create_packet(
 )
 
 # store key packet
-locator_token = xq.api.store_packet(encrypted_key_packet)
+locator_token = xq.api.add_packet(encrypted_key_packet)
 
 # encrypt something
 encrypted_message, nonce, tag = xq.encrypt_message(
@@ -44,14 +44,8 @@ encrypted_message, nonce, tag = xq.encrypt_message(
 print("\nencrypted_message", encrypted_message)
 
 # get key packet by lookup
-# TODO:
-#   this is returning `{"status":"Sorry, this message can no longer be decrypted"}`
-#   despite the default expiration being set to 24
 retrieved_key_packet = xq.api.get_packet(locator_token)
-# retrieved_key_packet = MYSUPERSECRET
 print("\nretrieved_key_packet", retrieved_key_packet)
-# assert retrieved_key_packet == tag
-
 
 # deycrypt
 decrypted_message = xq.decrypt_message(

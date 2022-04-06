@@ -1,9 +1,28 @@
+from unittest import mock
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 from xq import XQ
 
-# @pytest.fixture
-# @patch(XQ)
-# def mock_xq(mock_xq):
-#     return mock_xq
+
+@pytest.fixture
+def mock_xqapi():
+
+    with mock.patch("xq.XQAPI") as mock_api:
+        mock_api.validate_api_key = MagicMock(
+            return_value=True
+        )  # override checking for valid provided keys
+        xqapi = mock_api()  # create mocked instance
+
+        xqapi.api_key = "mockapikey"  # set fake api key
+        xqapi.dashboard_api_key = "mockdashboardkey"  # set fake dashboard key
+
+        yield xqapi
+
+
+@pytest.fixture
+def mock_xq(mock_xqapi):
+    XQ.__init__ = MagicMock(return_value=None)
+    XQ.api = MagicMock(return_value=mock_xqapi)
+
+    return XQ()
