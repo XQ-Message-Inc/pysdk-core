@@ -22,8 +22,7 @@ def mock_xqapi():
 
 @pytest.fixture
 def mock_xq(mock_xqapi):
+    XQ.__init__ = MagicMock(return_value=None)
+    XQ.api = MagicMock(return_value=mock_xqapi)
 
-    with mock.patch("xq.XQAPI") as mock_xq:
-        mock_xq.api = mock_xqapi
-
-        yield mock_xq
+    return XQ()
