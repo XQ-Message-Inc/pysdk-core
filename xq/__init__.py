@@ -34,6 +34,9 @@ class XQ:
     def decrypt_message(
         self, encryptedText: bytes, key, algorithm: Algorithms, nonce: bytearray
     ):
+        if isinstance(key, str):
+            key = key.encode()
+
         encryptionAlgorithm = Algorithms[algorithm](key, nonce=nonce)
         plaintext = encryptionAlgorithm.decrypt(encryptedText)
 
