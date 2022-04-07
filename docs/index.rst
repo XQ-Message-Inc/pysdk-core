@@ -1,13 +1,11 @@
 Welcome to xq-sdk's documentation!
 ==============================================
 
-SDK
-----
-.. automodule:: xq
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
 
+   modules
 
 Indices and tables
 ==================

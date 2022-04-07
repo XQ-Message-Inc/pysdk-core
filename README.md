@@ -57,6 +57,7 @@ coverage html
 
 ## build documentation
 ```
+sphinx-apidoc -f -o docs/ xq/
 cd docs
 make html
 ```
