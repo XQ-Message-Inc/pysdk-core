@@ -1,17 +1,42 @@
 from xq.api.subscription import API_SUBDOMAIN
 
 
-def authorize_user(api, user, firstName, lastName, newsletter=False, notifications=0):
-    payload = {
-        "user": user,
-        "firstName": firstName,
-        "lastName": lastName,
-        "newsletter": newsletter,
-        "notifications": notifications,
-    }
+def authorize_user(
+    api,
+    user_email: str,
+    firstName: str,
+    lastName: str,
+    newsletter=False,
+    notifications=0,
+):
+    """request access token for a given email address
+    https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDE-request-access-for-a-user
 
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param user_email: email address of user requesting access token
+    :type user_email: str
+    :param firstName: first name of user
+    :type firstName: str
+    :param lastName: last name of user
+    :type lastName: str
+    :param newsletter: subscribe to newsletter, defaults to False
+    :type newsletter: bool, optional
+    :param notifications: notification level: 0 = No Notifications, 1 = Receive Usage Reports, 2 = Receive Tutorials, 3 = Receive Both, defaults to 0
+    :type notifications: int, optional
+    :return: access token
+    :rtype: str
+    """
     status_code, auth_token = api.api_post(
-        "authorize", json=payload, subdomain=API_SUBDOMAIN
+        "authorize",
+        json={
+            "user": user_email,
+            "firstName": firstName,
+            "lastName": lastName,
+            "newsletter": newsletter,
+            "notifications": notifications,
+        },
+        subdomain=API_SUBDOMAIN,
     )
 
     # update auth header to use new bearer token

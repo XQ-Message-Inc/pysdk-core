@@ -24,8 +24,28 @@ class XQ:
         self.api = XQAPI(api_key, dashboard_api_key)  # bind api functions as methods
 
     def encrypt_message(
-        self, text, key: bytes, algorithm: Algorithms, recipients=[], expires_hours=24
+        self,
+        text: str,
+        key: bytes,
+        algorithm: Algorithms,
+        recipients=[],
+        expires_hours=24,
     ):
+        """encrypt a string
+
+        :param text: string to encrypt
+        :type text: str
+        :param key: encryption key to use to encrypted text
+        :type key: bytes
+        :param algorithm: the encryption algorithm to use
+        :type algorithm: Algorithms
+        :param recipients: email address which will have access to the encryption, defaults to []
+        :type recipients: list, optional
+        :param expires_hours: validation time in hours, defaults to 24
+        :type expires_hours: int, optional
+        :return: ciphertext, nonce, tag from encryption
+        :rtype: tuple(bytes)
+        """
         if isinstance(key, str):
             key = key.encode()
 
@@ -35,8 +55,21 @@ class XQ:
         return ciphertext, nonce, tag
 
     def decrypt_message(
-        self, encryptedText: bytes, key, algorithm: Algorithms, nonce: bytearray
+        self, encryptedText: bytes, key: bytes, algorithm: Algorithms, nonce: bytearray
     ):
+        """decrypt a previoulsy encrypted string
+
+        :param encryptedText: encrypted text to decrypt
+        :type encryptedText: bytes
+        :param key: encryption key used to encrypt/decrypt
+        :type key: bytes
+        :param algorithm: algorithm used to encrypt/decrypt
+        :type algorithm: Algorithms
+        :param nonce: nonce provided from original encryption
+        :type nonce: bytearray
+        :return: decrypted text
+        :rtype: str
+        """
         if isinstance(key, str):
             key = key.encode()
 
