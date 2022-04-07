@@ -5,7 +5,7 @@ from xq.exceptions import SDKEncryptionException
 
 
 class AESEncryption(Encryption):
-    """_summary_
+    """AES implimented encryption algorithm
 
     :param Encryption: Inherited Parent class
     :type Encryption: Encryption class

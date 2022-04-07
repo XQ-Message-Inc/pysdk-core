@@ -17,11 +17,24 @@ class Encryption:
 
     @property
     def key(self):
+        """method property that returns the correct key value used for encryption
+
+        :return: key used for encryption
+        :rtype: bytes
+        """
         return self.expandedKey if hasattr(self, "expandedKey") else self.originalKey
 
     def expandKey(self, key, extendTo=2048):
-        # replicated from jssdk-core
+        """expands a key to a minimum defined length
+        * replicated from jssdk-core
 
+        :param key: encryption key
+        :type key: bytes
+        :param extendTo: length to expand key to, defaults to 2048
+        :type extendTo: int, optional
+        :return: expanded key
+        :rtype: bytes
+        """
         key = re.sub("/\n$/", "", key)
         if len(key) >= extendTo:
             return key
@@ -33,8 +46,14 @@ class Encryption:
         return expandedKey
 
     def shuffle(self, string: str):
-        # replicated from jssdk-core
+        """psudo-randomize a provided string
+        * replicated from jssdk-core
 
+        :param string: provided string to randomize
+        :type string: str
+        :return: randomized string
+        :rtype: str
+        """
         string_list = list(string)
         for i in range(len(string_list) - 1, -1, -1):
             j = math.floor(random.uniform(0, 1) * (i + 1))
