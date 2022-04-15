@@ -8,6 +8,11 @@ XQ Message is an encryption-as-a-service (EaaS) platform which gives you the too
 
 ## installation
 
+### production
+```
+pip install git+ssh://git@github.com/XQ-Message-Inc/python-sdk.git@main#egg=xq-sdk
+```
+
 ### local/development
 ```
 git clone git@github.com:XQ-Message-Inc/python-sdk.git
@@ -37,6 +42,8 @@ This can be done via:
 - .env file
 
 ```python
+import xq
+
 xq = XQ(
   api_key="YOUR_XQ_API_KEY",
   dashboard_api_key="YOUR_DASHBOARD_API_KEY"
