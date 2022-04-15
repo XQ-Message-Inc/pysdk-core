@@ -18,7 +18,7 @@ class XQAPI:
         create_packet,
         authorize_alias,
     )
-    from xq.api.validation import get_packet, add_packet
+    from xq.api.validation import get_packet, add_packet, revoke_packet
     from xq.api.quantum import get_entropy
 
     def __init__(
@@ -43,10 +43,12 @@ class XQAPI:
             self.validate_api_key()
 
     def api_get(self, serviceEndpoint, subdomain, params={}):
-        """static method for interacting with the XQ API
+        """static method for interacting with the XQ API GET endpoints
 
         :param serviceEndpoint: uri service extension to hit
         :type serviceEndpoint: string
+        :param subdomain: subdomain of uri to use, api specific
+        :type subdomain: string
         :param params: optional parameters to pass, defaults to {}
         :type params: dict
         :param headers: optional headers to pass, defaults to {}
@@ -68,10 +70,45 @@ class XQAPI:
         return r.status_code, res
 
     def api_post(self, serviceEndpoint, subdomain, json=None, data=None):
+        """static method for interacting with XQ API POST endpoints
+
+        :param serviceEndpoint: uri service extension to hit
+        :type serviceEndpoint: string
+        :param subdomain: subdomain of uri to use, api specific
+        :type subdomain: string
+        :param json: optional parameters to pass, POSTS as json contenttype, defaults to None
+        :type json: dict, optional
+        :param data: optional parameters to pass, defaults to None
+        :type data: dict, optional
+        :return: status code, response
+        :rtype: tuple(int, string)
+        """
         r = requests.post(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             json=json,
             data=data,
+            headers=self.headers,
+        )
+
+        try:
+            res = r.json()
+        except Exception as e:
+            res = r.text
+
+        return r.status_code, res
+
+    def api_delete(self, serviceEndpoint, subdomain):
+        """static method for interacting with XQ API DELETE endpoints
+
+        :param serviceEndpoint: uri service extension to hit
+        :type serviceEndpoint: string
+        :param subdomain: subdomain of uri to use, api specific
+        :type subdomain: string
+        :return: status code, response
+        :rtype: tuple(int, string)
+        """
+        r = requests.delete(
+            f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             headers=self.headers,
         )
 
