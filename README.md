@@ -52,6 +52,13 @@ xq = XQ(
 
 **_Note: You only need to generate one SDK instance for use across your application._**
 
+#### Examples
+There are detailed usage examples available in the [examples folder](https://github.com/XQ-Message-Inc/python-sdk/tree/main/examples) of this project.
+
+**Specific Examples:**
+ - [Full manual encryption](examples/roundtrip.py)
+ - [Using a generated enropy key](examples/roundtrip_with_entropy_key.py)
+
 
 ## run tests
 ```pytest```
