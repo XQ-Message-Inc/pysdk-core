@@ -4,6 +4,7 @@ from xq.api.quantum import API_SUBDOMAIN
 
 def get_entropy(api, entropy_bits=2):
     """Generate quantum entropy from XQ with the provided number of entropy bits, returns as decoded string
+    https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDY-quantum-generator
 
     :param api: XQAPI instance
     :type api: XQAPI
