@@ -129,7 +129,27 @@
 <dd class="field-odd"><p>locator token to access key later</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.api_delete">
+<span class="sig-name descname"><span class="pre">api_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_delete" title="Permalink to this definition"></a></dt>
+<dd><p>static method for interacting with XQ API DELETE endpoints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>serviceEndpoint</strong> (<em>string</em>) – uri service extension to hit</p></li>
+<li><p><strong>subdomain</strong> (<em>string</em>) – subdomain of uri to use, api specific</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>status code, response</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(int, string)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -137,11 +157,12 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.api_get">
 <span class="sig-name descname"><span class="pre">api_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_get" title="Permalink to this definition"></a></dt>
-<dd><p>static method for interacting with the XQ API</p>
+<dd><p>static method for interacting with the XQ API GET endpoints</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>serviceEndpoint</strong> (<em>string</em>) – uri service extension to hit</p></li>
+<li><p><strong>subdomain</strong> (<em>string</em>) – subdomain of uri to use, api specific</p></li>
 <li><p><strong>params</strong> (<em>dict</em>) – optional parameters to pass, defaults to {}</p></li>
 <li><p><strong>headers</strong> (<em>dict</em>) – optional headers to pass, defaults to {}</p></li>
 </ul>
@@ -158,7 +179,24 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.api_post">
 <span class="sig-name descname"><span class="pre">api_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_post" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>static method for interacting with XQ API POST endpoints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>serviceEndpoint</strong> (<em>string</em>) – uri service extension to hit</p></li>
+<li><p><strong>subdomain</strong> (<em>string</em>) – subdomain of uri to use, api specific</p></li>
+<li><p><strong>json</strong> (<em>dict</em><em>, </em><em>optional</em>) – optional parameters to pass, POSTS as json contenttype, defaults to None</p></li>
+<li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – optional parameters to pass, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>status code, response</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(int, string)</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.authorize_alias">
@@ -322,7 +360,30 @@
 <dd class="field-odd"><p>key</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.revoke_packet">
+<span class="sig-name descname"><span class="pre">revoke_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.revoke_packet" title="Permalink to this definition"></a></dt>
+<dd><p>revoke a key packet with the provided locator token</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>locator_token</strong> (<em>str</em>) – url encoded locator token</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – packet revokation failed</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>success</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
