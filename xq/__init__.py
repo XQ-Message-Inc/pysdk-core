@@ -3,7 +3,9 @@ from ._version import get_versions
 from xq.config import API_KEY, DASHBOARD_API_KEY
 from xq.exceptions import SDKConfigurationException, SDKEncryptionException
 from xq.algorithms import Algorithms
+from xq.algorithms.encryption import Encryption
 from xq.api import XQAPI  # import all api endpoint integrations
+import base64
 
 __version__ = get_versions()["version"]
 del get_versions
@@ -22,6 +24,28 @@ class XQ:
         :type dashboard_api_key: _type_, optional
         """
         self.api = XQAPI(api_key, dashboard_api_key)  # bind api functions as methods
+
+    def generate_key_from_entropy(self):
+        """helper method for automatically requesting entropy and shuffling key
+
+        :return: generated encryption key from entropy
+        :rtype: bytes
+        """
+
+        # get XQ entropy
+        entropy = self.api.get_entropy(entropy_bits=128)
+
+        # decode base64 to string
+        decodedEntropyBytes = base64.b64decode(entropy)
+
+        # shuffle key
+        enc = Encryption(decodedEntropyBytes.decode())
+        generatedKey = enc.shuffle().encode()
+
+        # ensure shuffeled key did add or loss information
+        assert len(decodedEntropyBytes) == len(generatedKey)
+
+        return generatedKey
 
     def encrypt_message(
         self,

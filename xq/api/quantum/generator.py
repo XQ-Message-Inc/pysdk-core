@@ -3,7 +3,7 @@ from xq.api.quantum import API_SUBDOMAIN
 
 
 def get_entropy(api, entropy_bits=2):
-    """Generate quantum entropy from XQ with the provided number of entropy bits
+    """Generate quantum entropy from XQ with the provided number of entropy bits, returns as decoded string
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -11,11 +11,11 @@ def get_entropy(api, entropy_bits=2):
     :type entropy_bits: int, optional
     :raises SDKConfigurationException:  exception for http errors
     :return: entropy
-    :rtype: string
+    :rtype: base64 string
     """
     # https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDY-quantum-generator
     status_code, res = api.api_get(
-        "/", data={"ks": entropy_bits}, subdomain=API_SUBDOMAIN
+        "/", params={"ks": entropy_bits}, subdomain=API_SUBDOMAIN
     )
 
     if status_code == 200:
