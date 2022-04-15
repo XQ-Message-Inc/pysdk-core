@@ -188,13 +188,31 @@
 <span id="xq-api-subscription-user-management-module"></span><h2>xq.api.subscription.user_management module<a class="headerlink" href="#module-xq.api.subscription.user_management" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="xq.api.subscription.user_management.authorize_alias">
-<span class="sig-prename descclassname"><span class="pre">xq.api.subscription.user_management.</span></span><span class="sig-name descname"><span class="pre">authorize_alias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.subscription.user_management.authorize_alias" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">xq.api.subscription.user_management.</span></span><span class="sig-name descname"><span class="pre">authorize_alias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.subscription.user_management.authorize_alias" title="Permalink to this definition"></a></dt>
+<dd><p>request an access token for the given user information
+<a class="reference external" href="https://subscription.xqmsg.net/v2/authorizealias">https://subscription.xqmsg.net/v2/authorizealias</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="xq.api.html#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>user_email</strong> (<em>str</em>) – email address of user requesting access token</p></li>
+<li><p><strong>firstName</strong> (<em>str</em>) – first name of user</p></li>
+<li><p><strong>lastName</strong> (<em>str</em>) – last name of user</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>access token</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="xq.api.subscription.user_management.authorize_user">
 <span class="sig-prename descclassname"><span class="pre">xq.api.subscription.user_management.</span></span><span class="sig-name descname"><span class="pre">authorize_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newsletter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notifications</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.subscription.user_management.authorize_user" title="Permalink to this definition"></a></dt>
-<dd><p>request access token for a given email address
+<dd><p>request pre-auth token for a given email address, this token will need to be exchanged for an access token
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDE-request-access-for-a-user">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDE-request-access-for-a-user</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -208,7 +226,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>access token</p>
+<dd class="field-even"><p>pre-aut token, which can be exchanged for an access token</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
