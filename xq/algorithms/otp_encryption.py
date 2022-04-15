@@ -24,9 +24,7 @@ class OTPEncryption(Encryption):
         """
         self.max_encryption_chunk_size = max_encryption_chunk_size
         key_string = key if isinstance(key, str) else key.decode()
-        self.expandedKey = self.expandKey(
-            key_string, self.max_encryption_chunk_size
-        ).encode()
+        self.expandedKey = self.expandKey(key_string, self.max_encryption_chunk_size)
 
         Encryption.__init__(self, key)
 
@@ -48,7 +46,7 @@ class OTPEncryption(Encryption):
         """
         return bytes([text[i] ^ key[i] for i in range(len(text))])
 
-    def xor_chunker(self, text):
+    def xor_chunker(self, text: bytes):
         """break text into maximum sized chunks, encrypt, and join
 
         :param text: text to encrypt

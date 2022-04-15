@@ -22,9 +22,14 @@ class Encryption:
         :return: key used for encryption
         :rtype: bytes
         """
-        return self.expandedKey if hasattr(self, "expandedKey") else self.originalKey
+        key = self.expandedKey if hasattr(self, "expandedKey") else self.originalKey
 
-    def expandKey(self, key, extendTo=2048):
+        if isinstance(key, str):
+            key = key.encode()
+
+        return key
+
+    def expandKey(self, key=None, extendTo=2048):
         """expands a key to a minimum defined length
         * replicated from jssdk-core
 
@@ -35,6 +40,11 @@ class Encryption:
         :return: expanded key
         :rtype: bytes
         """
+        key = key if key else self.key
+
+        if not isinstance(key, str):
+            key = key.decode()
+
         key = re.sub("/\n$/", "", key)
         if len(key) >= extendTo:
             return key
@@ -43,9 +53,9 @@ class Encryption:
         while len(expandedKey) < extendTo:
             expandedKey += self.shuffle(key)
 
-        return expandedKey
+        return expandedKey.encode()
 
-    def shuffle(self, string: str):
+    def shuffle(self, string: str = None):
         """psudo-randomize a provided string
         * replicated from jssdk-core
 
@@ -54,6 +64,7 @@ class Encryption:
         :return: randomized string
         :rtype: str
         """
+        string = string if string else self.key
         string_list = list(string)
         for i in range(len(string_list) - 1, -1, -1):
             j = math.floor(random.uniform(0, 1) * (i + 1))
@@ -61,4 +72,14 @@ class Encryption:
             string_list[i] = string_list[j]
             string_list[j] = tmp
 
-        return "".join(string_list)
+        try:
+            # try string of bytes
+            bytes_string = bytes(string_list).decode()
+            assert len(bytes_string) == len(
+                string
+            ), "unexpected shuffle! new length does not match original"
+
+            return bytes_string
+        except:
+            # just a regular string
+            return "".join(string_list)

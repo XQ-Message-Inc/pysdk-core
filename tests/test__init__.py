@@ -66,6 +66,15 @@ def test_encrypt_message_stingkey(mock_xq):
     )
 
 
+def test_generate_key_from_entropy(mock_xq):
+    entropy128 = "MmJjMjc4MzU1N2RkYjdkODYzY2YzNmZmOGRhMDMxZmM="
+    mock_xq.api.get_entropy.return_value = entropy128
+    key = mock_xq.generate_key_from_entropy()
+
+    assert len(key) == len(base64.b64decode(entropy128))
+    assert len(key) in [16, 24, 32]
+
+
 # def test_decrypt_message(mock_xq):
 #     mock_xq.decrypt_message(
 #         "mockencryption",
