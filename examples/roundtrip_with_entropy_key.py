@@ -18,14 +18,7 @@ xq = XQ()
 email = input(f"Please provide the email address that will be used for authentication:")
 first_name = input(f"Please provide your first name:")
 last_name = input(f"Please provide your last name:")
-xq.api.authorize_user(email, first_name, last_name)  # returns success boolean
-
-# 2FA
-pin = input(f"Please provide the PIN sent to the email address '{email}':")
-xq.api.code_validate(pin)
-
-# exchange for token
-new_key = xq.api.exchange_key()
+xq.api.authorize_alias(email, first_name, last_name)
 
 # create key packet from qunatum entropy
 KEY = xq.generate_key_from_entropy()
