@@ -88,7 +88,7 @@
 <dt class="sig sig-object py" id="xq.algorithms.aes_encryption.AESEncryption">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.algorithms.aes_encryption.</span></span><span class="sig-name descname"><span class="pre">AESEncryption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.aes_encryption.AESEncryption" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#xq.algorithms.encryption.Encryption" title="xq.algorithms.encryption.Encryption"><code class="xref py py-class docutils literal notranslate"><span class="pre">xq.algorithms.encryption.Encryption</span></code></a></p>
-<p>_summary_</p>
+<p>AES implimented encryption algorithm</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>Encryption</strong> (<em>Encryption class</em>) – Inherited Parent class</p>
@@ -141,9 +141,62 @@
 <span id="xq-algorithms-encryption-module"></span><h2>xq.algorithms.encryption module<a class="headerlink" href="#module-xq.algorithms.encryption" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="xq.algorithms.encryption.Encryption">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.algorithms.encryption.</span></span><span class="sig-name descname"><span class="pre">Encryption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.encryption.Encryption" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.algorithms.encryption.</span></span><span class="sig-name descname"><span class="pre">Encryption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.encryption.Encryption" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>parent class for all encryption algorithms</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.algorithms.encryption.Encryption.expandKey">
+<span class="sig-name descname"><span class="pre">expandKey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extendTo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2048</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.encryption.Encryption.expandKey" title="Permalink to this definition"></a></dt>
+<dd><p>expands a key to a minimum defined length
+* replicated from jssdk-core</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – encryption key</p></li>
+<li><p><strong>extendTo</strong> (<em>int</em><em>, </em><em>optional</em>) – length to expand key to, defaults to 2048</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>expanded key</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="xq.algorithms.encryption.Encryption.key">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">key</span></span><a class="headerlink" href="#xq.algorithms.encryption.Encryption.key" title="Permalink to this definition"></a></dt>
+<dd><p>method property that returns the correct key value used for encryption</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>key used for encryption</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.algorithms.encryption.Encryption.shuffle">
+<span class="sig-name descname"><span class="pre">shuffle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.encryption.Encryption.shuffle" title="Permalink to this definition"></a></dt>
+<dd><p>psudo-randomize a provided string
+* replicated from jssdk-core</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) – provided string to randomize</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>randomized string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -151,8 +204,89 @@
 <span id="xq-algorithms-otp-encryption-module"></span><h2>xq.algorithms.otp_encryption module<a class="headerlink" href="#module-xq.algorithms.otp_encryption" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="xq.algorithms.otp_encryption.OTPEncryption">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.algorithms.otp_encryption.</span></span><span class="sig-name descname"><span class="pre">OTPEncryption</span></span><a class="headerlink" href="#xq.algorithms.otp_encryption.OTPEncryption" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.algorithms.otp_encryption.</span></span><span class="sig-name descname"><span class="pre">OTPEncryption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_encryption_chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2048</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.otp_encryption.OTPEncryption" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#xq.algorithms.encryption.Encryption" title="xq.algorithms.encryption.Encryption"><code class="xref py py-class docutils literal notranslate"><span class="pre">xq.algorithms.encryption.Encryption</span></code></a></p>
+<p>OTP implimented encryption algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Encryption</strong> (<em>Encryption class</em>) – Inherited Parent class</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.algorithms.otp_encryption.OTPEncryption.decrypt">
+<span class="sig-name descname"><span class="pre">decrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.otp_encryption.OTPEncryption.decrypt" title="Permalink to this definition"></a></dt>
+<dd><p>decryption method for decrypting a string or file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>bytes</em>) – text to decrypt</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>decrypted text</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.algorithms.otp_encryption.OTPEncryption.encrypt">
+<span class="sig-name descname"><span class="pre">encrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.otp_encryption.OTPEncryption.encrypt" title="Permalink to this definition"></a></dt>
+<dd><p>encryption method for encrypting a string or file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msg</strong> (<em>str OR FileLike</em>) – message to encrypt</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.encryption.SDKEncryptionException" title="xq.exceptions.encryption.SDKEncryptionException"><strong>SDKEncryptionException</strong></a> – unsupported message type</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>encrypted message</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.algorithms.otp_encryption.OTPEncryption.xor_bytes">
+<span class="sig-name descname"><span class="pre">xor_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.otp_encryption.OTPEncryption.xor_bytes" title="Permalink to this definition"></a></dt>
+<dd><p>xor the provided text to key bytes
+* replicated from jssdk-core</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>bytes</em>) – encryption key</p></li>
+<li><p><strong>text</strong> (<em>bytes</em>) – text to encrypt</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>padded text bytes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.algorithms.otp_encryption.OTPEncryption.xor_chunker">
+<span class="sig-name descname"><span class="pre">xor_chunker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.otp_encryption.OTPEncryption.xor_chunker" title="Permalink to this definition"></a></dt>
+<dd><p>break text into maximum sized chunks, encrypt, and join</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>bytes</em>) – text to encrypt</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>encrypted bytes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
