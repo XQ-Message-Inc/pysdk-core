@@ -16,6 +16,7 @@ class XQAPI:
         code_validate,
         exchange_key,
         create_packet,
+        authorize_alias,
     )
     from xq.api.validation import get_packet, add_packet
     from xq.api.quantum import get_entropy

@@ -28,7 +28,6 @@ In order to utilize the XQ SDK and interact with XQ servers you will need both t
 3. Create a **`General`** key for the XQ framework API.
 4. Create a **`Dashboard`** key for the XQ dashboard API.
 
---
 
 ## Basic Usage
 
@@ -55,21 +54,25 @@ xq = XQ(
 #### Examples
 There are detailed usage examples available in the [examples folder](https://github.com/XQ-Message-Inc/python-sdk/tree/main/examples) of this project.
 
-**Specific Examples:**
- - [Full manual encryption](examples/roundtrip.py)
- - [Using a generated enropy key](examples/roundtrip_with_entropy_key.py)
+**Rountrip Encryption Examples:**
+ - [BYOK w/ 2FA](examples/roundtrip_with_2fa.py)
+ - [XQ Generated Enropy Key](examples/roundtrip_with_entropy_key.py)
 
 
-## run tests
-```pytest```
+## Development
 
-### with coverage html reports
+### Run Tests
+```
+pytest
+```
+
+#### Run Tests with Coverage HTML Reports
 ```
 coverage run -m pytest
 coverage html
 ```
 
-## build documentation
+### Build Documentation
 ```
 sphinx-apidoc -f -o docs/ xq/
 cd docs
