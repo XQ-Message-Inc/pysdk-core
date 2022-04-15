@@ -1,6 +1,7 @@
 import urllib
-from xq.exceptions import XQException
+from typing import List
 
+from xq.exceptions import XQException
 from xq.api.validation import API_SUBDOMAIN
 
 
@@ -50,6 +51,7 @@ def add_packet(api, encrypted_key_packet: bytes):
 
 def revoke_packet(api, locator_token: str):
     """revoke a key packet with the provided locator token
+    https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODI-revoke-access-to-a-key
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -59,8 +61,6 @@ def revoke_packet(api, locator_token: str):
     :return: success
     :rtype: bool
     """
-    # https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODI-revoke-access-to-a-key
-
     status_code, res = api.api_delete(
         f"key/{urllib.parse.quote_plus(locator_token)}", subdomain=API_SUBDOMAIN
     )
@@ -69,3 +69,53 @@ def revoke_packet(api, locator_token: str):
         return True
     else:
         raise XQException(message=f"Packet deletion failed: {res}")
+
+
+def grant_users(api, locator_token: str, recipients: List[str]):
+    """grant a list of recipients access to a given token
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param locator_token: url encoded locator token
+    :type locator_token: str
+    :param recipients: list of user emails to grant
+    :type recipients: List[str]
+    :raises XQException: access grant failed
+    :return: success
+    :rtype: boolean
+    """
+    status_code, res = api.api_post(
+        f"grant/{urllib.parse.quote_plus(locator_token)}",
+        json={"recipients": recipients},
+        subdomain=API_SUBDOMAIN,
+    )
+
+    if str(status_code).startswith("20"):
+        return True
+    else:
+        raise XQException(message=f"Packet access grant failed: {res}")
+
+
+def revoke_users(api, locator_token: str, recipients: List[str]):
+    """revoke a list of recipents from accessing a given token
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param locator_token: url encoded locator token
+    :type locator_token: str
+    :param recipients: list of user emails to revoke
+    :type recipients: List[str]
+    :raises XQException: acces revoke failed
+    :return: success
+    :rtype: boolean
+    """
+    status_code, res = api.api_patch(
+        f"revoke/{urllib.parse.quote_plus(locator_token)}",
+        json={"recipients": recipients},
+        subdomain=API_SUBDOMAIN,
+    )
+
+    if str(status_code).startswith("20"):
+        return True
+    else:
+        raise XQException(message=f"Packet access grant failed: {res}")

@@ -86,3 +86,38 @@ def test_revoke_key():
     # get key packet - should be gone
     with pytest.raises(XQException):
         retrieved_key_packet = xq.api.get_packet(locator_token)
+
+
+@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
+def test_revoke_users():
+    # init SDK (creds from ENV or input params)
+    xq = XQ()
+
+    # get user authentication token
+    email = "testmock@xqtest.com"
+    xq.api.authorize_alias(email, "test", "runner")
+
+    # create key packet from qunatum entropy
+    KEY = xq.generate_key_from_entropy()
+    encrypted_key_packet = xq.api.create_packet(recipients=[email], key=KEY)
+
+    # store key packet
+    locator_token = xq.api.add_packet(encrypted_key_packet)
+
+    # grant user access
+    email1 = "goodguy@xqtest.com"
+    email2 = "badguy@xqtest.com"
+    xq.api.grant_users(locator_token, [email1, email2])
+
+    # revoke badguy
+    xq.api.revoke_users(locator_token, [email2])
+
+    # veryfiy goodguy
+    xq.api.authorize_alias(email1, "good", "guy")
+    retrieved_key_packet = xq.api.get_packet(locator_token)
+    assert retrieved_key_packet
+
+    # verify badguy
+    xq.api.authorize_alias(email2, "bad", "guy")
+    with pytest.raises(XQException):
+        retrieved_key_packet = xq.api.get_packet(locator_token)
