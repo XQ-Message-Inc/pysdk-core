@@ -18,6 +18,7 @@ class XQAPI:
         create_packet,
     )
     from xq.api.validation import get_packet, add_packet
+    from xq.api.quantum import get_entropy
 
     def __init__(
         self,
