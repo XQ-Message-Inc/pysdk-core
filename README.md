@@ -28,7 +28,6 @@ In order to utilize the XQ SDK and interact with XQ servers you will need both t
 3. Create a **`General`** key for the XQ framework API.
 4. Create a **`Dashboard`** key for the XQ dashboard API.
 
---
 
 ## Basic Usage
 
