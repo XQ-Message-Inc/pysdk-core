@@ -4,12 +4,27 @@
 #
 # PREREQS: XQ_API_KEY, XQ_DASHBOARD_API_KEY must
 #   be set in the ENV or .env file
+#
+#   THESE TESTS WILL PASS IF NOT SET
 ########################################################
 import pytest
+import warnings
 from xq import XQ
 from xq.exceptions import XQException
 
 
+def credentials_not_set():
+    try:
+        XQ()
+        return False  # credentials looks good
+    except:
+        warnings.warn(
+            "XQ API credentials were not found, unable to run integration tests!"
+        )
+        return True  # unable to init with credentials
+
+
+@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
 def test_roundtrip():
     # init SDK (creds from ENV or input params)
     xq = XQ()
@@ -45,6 +60,7 @@ def test_roundtrip():
     assert decrypted_message == message_to_encrypt
 
 
+@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
 def test_revoke_key():
     # init SDK (creds from ENV or input params)
     xq = XQ()
