@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Example message encryption lifecycle
+# Example message encryption lifecycle, using an XQ generated qunatum key
 #
 # Assumptions:
 #     XQ_API_KEY and XQ_DASHBOARD_API_KEY are defined in the ENV or .env file
@@ -29,8 +29,6 @@ new_key = xq.api.exchange_key()
 
 # create key packet from qunatum entropy
 KEY = xq.generate_key_from_entropy()
-print("-- KEY -")
-print(KEY)
 encrypted_key_packet = xq.api.create_packet(recipients=[email], key=KEY)
 
 # store key packet
@@ -38,7 +36,6 @@ locator_token = xq.api.add_packet(encrypted_key_packet)
 
 # encrypt something
 message_to_encrypt = "sometexttoencrypt"
-print(len(KEY))
 print("\nencrypting message:", message_to_encrypt)
 encrypted_message, nonce, tag = xq.encrypt_message(
     message_to_encrypt,
