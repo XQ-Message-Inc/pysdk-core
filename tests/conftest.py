@@ -1,13 +1,13 @@
 from unittest import mock
 import pytest
 from unittest.mock import patch, MagicMock
+import copy
 
 from xq import XQ
 
 
 @pytest.fixture
 def mock_xqapi():
-
     with mock.patch("xq.XQAPI") as mock_api:
         mock_api.validate_api_key = MagicMock(
             return_value=True
@@ -22,7 +22,13 @@ def mock_xqapi():
 
 @pytest.fixture
 def mock_xq(mock_xqapi):
-    XQ.__init__ = MagicMock(return_value=None)
-    XQ.api = MagicMock(return_value=mock_xqapi)
+    xq = XQ()
+    patch.object(xq, "__init__", None)
 
-    return XQ()
+    return xq
+
+    # with mock.patch("xq.XQ") as patchedXQ:
+    #     patch.object(patchedXQ, '__init__', None)
+    #     patchedXQ.api = MagicMock(return_value=mock_xqapi)
+
+    #     yield patchedXQ()
