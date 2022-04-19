@@ -18,7 +18,13 @@ class XQAPI:
         create_packet,
         authorize_alias,
     )
-    from xq.api.validation import get_packet, add_packet, revoke_packet
+    from xq.api.validation import (
+        get_packet,
+        add_packet,
+        revoke_packet,
+        grant_users,
+        revoke_users,
+    )
     from xq.api.quantum import get_entropy
 
     def __init__(
@@ -109,6 +115,34 @@ class XQAPI:
         """
         r = requests.delete(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
+            headers=self.headers,
+        )
+
+        try:
+            res = r.json()
+        except Exception as e:
+            res = r.text
+
+        return r.status_code, res
+
+    def api_patch(self, serviceEndpoint, subdomain, data=None, json=None):
+        """static method for interacting with XQ API PATCH endpoints
+
+        :param serviceEndpoint: uri service extension to hit
+        :type serviceEndpoint: string
+        :param subdomain: subdomain of uri to use, api specific
+        :type subdomain: string
+        :param data: optional parameters to pass, defaults to None
+        :type data: dict, optional
+        :param json: optional parameters to pass, POSTS as json contenttype, defaults to None
+        :type json: dict, optional
+        :return: status code, response
+        :rtype: tuple(int, string)
+        """
+        r = requests.patch(
+            f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
+            data=data,
+            json=json,
             headers=self.headers,
         )
 
