@@ -48,6 +48,13 @@ def test_invalid_api_key(mock_api_call, key_verify_failure):
         XQ(api_key="mockapikey", dashboard_api_key="mockdashboardkey")
 
 
+@patch.object(XQAPI, "api_get")
+def test_missing_api_key(mock_api_call, key_verify_success):
+    mock_api_call.return_value = key_verify_success
+    with pytest.raises(SDKConfigurationException):
+        XQ()
+
+
 def test_encrypt_message(mock_xq):
     assert mock_xq.encrypt_message(
         text="sometexttoencrypt",
@@ -68,7 +75,7 @@ def test_encrypt_message_stingkey(mock_xq):
 
 def test_generate_key_from_entropy(mock_xq):
     entropy128 = "MmJjMjc4MzU1N2RkYjdkODYzY2YzNmZmOGRhMDMxZmM="
-    mock_xq.api.get_entropy.return_value = entropy128
+    mock_xq.api.get_entropy = MagicMock(return_value=entropy128)
     key = mock_xq.generate_key_from_entropy()
 
     assert len(key) == len(base64.b64decode(entropy128))
