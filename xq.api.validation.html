@@ -134,9 +134,34 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="xq.api.validation.key_management.grant_users">
+<span class="sig-prename descclassname"><span class="pre">xq.api.validation.key_management.</span></span><span class="sig-name descname"><span class="pre">grant_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.validation.key_management.grant_users" title="Permalink to this definition"></a></dt>
+<dd><p>grant a list of recipients access to a given token</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="xq.api.html#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>locator_token</strong> (<em>str</em>) – url encoded locator token</p></li>
+<li><p><strong>recipients</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – list of user emails to grant</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – access grant failed</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>success</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="xq.api.validation.key_management.revoke_packet">
 <span class="sig-prename descclassname"><span class="pre">xq.api.validation.key_management.</span></span><span class="sig-name descname"><span class="pre">revoke_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.validation.key_management.revoke_packet" title="Permalink to this definition"></a></dt>
-<dd><p>revoke a key packet with the provided locator token</p>
+<dd><p>revoke a key packet with the provided locator token
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODI-revoke-access-to-a-key">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODI-revoke-access-to-a-key</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -152,6 +177,30 @@
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="xq.api.validation.key_management.revoke_users">
+<span class="sig-prename descclassname"><span class="pre">xq.api.validation.key_management.</span></span><span class="sig-name descname"><span class="pre">revoke_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.validation.key_management.revoke_users" title="Permalink to this definition"></a></dt>
+<dd><p>revoke a list of recipents from accessing a given token</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="xq.api.html#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>locator_token</strong> (<em>str</em>) – url encoded locator token</p></li>
+<li><p><strong>recipients</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – list of user emails to revoke</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – acces revoke failed</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>success</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
 </dd>
 </dl>
 </dd></dl>
