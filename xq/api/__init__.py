@@ -26,6 +26,7 @@ class XQAPI:
         revoke_users,
     )
     from xq.api.quantum import get_entropy
+    from xq.api.manage.authentication import dashboard_login
 
     def __init__(
         self,
@@ -89,6 +90,7 @@ class XQAPI:
         :return: status code, response
         :rtype: tuple(int, string)
         """
+        print(f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}")
         r = requests.post(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             json=json,
