@@ -5,6 +5,7 @@ from xq.config import DASHBOARD_API_KEY
 
 def dashboard_login(api, email: str = None, password: str = None, method: int = 1):
     """log a given user into their dashboard account
+    https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDM-login-to-the-dashboard
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -18,8 +19,6 @@ def dashboard_login(api, email: str = None, password: str = None, method: int = 
     :return: user access token
     :rtype: string
     """
-    # https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDM-login-to-the-dashboard
-
     if method == 0:
         if not (email and password):
             raise XQException(message=f"Credential auth requested, but not provided")
@@ -34,7 +33,9 @@ def dashboard_login(api, email: str = None, password: str = None, method: int = 
         # unsuported method
         raise XQException(message=f"Unsupported authentication method")
 
-    api.headers.update({"api-key": DASHBOARD_API_KEY})
+    api.headers.update(
+        {"api-key": DASHBOARD_API_KEY}
+    )  # dashboard api token needs to be set in the header
 
     status_code, res = api.api_post("login", json=payload, subdomain=API_SUBDOMAIN)
 

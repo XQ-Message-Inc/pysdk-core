@@ -90,7 +90,6 @@ class XQAPI:
         :return: status code, response
         :rtype: tuple(int, string)
         """
-        print(f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}")
         r = requests.post(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             json=json,
