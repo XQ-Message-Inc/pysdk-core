@@ -3,6 +3,36 @@ from xq.api.manage import API_SUBDOMAIN
 from xq.config import DASHBOARD_API_KEY
 
 
+def dashboard_signup(api, email: str, password: str = None, emailOptIn=True):
+    """register a new user for XQ Dashboard access
+    https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDI-self-sign-up
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param email: email address of registering user
+    :type email: str
+    :param password: optional password, used for authenticating without email 2FA, defaults to None
+    :type password: str, optional
+    :param emailOptIn: opt in to email notifications, defaults to True
+    :type emailOptIn: bool, optional
+    """
+    payload = {
+        "email": email,
+        "optIn": emailOptIn,
+        # 'state': ''   # UI only, user tracking
+    }
+
+    if password:
+        payload["pwd"] = password
+
+    status_code, res = api.api_post("signup", json=payload, subdomain=API_SUBDOMAIN)
+
+    if status_code == 200:
+        return res
+    else:
+        raise XQException(message=f"Error registering Dashboard user: {res}")
+
+
 def dashboard_login(api, email: str = None, password: str = None, method: int = 1):
     """log a given user into their dashboard account
     https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDM-login-to-the-dashboard

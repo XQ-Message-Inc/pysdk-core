@@ -26,7 +26,12 @@ class XQAPI:
         revoke_users,
     )
     from xq.api.quantum import get_entropy
-    from xq.api.manage.authentication import dashboard_login
+    from xq.api.manage import (
+        dashboard_signup,
+        dashboard_login,
+        create_usergroup,
+        get_usergroup,
+    )
 
     def __init__(
         self,

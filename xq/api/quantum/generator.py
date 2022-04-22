@@ -14,7 +14,6 @@ def get_entropy(api, entropy_bits=2):
     :return: entropy
     :rtype: base64 string
     """
-    # https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDY-quantum-generator
     status_code, res = api.api_get(
         "/", params={"ks": entropy_bits}, subdomain=API_SUBDOMAIN
     )

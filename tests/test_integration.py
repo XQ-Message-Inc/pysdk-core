@@ -124,7 +124,23 @@ def test_revoke_users():
     #     retrieved_key_packet = xq.api.get_packet(locator_token)
 
 
+# @pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
+# def test_dashboard_auth():
+#     # TODO: OBE, see test_usergroups. requires signup for auth
+#     xq = XQ()
+#     assert xq.api.dashboard_login()
+
+
 @pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
-def test_dashboard_auth():
+def test_usergroups():
     xq = XQ()
+    assert xq.api.dashboard_signup()
     assert xq.api.dashboard_login()
+
+    res = xq.api.create_usergroup()
+    print("CREATED GROUP")
+    print(res)
+
+    ug = xq.api.get_usergroup()
+    print("GOT USERGROUP")
+    print(ug)
