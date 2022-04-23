@@ -85,4 +85,4 @@ def dashboard_login(
         )  # update auth header with Dashboard token
         return True
     else:
-        raise XQException(message=f"Error authenticating to Dashboard: {res}")
+        raise XQException(message=f"Error authenticating to Dashboard: {auth_token}")
