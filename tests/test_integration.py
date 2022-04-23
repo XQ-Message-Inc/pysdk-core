@@ -137,7 +137,9 @@ def test_usergroups():
     email = "mocker@xqtest.com"
     password = "supersecret"
     assert xq.api.dashboard_signup(email=email, password=password)
-    assert xq.api.dashboard_login(email=email, password=password)
+    assert xq.api.dashboard_login(
+        email=email, password=password, workspace="python-sdk-dev"
+    )
 
     res = xq.api.create_usergroup()
     print("CREATED GROUP")

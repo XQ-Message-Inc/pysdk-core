@@ -40,7 +40,9 @@ def dashboard_signup(api, email: str, password: str = None, emailOptIn=True):
         raise XQException(message=f"Error registering Dashboard user: {res}")
 
 
-def dashboard_login(api, email: str = None, password: str = None, method: int = 0):
+def dashboard_login(
+    api, email: str = None, password: str = None, method: int = 0, workspace: str = None
+):
     """log a given user into their dashboard account
     https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDM-login-to-the-dashboard
 
@@ -52,6 +54,8 @@ def dashboard_login(api, email: str = None, password: str = None, method: int = 
     :type password: str, optional
     :param method: authentication method (0 = user/password, 1 = OAuth Token), defaults to 0
     :type method: int, optional
+    :param workspace: the account workspace. This field is deprecated and should not be used., defaults to None
+    :type workspace: string, optional - DEPRECATED
     :raises XQException: authentication error with request
     :return: user access token
     :rtype: string
@@ -59,24 +63,26 @@ def dashboard_login(api, email: str = None, password: str = None, method: int = 
     if method == 0:
         if not (email and password):
             raise XQException(message=f"Credential auth requested, but not provided")
-
         payload = {"email": email, "pwd": password, "method": 0}
-
-    elif method == 1:
-        # oauth
+    elif method == 1:  # oauth
         payload = {"pwd": DASHBOARD_API_KEY, "method": 1}
-
-    else:
-        # unsuported method
+    else:  # unsuported method
         raise XQException(message=f"Unsupported authentication method")
+    if workspace:
+        payload["workspace"] = workspace
 
     api.headers.update(
         {"api-key": DASHBOARD_API_KEY}
     )  # dashboard api token needs to be set in the header
 
-    status_code, res = api.api_post("login", json=payload, subdomain=API_SUBDOMAIN)
+    status_code, auth_token = api.api_post(
+        "login", json=payload, subdomain=API_SUBDOMAIN
+    )
 
     if status_code == 200:
-        return res
+        api.headers.update(
+            {"authorization": f"Bearer {auth_token}"}
+        )  # update auth header with Dashboard token
+        return True
     else:
         raise XQException(message=f"Error authenticating to Dashboard: {res}")
