@@ -134,8 +134,10 @@ def test_revoke_users():
 @pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
 def test_usergroups():
     xq = XQ()
-    assert xq.api.dashboard_signup()
-    assert xq.api.dashboard_login()
+    email = "mocker@xqtest.com"
+    password = "supersecret"
+    assert xq.api.dashboard_signup(email=email, password=password)
+    assert xq.api.dashboard_login(email=email, password=password)
 
     res = xq.api.create_usergroup()
     print("CREATED GROUP")

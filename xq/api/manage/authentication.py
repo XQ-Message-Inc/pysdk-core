@@ -25,15 +25,22 @@ def dashboard_signup(api, email: str, password: str = None, emailOptIn=True):
     if password:
         payload["pwd"] = password
 
+    api.headers.update(
+        {"api-key": DASHBOARD_API_KEY}
+    )  # dashboard api token needs to be set in the header
+
     status_code, res = api.api_post("signup", json=payload, subdomain=API_SUBDOMAIN)
 
     if status_code == 200:
+        return res
+    elif status_code == 409:
+        # already registered
         return res
     else:
         raise XQException(message=f"Error registering Dashboard user: {res}")
 
 
-def dashboard_login(api, email: str = None, password: str = None, method: int = 1):
+def dashboard_login(api, email: str = None, password: str = None, method: int = 0):
     """log a given user into their dashboard account
     https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDM-login-to-the-dashboard
 
@@ -43,7 +50,7 @@ def dashboard_login(api, email: str = None, password: str = None, method: int = 
     :type email: str, optional
     :param password: password for user account, defaults to None
     :type password: str, optional
-    :param method: authentication method (0 = user/password, 1 = OAuth Token), defaults to 1
+    :param method: authentication method (0 = user/password, 1 = OAuth Token), defaults to 0
     :type method: int, optional
     :raises XQException: authentication error with request
     :return: user access token

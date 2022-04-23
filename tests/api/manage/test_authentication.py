@@ -23,7 +23,7 @@ def test_dashboard_signup_param_error(mock_xqapi):
 
 def test_dashboard_login_oauth(mock_xqapi):
     mock_xqapi.api_post = MagicMock(return_value=(200, "mock server success"))
-    assert dashboard_login(mock_xqapi)
+    assert dashboard_login(mock_xqapi, method=1)
 
 
 def test_dashboard_login_creds(mock_xqapi):
