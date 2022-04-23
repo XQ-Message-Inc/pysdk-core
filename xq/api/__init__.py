@@ -31,6 +31,7 @@ class XQAPI:
         dashboard_login,
         create_usergroup,
         get_usergroup,
+        add_contact,
     )
 
     def __init__(
