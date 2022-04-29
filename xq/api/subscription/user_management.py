@@ -72,7 +72,7 @@ def authorize_alias(api, user_email: str, firstName: str, lastName: str):
     # update auth header to use new bearer token
     api.headers.update({"authorization": f"Bearer {auth_token}"})
 
-    if status_code == 200:
+    if str(status_code).startswith("20"):
         return auth_token
     else:
         return False

@@ -107,21 +107,20 @@ def test_revoke_users():
     # grant user access
     email1 = "goodguy@xqtest.com"
     email2 = "badguy@xqtest.com"
-    xq.api.grant_users(locator_token, [email1, email2])
+    xq.api.grant_users(locator_token, [email1, email2], alias_access=True)
 
     # revoke badguy
-    xq.api.revoke_users(locator_token, [email2])
+    xq.api.revoke_users(locator_token, [email2], alias_access=True)
 
     # veryfiy goodguy
     xq.api.authorize_alias(email1, "good", "guy")
-    # TODO: fails, waiting for Traian
-    # retrieved_key_packet = xq.api.get_packet(locator_token)
-    # assert retrieved_key_packet
+    retrieved_key_packet = xq.api.get_packet(locator_token)
+    assert retrieved_key_packet
 
-    # # verify badguy
-    # xq.api.authorize_alias(email2, "bad", "guy")
-    # with pytest.raises(XQException):
-    #     retrieved_key_packet = xq.api.get_packet(locator_token)
+    # verify badguy
+    xq.api.authorize_alias(email2, "bad", "guy")
+    with pytest.raises(XQException):
+        retrieved_key_packet = xq.api.get_packet(locator_token)
 
 
 # @pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
@@ -131,27 +130,27 @@ def test_revoke_users():
 #     assert xq.api.dashboard_login()
 
 
-@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
-def test_usergroups():
-    xq = XQ()
+# @pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
+# def test_usergroups():
+#     xq = XQ()
 
-    email = "mocker@xqtest.com"
-    password = "supersecret"
+#     email = "mocker@xqtest.com"
+#     password = "supersecret"
 
-    assert xq.api.dashboard_signup(email=email, password=password)
-    assert xq.api.dashboard_login(
-        email=email, password=password, workspace="python-sdk-dev"
-    )
+#     assert xq.api.dashboard_signup(email=email, password=password)
+#     assert xq.api.dashboard_login(
+#         email=email, password=password, workspace="python-sdk-dev"
+#     )
 
-    # test adding a business contact
-    xq.api.add_contact("Mock", "Mocker", "mocker@xqtest.com", "Chief Mocker Officer", 6)
+#     # test adding a business contact
+#     xq.api.add_contact("Mock", "Mocker", "mocker@xqtest.com", "Chief Mocker Officer", 6)
 
-    # add a usergroup
-    res = xq.api.create_usergroup()
-    print("CREATED GROUP")
-    print(res)
+#     # add a usergroup
+#     res = xq.api.create_usergroup()
+#     print("CREATED GROUP")
+#     print(res)
 
-    # request created usergroup
-    ug = xq.api.get_usergroup()
-    print("GOT USERGROUP")
-    print(ug)
+#     # request created usergroup
+#     ug = xq.api.get_usergroup()
+#     print("GOT USERGROUP")
+#     print(ug)

@@ -71,8 +71,9 @@ def revoke_packet(api, locator_token: str):
         raise XQException(message=f"Packet deletion failed: {res}")
 
 
-def grant_users(api, locator_token: str, recipients: List[str]):
+def grant_users(api, locator_token: str, recipients: List[str], alias_access=False):
     """grant a list of recipients access to a given token
+    https://xq.stoplight.io/docs/xqmsg/b3A6NDMzMTkyOTY-grant-a-user-access-to-a-key
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -80,11 +81,16 @@ def grant_users(api, locator_token: str, recipients: List[str]):
     :type locator_token: str
     :param recipients: list of user emails to grant
     :type recipients: List[str]
+    :param alias_access: grant the user access for alias (non-MFA)
+    :type alias_access: Boolean
     :raises XQException: access grant failed
     :return: success
     :rtype: boolean
     """
-    status_code, res = api.api_post(
+    if alias_access:
+        recipients = [f"{email}@alias.local" for email in recipients]
+
+    status_code, res = api.api_post(  # documentation says PATCH, but supports POST
         f"grant/{urllib.parse.quote_plus(locator_token)}",
         json={"recipients": recipients},
         subdomain=API_SUBDOMAIN,
@@ -96,8 +102,9 @@ def grant_users(api, locator_token: str, recipients: List[str]):
         raise XQException(message=f"Packet access grant failed: {res}")
 
 
-def revoke_users(api, locator_token: str, recipients: List[str]):
+def revoke_users(api, locator_token: str, recipients: List[str], alias_access=False):
     """revoke a list of recipents from accessing a given token
+    https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODU-revoke-user-access
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -105,10 +112,15 @@ def revoke_users(api, locator_token: str, recipients: List[str]):
     :type locator_token: str
     :param recipients: list of user emails to revoke
     :type recipients: List[str]
+    :param alias_access: grant the user access for alias (non-MFA)
+    :type alias_access: Boolean
     :raises XQException: acces revoke failed
     :return: success
     :rtype: boolean
     """
+    if alias_access:
+        recipients = [f"{email}@alias.local" for email in recipients]
+
     status_code, res = api.api_patch(
         f"revoke/{urllib.parse.quote_plus(locator_token)}",
         json={"recipients": recipients},
