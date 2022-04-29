@@ -16,7 +16,7 @@ def create_usergroup(api):
     if status_code == 200:
         return res
     else:
-        raise XQException(message=f"Error authenticating to Dashboard: {res}")
+        raise XQException(message=f"Error creating Dashboard usergroup: {res}")
 
 
 def get_usergroup(api):
@@ -27,7 +27,7 @@ def get_usergroup(api):
     if status_code == 200:
         return res
     else:
-        raise XQException(message=f"Error authenticating to Dashboard: {res}")
+        raise XQException(message=f"Error getting Dashboard usergroup: {res}")
 
 
 def update_usergroup(api):
@@ -38,12 +38,10 @@ def update_usergroup(api):
     if status_code == 200:
         return res
     else:
-        raise XQException(message=f"Error authenticating to Dashboard: {res}")
+        raise XQException(message=f"Error updating Dashbaord usergroup: {res}")
 
 
 def delete_usergroup(api, usergroup_id):
-    params = {}
-
     status_code, res = api.api_delete(
         "usergroup", params={"id": usergroup_id}, subdomain=API_SUBDOMAIN
     )
@@ -51,4 +49,4 @@ def delete_usergroup(api, usergroup_id):
     if status_code == 200:
         return res
     else:
-        raise XQException(message=f"Error authenticating to Dashboard: {res}")
+        raise XQException(message=f"Error deleting Dashboard usergroup: {res}")
