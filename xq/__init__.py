@@ -89,7 +89,7 @@ class XQ:
         :return: decrypted text
         :rtype: str
         """
-        if algorithm is not "OTP" and not nonce:
+        if algorithm != "OTP" and not nonce:
             raise XQException("`nonce` is required for {algorithm} encryption")
 
         if isinstance(key, str):
@@ -110,6 +110,9 @@ class XQ:
         :return: encrypted text, encryption key
         :rtype: tuple
         """
+        if isinstance(fileObj, str):
+            fileObj = open(fileObj, "r")
+
         otp = OTPEncryption(key)
         ciphertext = otp.encrypt(fileObj)
 
