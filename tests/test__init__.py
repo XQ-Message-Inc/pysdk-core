@@ -60,16 +60,12 @@ def test_encrypt_message(mock_xq):
         text="sometexttoencrypt",
         key=b"thisisabytestext",
         algorithm="AES",
-        recipients=["mock@test.com"],
     )
 
 
 def test_encrypt_message_stingkey(mock_xq):
     assert mock_xq.encrypt_message(
-        text="sometexttoencrypt",
-        key="thisisabytestext",
-        algorithm="AES",
-        recipients=["mock@test.com"],
+        text="sometexttoencrypt", key="thisisabytestext", algorithm="AES"
     )
 
 
@@ -97,3 +93,14 @@ def test_generate_key_from_entropy(mock_xq):
 #         algorithm="AES",
 #         nonce=None
 #     )
+
+
+def test_file_encryption(mock_xq, tmp_path):
+    text = "text to encrypt"
+    fh = tmp_path / "filetoencrypt"
+    fh.write_text(text)
+
+    encryptedText, expanded_key = mock_xq.encrypt_file(fh, key="thisisabytestext")
+    decrypted_file = mock_xq.decrypt_file(encryptedText, key=expanded_key)
+
+    assert decrypted_file.getvalue() == text

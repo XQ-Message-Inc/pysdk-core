@@ -1,9 +1,11 @@
-from ._version import get_versions
+import typing
+import io
 
+from ._version import get_versions
 from xq.config import API_KEY, DASHBOARD_API_KEY
 from xq.exceptions import SDKConfigurationException, SDKEncryptionException
-from xq.algorithms import Algorithms
-from xq.algorithms.encryption import Encryption
+from xq.algorithms import OTPEncryption, Encryption, Algorithms
+from xq.exceptions import XQException
 from xq.api import XQAPI  # import all api endpoint integrations
 import base64
 
@@ -47,26 +49,15 @@ class XQ:
 
         return generatedKey
 
-    def encrypt_message(
-        self,
-        text: str,
-        key: bytes,
-        algorithm: Algorithms,
-        recipients=[],
-        expires_hours=24,
-    ):
+    def encrypt_message(self, text: str, key: bytes, algorithm: Algorithms = "AES"):
         """encrypt a string
 
         :param text: string to encrypt
         :type text: str
         :param key: encryption key to use to encrypted text
-        :type key: bytes
+        :type key: bytes, defaults to None
         :param algorithm: the encryption algorithm to use
-        :type algorithm: Algorithms
-        :param recipients: email address which will have access to the encryption, defaults to []
-        :type recipients: list, optional
-        :param expires_hours: validation time in hours, defaults to 24
-        :type expires_hours: int, optional
+        :type algorithm: Algorithms, defaults to AES
         :return: ciphertext, nonce, tag from encryption
         :rtype: tuple(bytes)
         """
@@ -79,7 +70,11 @@ class XQ:
         return ciphertext, nonce, tag
 
     def decrypt_message(
-        self, encryptedText: bytes, key: bytes, algorithm: Algorithms, nonce: bytearray
+        self,
+        encryptedText: bytes,
+        key: bytes,
+        algorithm: Algorithms = "AES",
+        nonce: bytearray = None,
     ):
         """decrypt a previoulsy encrypted string
 
@@ -94,6 +89,9 @@ class XQ:
         :return: decrypted text
         :rtype: str
         """
+        if algorithm is not "OTP" and not nonce:
+            raise XQException("`nonce` is required for {algorithm} encryption")
+
         if isinstance(key, str):
             key = key.encode()
 
@@ -101,3 +99,43 @@ class XQ:
         plaintext = encryptionAlgorithm.decrypt(encryptedText)
 
         return plaintext
+
+    def encrypt_file(self, fileObj: typing.TextIO, key: bytes) -> bytearray:
+        """encrypt the contents of a given file object
+
+        :param fileObj: FileLike object to encrypt
+        :type fileObj: typing.TextIO
+        :param key: encryption key to use, NOTE: may be expanded
+        :type key: bytes
+        :return: encrypted text, encryption key
+        :rtype: tuple
+        """
+        otp = OTPEncryption(key)
+        ciphertext = otp.encrypt(fileObj)
+
+        return ciphertext, otp.key
+
+    def decrypt_file(self, encryptedText: bytes, key: bytes) -> io.StringIO:
+        """decrypt a given bytes string back into a FileLike object
+
+        :param encryptedText: encrypted file contents
+        :type encryptedText: bytes
+        :param key: encryption key
+        :type key: bytes
+        :return: FileLike StringIO handle
+        :rtype: StringIO
+        """
+        otp = OTPEncryption(key)
+        plaintext = otp.decrypt(encryptedText)
+        fh = io.StringIO(plaintext)
+
+        return fh
+
+    def magic_encrypt(self):
+        # TODO: to all the things:
+        #   1. determine string or file
+        #   2. generate key
+        #   3. encrypt
+        #   4. save key in xq
+        #   4. return locator token for key and encrypted message/file content
+        pass

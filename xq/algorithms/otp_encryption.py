@@ -1,6 +1,7 @@
 from typing import TextIO, BinaryIO
 from io import StringIO, BytesIO
 from urllib.parse import quote_plus
+from pathlib import PosixPath, Path
 import warnings
 
 from xq.algorithms import Encryption
@@ -80,6 +81,9 @@ class OTPEncryption(Encryption):
         elif isinstance(msg, BinaryIO) or isinstance(msg, BytesIO):
             # binary file
             text = msg.getvalue()
+        elif isinstance(msg, PosixPath):
+            # unix file
+            text = msg.open("r").read().encode()
         else:
             raise SDKEncryptionException(f"Message type {type(msg)} is not supported!")
 
