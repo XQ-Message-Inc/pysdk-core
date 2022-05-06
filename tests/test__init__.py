@@ -104,3 +104,11 @@ def test_file_encryption(mock_xq, tmp_path):
     decrypted_file = mock_xq.decrypt_file(encryptedText, key=expanded_key)
 
     assert decrypted_file.getvalue() == text
+
+
+def test_magic_encryption_text(mock_xq, tmp_path):
+    pass
+
+
+def test_magic_encryption_file(mock_xq, tmp_path):
+    pass

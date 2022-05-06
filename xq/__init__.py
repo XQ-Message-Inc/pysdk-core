@@ -134,11 +134,39 @@ class XQ:
 
         return fh
 
-    def magic_encrypt(self):
-        # TODO: to all the things:
-        #   1. determine string or file
-        #   2. generate key
+    def magic_encrypt(self, thing_to_encrypt: any, recipients):
+        #   1. generate key
+        KEY = self.generate_key_from_entropy()
+        encrypted_key_packet = self.api.create_packet(recipients=recipients, key=KEY)
+
+        #   2. store key packet
+        locator_token = self.api.add_packet(encrypted_key_packet)
+
         #   3. encrypt
+        if isinstance(thing_to_encrypt, str):
+            return locator_token, self.encrypt_message(
+                thing_to_encrypt,
+                key=KEY,
+                algorithm="AES",
+                recipients=recipients,
+            )
+        else:
+            return locator_token, self.encrypt_file(thing_to_encrypt, key=KEY)
+
+        # get key packet by lookup
+        retrieved_key_packet = xq.api.get_packet(locator_token)
+
         #   4. save key in xq
+
         #   4. return locator token for key and encrypted message/file content
         pass
+
+    def magic_decrypt(magic_bundle):
+
+        if len(magic_bundle) == 4:
+            # AES bundle - locator_token, encrypted_message, nonce, tag
+            locator_token, encrypted_message, nonce, tag = magic_bundle
+
+        else:
+            # OTP bundle - locator_token, encryptedText, expanded_key
+            locator_token, encryptedText, expanded_key = magic_bundle
