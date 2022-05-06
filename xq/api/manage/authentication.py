@@ -41,7 +41,7 @@ def dashboard_signup(api, email: str, password: str = None, emailOptIn=True):
 
 
 def dashboard_login(
-    api, email: str = None, password: str = None, method: int = 0, workspace: str = None
+    api, email: str = None, password: str = None, method: int = 1, workspace: str = None
 ):
     """log a given user into their dashboard account
     https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDM-login-to-the-dashboard
@@ -65,7 +65,7 @@ def dashboard_login(
             raise XQException(message=f"Credential auth requested, but not provided")
         payload = {"email": email, "pwd": password, "method": 0}
     elif method == 1:  # oauth
-        payload = {"pwd": DASHBOARD_API_KEY, "method": 1}
+        payload = {"pwd": password, "method": 1}
     else:  # unsuported method
         raise XQException(message=f"Unsupported authentication method")
     if workspace:
