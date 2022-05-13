@@ -31,6 +31,8 @@ class XQAPI:
         dashboard_login,
         create_usergroup,
         get_usergroup,
+        update_usergroup,
+        delete_usergroup,
         add_contact,
         send_login_link,
         validate_access_token,
@@ -100,6 +102,34 @@ class XQAPI:
         :rtype: tuple(int, string)
         """
         r = requests.post(
+            f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
+            json=json,
+            data=data,
+            headers=self.headers,
+        )
+
+        try:
+            res = r.json()
+        except Exception as e:
+            res = r.text
+
+        return r.status_code, res
+
+    def api_put(self, serviceEndpoint, subdomain, json=None, data=None):
+        """static method for interacting with XQ API PUT endpoints
+
+        :param serviceEndpoint: uri service extension to hit
+        :type serviceEndpoint: string
+        :param subdomain: subdomain of uri to use, api specific
+        :type subdomain: string
+        :param json: optional parameters to pass, POSTS as json contenttype, defaults to None
+        :type json: dict, optional
+        :param data: optional parameters to pass, defaults to None
+        :type data: dict, optional
+        :return: status code, response
+        :rtype: tuple(int, string)
+        """
+        r = requests.put(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             json=json,
             data=data,

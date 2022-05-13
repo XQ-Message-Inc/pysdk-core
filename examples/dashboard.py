@@ -14,27 +14,48 @@ from xq import XQ
 xq = XQ()
 
 email = input(f"Please provide the email address that will be used for authentication:")
-password = "nonsense"
 
 # NOTE: password authentication to dashboard is not currently suppored by the API
 xq.api.dashboard_signup(email=email)
 xq.api.send_login_link(email=email)
-password = input(f"Paste magic link sent to {email}:")
-xq.api.dashboard_login(email=email, password=password)
-res = xq.api.login_verify()
-assert xq.api.validate_access_token()
-
-# adding a business contact
-# xq.api.add_contact("Mock", "Mocker", "mocker@xqtest.com", "Chief Mocker Officer", 6)
+magic_link = input(f"Paste magic link sent to {email}:")
+xq.api.dashboard_login(password=magic_link)  # set temporary access_token
+res = xq.api.login_verify()  # exchange for real access_token
+assert xq.api.validate_access_token()  # verify access token
 
 # add a usergroup
-res = xq.api.create_usergroup(
-    usergroup_id=1, members=["mock@xqtest.com"], name="testusergroup"
+new_usergroup = xq.api.create_usergroup(
+    name="testusergroup", members=["oldmember@xq.com"]
 )
-print("CREATED GROUP")
-print(res)
+print("CREATED GROUP:")
+print(new_usergroup)
 
-# request created usergroup
-ug = xq.api.get_usergroup(usergroup_id=1)
-print("GOT USERGROUP")
-print(ug)
+# request all usergroups
+all_groups = xq.api.get_usergroup()
+print("\n\nGOT ALL USERGROUPS:")
+print(all_groups)
+
+# request created usergroup by id
+requested_usergroup = xq.api.get_usergroup(usergroup_id=new_usergroup["id"])
+print("\n\nGOT USERGROUP BY ID:")
+print(requested_usergroup)
+
+##
+# TODO: PUT, POST, and PATCH not supported by API
+##
+
+# # update usergroup
+# res = xq.api.update_usergroup(usergroup_id=new_usergroup['id'], name="renamed usergroup", members=["newmember@xq.com"])
+# print('updated:', res)
+
+# # verify update
+# res = xq.api.get_usergroup(usergroup_id=new_usergroup['id'])
+# print('got updated:', res)
+
+# # delete usergroup
+# res = xq.api.delete_usergroup(usergroup_id=new_usergroup['id'])
+# print('deleted:', res)
+
+# # verify delete
+# res = xq.api.get_usergroup(usergroup_id=new_usergroup['id'])
+# print('got deleted:', res)

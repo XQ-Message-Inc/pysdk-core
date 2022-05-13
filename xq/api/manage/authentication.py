@@ -118,7 +118,6 @@ def dashboard_login(
         status_code = 200
 
     if status_code == 200:
-        print(auth_token)
         api.headers.update(
             {"authorization": f"Bearer {auth_token}"}
         )  # update auth header with Dashboard token
@@ -147,7 +146,6 @@ def login_verify(api):
     )
 
     if status_code == 200:
-        print(res)
         api.headers.update(
             {"authorization": f"Bearer {res}"}
         )  # update auth header with Dashboard token
