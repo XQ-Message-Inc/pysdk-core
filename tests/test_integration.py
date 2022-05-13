@@ -125,12 +125,12 @@ def test_revoke_users():
 
 # @pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
 # def test_dashboard_auth():
-#     # TODO: OBE, see test_usergroups. requires signup for auth
+#     # NOTE: OBE, see test_usergroups. requires signup for auth
 #     xq = XQ()
 #     assert xq.api.dashboard_login()
 
 
-# TODO: this cannot be tested automatically due to the magic-link requirement
+# NOTE: this cannot be tested automatically due to the magic-link requirement
 # @pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
 # def test_usergroups():
 #     xq = XQ()
