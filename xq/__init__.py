@@ -154,16 +154,18 @@ class XQ:
         locator_token = self.api.add_packet(encrypted_key_packet)
 
         #   3. encrypt
-        if os.path.isfile(thing_to_encrypt):
-            return (locator_token,) + self.encrypt_file(thing_to_encrypt, key=KEY)
-
-        elif isinstance(thing_to_encrypt, str):
-            return (locator_token,) + self.encrypt_message(
-                thing_to_encrypt, key=KEY, algorithm="AES"
-            )
-        else:
+        try:
+            if isinstance(thing_to_encrypt, str) and not os.path.isfile(
+                thing_to_encrypt
+            ):
+                return (locator_token,) + self.encrypt_message(
+                    thing_to_encrypt, key=KEY, algorithm="AES"
+                )
+            else:
+                return (locator_token,) + self.encrypt_file(thing_to_encrypt, key=KEY)
+        except Exception as e:
             raise XQException(
-                f"Encrypting {type(thing_to_encrypt)} is not currently supported"
+                f"Encrypting {type(thing_to_encrypt)} is not currently supported, or another error occured: {e}"
             )
 
     def magic_decrypt(self, magic_bundle):
