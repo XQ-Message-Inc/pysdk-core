@@ -7,13 +7,13 @@ from xq.exceptions import XQException
 
 def test_create_usergroup(mock_xqapi):
     mock_xqapi.api_post = MagicMock(return_value=(200, "mock server success"))
-    assert create_usergroup(mock_xqapi)
+    assert create_usergroup(mock_xqapi, name="mockname", members=["mockmember"])
 
 
 def test_create_usergroup_error(mock_xqapi):
     mock_xqapi.api_post = MagicMock(return_value=(500, "mock server error"))
     with pytest.raises(XQException):
-        create_usergroup(mock_xqapi)
+        create_usergroup(mock_xqapi, name="mockname", members=["mockmember"])
 
 
 def test_get_usergroup(mock_xqapi):
@@ -28,14 +28,14 @@ def test_get_usergroup(mock_xqapi):
 
 
 def test_update_usergroup(mock_xqapi):
-    mock_xqapi.api_put = MagicMock(return_value=(200, "mock server success"))
-    assert update_usergroup(mock_xqapi)
+    mock_xqapi.api_patch = MagicMock(return_value=(200, "mock server success"))
+    assert update_usergroup(mock_xqapi, 1, "mockname", "mockmemebers")
 
 
 def test_update_usergroup_error(mock_xqapi):
-    mock_xqapi.api_put = MagicMock(return_value=(500, "mock server error"))
+    mock_xqapi.api_patch = MagicMock(return_value=(500, "mock server error"))
     with pytest.raises(XQException):
-        update_usergroup(mock_xqapi)
+        update_usergroup(mock_xqapi, 1, "mockname", "mockmemebers")
 
 
 def test_delete_usergroup(mock_xqapi):

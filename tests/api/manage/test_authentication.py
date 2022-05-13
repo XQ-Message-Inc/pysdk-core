@@ -6,7 +6,7 @@ from xq.exceptions import XQException
 
 
 def test_dashboard_signup(mock_xqapi):
-    mock_xqapi.api_post = MagicMock(return_value=(200, "mock server success"))
+    mock_xqapi.api_post = MagicMock(return_value=(204, "mock server success"))
     assert dashboard_signup(mock_xqapi, email="mockuser@xqtest.com")
 
 
@@ -34,7 +34,7 @@ def test_send_login_link_error(mock_xqapi):
 
 def test_dashboard_login_oauth(mock_xqapi):
     mock_xqapi.api_post = MagicMock(return_value=(200, "mock server success"))
-    assert dashboard_login(mock_xqapi, method=1)
+    assert dashboard_login(mock_xqapi, password="mockpass", method=1)
 
 
 def test_dashboard_login_creds(mock_xqapi):
@@ -43,11 +43,11 @@ def test_dashboard_login_creds(mock_xqapi):
 
 
 def test_dashboard_login_creds_missing(mock_xqapi):
-    with pytest.raises(XQException):
+    with pytest.raises(TypeError):
         dashboard_login(mock_xqapi, method=0)
 
 
 def test_dashboard_login_error(mock_xqapi):
     mock_xqapi.api_post = MagicMock(return_value=(500, "mock server error"))
-    with pytest.raises(XQException):
+    with pytest.raises(TypeError):
         dashboard_login(mock_xqapi)

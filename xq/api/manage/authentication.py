@@ -72,7 +72,7 @@ def send_login_link(api, email: str, host: str = None):
 
 
 def dashboard_login(
-    api, email: str = None, password: str = None, method: int = 1, workspace: str = None
+    api, password: str, email: str = None, method: int = 1, workspace: str = None
 ):
     """log a given user into their dashboard account
     https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDM-login-to-the-dashboard
@@ -81,8 +81,8 @@ def dashboard_login(
     :type api: XQAPI
     :param email: email address of authenticating user, defaults to None
     :type email: str, optional
-    :param password: password for user account, defaults to None
-    :type password: str, optional
+    :param password: password or magic link for user account
+    :type password: str
     :param method: authentication method (0 = user/password, 1 = OAuth Token), defaults to 0
     :type method: int, optional
     :param workspace: the account workspace. This field is deprecated and should not be used., defaults to None
