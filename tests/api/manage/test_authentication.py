@@ -21,6 +21,17 @@ def test_dashboard_signup_param_error(mock_xqapi):
         dashboard_signup(mock_xqapi)
 
 
+def test_send_login_link(mock_xqapi):
+    mock_xqapi.api_post = MagicMock(return_value=(204, "mock server success"))
+    assert send_login_link(mock_xqapi, email="mockuser@xqtest.com")
+
+
+def test_send_login_link_error(mock_xqapi):
+    mock_xqapi.api_post = MagicMock(return_value=(500, "mock server success"))
+    with pytest.raises(XQException):
+        send_login_link(mock_xqapi, email="mockuser@xqtest.com")
+
+
 def test_dashboard_login_oauth(mock_xqapi):
     mock_xqapi.api_post = MagicMock(return_value=(200, "mock server success"))
     assert dashboard_login(mock_xqapi, method=1)

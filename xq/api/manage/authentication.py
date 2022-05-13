@@ -22,6 +22,7 @@ def dashboard_signup(api, email: str, password: str = None, emailOptIn=True):
         # 'state': ''   # UI only, user tracking
     }
 
+    # NOTE: password authentication to dashboard is not currently suppored by the API
     if password:
         payload["pwd"] = password
 
@@ -38,6 +39,36 @@ def dashboard_signup(api, email: str, password: str = None, emailOptIn=True):
         return res
     else:
         raise XQException(message=f"Error registering Dashboard user: {res}")
+
+
+def send_login_link(api, email: str, host: str = None):
+    """send login magic link to a users email for Dashboard authentication
+    https://xq.stoplight.io/docs/xqmsg/5cde236a164ba-send-login-magic-link-to-a-user
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param email: email address of authenticating user
+    :type email: str
+    :param host: the host domain that login links will target.  if not provided, the default will be used, defaults to None
+    :type host: str, optional
+    :raises XQException: _description_
+    :return: _description_
+    :rtype: _type_
+    """
+    payload = {"email": email}
+    if host:
+        payload["host"] = host
+
+    api.headers.update(
+        {"api-key": DASHBOARD_API_KEY}
+    )  # dashboard api token needs to be set in the header
+
+    status_code, res = api.api_post("login/link", json=payload, subdomain=API_SUBDOMAIN)
+
+    if status_code == 204:
+        return res
+    else:
+        raise XQException(message=f"Error sending Dashboard magic link: {res}")
 
 
 def dashboard_login(
@@ -61,6 +92,7 @@ def dashboard_login(
     :rtype: string
     """
     if method == 0:
+        # NOTE: password authentication to dashboard is not currently suppored by the API
         if not (email and password):
             raise XQException(message=f"Credential auth requested, but not provided")
         payload = {"email": email, "pwd": password, "method": 0}
