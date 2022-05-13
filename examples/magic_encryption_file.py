@@ -22,11 +22,16 @@ first_name = input(f"Please provide your first name:")
 last_name = input(f"Please provide your last name:")
 xq.api.authorize_alias(email, first_name, last_name)
 
+# make a file
+tmp_file_path = "/tmp/filetoencrypt"
+filecontent = "some text to encrypt"
+with open(tmp_file_path, "w") as fh_write:
+    fh_write.write(filecontent)
+
 # encrypt
-message = "something to encrypt"
-magic_bundle = xq.magic_encrypt(message, recipients=[email])
+magic_bundle = xq.magic_encrypt(tmp_file_path, recipients=[email])
 
 # decrypt
-plaintext = xq.magic_decrypt(magic_bundle)
+decrypted_file = xq.magic_decrypt(magic_bundle)
 
-assert plaintext == message
+assert decrypted_file.getvalue() == filecontent

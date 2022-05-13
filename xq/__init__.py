@@ -1,5 +1,6 @@
 import typing
 import io
+import os
 
 from ._version import get_versions
 from xq.config import API_KEY, DASHBOARD_API_KEY
@@ -143,30 +144,42 @@ class XQ:
         locator_token = self.api.add_packet(encrypted_key_packet)
 
         #   3. encrypt
-        if isinstance(thing_to_encrypt, str):
-            return locator_token, self.encrypt_message(
-                thing_to_encrypt,
-                key=KEY,
-                algorithm="AES",
-                recipients=recipients,
+
+        if os.path.isfile(thing_to_encrypt):
+            print("encrypting file")
+            return (locator_token,) + self.encrypt_file(thing_to_encrypt, key=KEY)
+
+        elif isinstance(thing_to_encrypt, str):
+            return (locator_token,) + self.encrypt_message(
+                thing_to_encrypt, key=KEY, algorithm="AES"
             )
         else:
-            return locator_token, self.encrypt_file(thing_to_encrypt, key=KEY)
+            raise XQException(
+                f"Encrypting {type(thing_to_encrypt)} is not currently supported"
+            )
 
-        # get key packet by lookup
-        retrieved_key_packet = xq.api.get_packet(locator_token)
-
-        #   4. save key in xq
-
-        #   4. return locator token for key and encrypted message/file content
-        pass
-
-    def magic_decrypt(magic_bundle):
+    def magic_decrypt(self, magic_bundle):
+        aes_encryption = False
 
         if len(magic_bundle) == 4:
             # AES bundle - locator_token, encrypted_message, nonce, tag
             locator_token, encrypted_message, nonce, tag = magic_bundle
+            aes_encryption = True
 
         else:
             # OTP bundle - locator_token, encryptedText, expanded_key
-            locator_token, encryptedText, expanded_key = magic_bundle
+            locator_token, encrypted_message, expanded_key = magic_bundle
+
+        # get key packet by lookup
+        retrieved_key_packet = self.api.get_packet(locator_token)
+
+        # decrypt message
+        if aes_encryption:
+            return self.decrypt_message(
+                encrypted_message,
+                key=retrieved_key_packet,
+                algorithm="AES",
+                nonce=nonce,
+            )
+        else:
+            return self.decrypt_file(encrypted_message, retrieved_key_packet)
