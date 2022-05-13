@@ -21,17 +21,20 @@ xq.api.dashboard_signup(email=email)
 xq.api.send_login_link(email=email)
 password = input(f"Paste magic link sent to {email}:")
 xq.api.dashboard_login(email=email, password=password)
+res = xq.api.login_verify()
 assert xq.api.validate_access_token()
 
-# test adding a business contact
+# adding a business contact
 # xq.api.add_contact("Mock", "Mocker", "mocker@xqtest.com", "Chief Mocker Officer", 6)
 
-# # add a usergroup
-# res = xq.api.create_usergroup()
-# print("CREATED GROUP")
-# print(res)
+# add a usergroup
+res = xq.api.create_usergroup(
+    usergroup_id=1, members=["mock@xqtest.com"], name="testusergroup"
+)
+print("CREATED GROUP")
+print(res)
 
-# # request created usergroup
-# ug = xq.api.get_usergroup()
-# print("GOT USERGROUP")
-# print(ug)
+# request created usergroup
+ug = xq.api.get_usergroup(usergroup_id=1)
+print("GOT USERGROUP")
+print(ug)

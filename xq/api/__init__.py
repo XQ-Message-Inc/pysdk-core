@@ -34,6 +34,7 @@ class XQAPI:
         add_contact,
         send_login_link,
         validate_access_token,
+        login_verify,
     )
 
     def __init__(

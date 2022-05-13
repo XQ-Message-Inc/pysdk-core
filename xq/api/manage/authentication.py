@@ -51,9 +51,9 @@ def send_login_link(api, email: str, host: str = None):
     :type email: str
     :param host: the host domain that login links will target.  if not provided, the default will be used, defaults to None
     :type host: str, optional
-    :raises XQException: _description_
-    :return: _description_
-    :rtype: _type_
+    :raises XQException: error sending magic link
+    :return: success
+    :rtype: boolean
     """
     payload = {"email": email}
     if host:
@@ -66,7 +66,7 @@ def send_login_link(api, email: str, host: str = None):
     status_code, res = api.api_post("login/link", json=payload, subdomain=API_SUBDOMAIN)
 
     if status_code == 204:
-        return res
+        return True
     else:
         raise XQException(message=f"Error sending Dashboard magic link: {res}")
 
@@ -127,9 +127,45 @@ def dashboard_login(
         raise XQException(message=f"Error authenticating to Dashboard: {auth_token}")
 
 
-def validate_access_token(api):
-    # https://xq.stoplight.io/docs/xqmsg/f260b4a8eb1ea-validate-an-access-token
+def login_verify(api):
+    """verify a user's login and exchange fake auth_token for a real auth_token
 
+    WARNING: this is not documented anyway.  was found by reverse engineering the magic link auth flow
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :raises XQException: unable to verify login
+    :return: validated
+    :rtype: boolean
+    """
+    api.headers.update(
+        {"api-key": DASHBOARD_API_KEY}
+    )  # dashboard api token needs to be set in the header
+
+    status_code, res = api.api_get(
+        "login/verify?request=default", subdomain=API_SUBDOMAIN
+    )
+
+    if status_code == 200:
+        print(res)
+        api.headers.update(
+            {"authorization": f"Bearer {res}"}
+        )  # update auth header with Dashboard token
+        return True
+    else:
+        raise XQException(message=f"Unable to verify login: {res}")
+
+
+def validate_access_token(api):
+    """validate that the set access_token is valid for the dashboard
+    https://xq.stoplight.io/docs/xqmsg/f260b4a8eb1ea-validate-an-access-token
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :raises XQException: invalid access token
+    :return: validated
+    :rtype: boolean
+    """
     api.headers.update(
         {"api-key": DASHBOARD_API_KEY}
     )  # dashboard api token needs to be set in the header
@@ -139,4 +175,4 @@ def validate_access_token(api):
     if status_code == 204:
         return True
     else:
-        raise XQException(message=f"Error sending Dashboard magic link: {res}")
+        raise XQException(message=f"Unable to validate access token: {res}")
