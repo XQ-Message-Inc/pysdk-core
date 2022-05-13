@@ -57,6 +57,9 @@ There are detailed usage examples available in the [examples folder](https://git
 **Rountrip Encryption Examples:**
  - [BYOK w/ 2FA](examples/roundtrip_with_2fa.py)
  - [XQ Generated Enropy Key](examples/roundtrip_with_entropy_key.py)
+ - [File Encryption](examples/roundtrip_otp_file.py)
+ - [Magic Encrypt Text](examples/magic_encryption.py)
+ - [Magic Encrypt File](examples/magic_encryption_file.py)
  - [Dashboard (Beta)](examples/dashboard.py)
 
 ## Development

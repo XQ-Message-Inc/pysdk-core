@@ -47,6 +47,21 @@ def test_roundtrip_seperate_instances_file(key_bytes, plaintextFilelike):
         assert plaintext == plaintextFilelike.getvalue()
 
 
+def test_roundtrip_fh(tmp_path, key_bytes):
+    file_content = "some text to encrypt"
+
+    with open(f"{tmp_path}/filetoencrypt", "w") as fh_write:
+        fh_write.write(file_content)
+
+    fh_read = open(f"{tmp_path}/filetoencrypt", "r")
+
+    otp = OTPEncryption(key_bytes)
+    ciphertext = otp.encrypt(fh_read)
+    plaintext = otp.decrypt(ciphertext)
+
+    assert plaintext == file_content
+
+
 # test binary file
 def test_roundtrip_bytesfile(key_bytes, binaryFilelike):
     otp = OTPEncryption(key_bytes)
