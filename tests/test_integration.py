@@ -43,10 +43,7 @@ def test_roundtrip():
     # encrypt something
     message_to_encrypt = "sometexttoencrypt"
     encrypted_message, nonce, tag = xq.encrypt_message(
-        message_to_encrypt,
-        key=KEY,
-        algorithm="AES",
-        recipients=[email],
+        message_to_encrypt, key=KEY, algorithm="AES"
     )
 
     # get key packet by lookup
