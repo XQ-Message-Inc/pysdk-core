@@ -135,7 +135,17 @@ class XQ:
 
         return fh
 
-    def magic_encrypt(self, thing_to_encrypt: any, recipients):
+    def magic_encrypt(self, thing_to_encrypt: any, recipients: list[str]):
+        """easy button encryption: encrypt something with an entropy generated encryption key, and store the key in XQ
+
+        :param thing_to_encrypt: something to encrypt (i.e. text, file path string, etc)
+        :type thing_to_encrypt: any
+        :param recipients: list of recipient emails
+        :type recipients: list[str]
+        :raises XQException: _description_
+        :return: magic bundle, used for decryption
+        :rtype: tuple
+        """
         #   1. generate key
         KEY = self.generate_key_from_entropy()
         encrypted_key_packet = self.api.create_packet(recipients=recipients, key=KEY)
@@ -144,9 +154,7 @@ class XQ:
         locator_token = self.api.add_packet(encrypted_key_packet)
 
         #   3. encrypt
-
         if os.path.isfile(thing_to_encrypt):
-            print("encrypting file")
             return (locator_token,) + self.encrypt_file(thing_to_encrypt, key=KEY)
 
         elif isinstance(thing_to_encrypt, str):
@@ -159,6 +167,13 @@ class XQ:
             )
 
     def magic_decrypt(self, magic_bundle):
+        """easy button decryption: decrypt a magic encrypted with it's magic bundle
+
+        :param magic_bundle: magic bundle created by magic_encryption
+        :type magic_bundle: tuple
+        :return: decrypted item
+        :rtype: any
+        """
         aes_encryption = False
 
         if len(magic_bundle) == 4:
