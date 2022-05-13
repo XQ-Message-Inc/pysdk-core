@@ -60,6 +60,7 @@ There are detailed usage examples available in the [examples folder](https://git
  - [File Encryption](examples/roundtrip_otp_file.py)
  - [Magic Encrypt Text](examples/magic_encryption.py)
  - [Magic Encrypt File](examples/magic_encryption_file.py)
+ - [Dashboard (Beta)](examples/dashboard.py)
 
 ## Development
 
