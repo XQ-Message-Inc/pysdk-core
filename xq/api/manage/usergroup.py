@@ -8,10 +8,10 @@ from xq.exceptions import XQException
 from xq.api.manage import API_SUBDOMAIN
 
 
-def create_usergroup(api):
-    payload = {}
+def create_usergroup(api, usergroup_id: int, members: list[str], name: str):
+    params = {"id": usergroup_id, "members": members, "name": name}
 
-    status_code, res = api.api_post("usergroup", json=payload, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_post("usergroup", json=params, subdomain=API_SUBDOMAIN)
 
     if status_code == 200:
         return res
@@ -19,8 +19,8 @@ def create_usergroup(api):
         raise XQException(message=f"Error creating Dashboard usergroup: {res}")
 
 
-def get_usergroup(api):
-    params = {}
+def get_usergroup(api, usergroup_id: int, groups: list[str] = None):
+    params = {"groups": groups, "id": usergroup_id}
 
     status_code, res = api.api_get("usergroup", params=params, subdomain=API_SUBDOMAIN)
 
@@ -30,8 +30,8 @@ def get_usergroup(api):
         raise XQException(message=f"Error getting Dashboard usergroup: {res}")
 
 
-def update_usergroup(api):
-    params = {}
+def update_usergroup(api, usergroup_id: int, members: list[str], name: str):
+    params = {"id": usergroup_id, "members": members, "name": name}
 
     status_code, res = api.api_put("usergroup", params=params, subdomain=API_SUBDOMAIN)
 

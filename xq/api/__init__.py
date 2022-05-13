@@ -33,6 +33,7 @@ class XQAPI:
         get_usergroup,
         add_contact,
         send_login_link,
+        validate_access_token,
     )
 
     def __init__(

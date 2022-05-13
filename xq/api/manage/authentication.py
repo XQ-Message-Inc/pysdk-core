@@ -32,7 +32,7 @@ def dashboard_signup(api, email: str, password: str = None, emailOptIn=True):
 
     status_code, res = api.api_post("signup", json=payload, subdomain=API_SUBDOMAIN)
 
-    if status_code == 200:
+    if status_code == 204:
         return res
     elif status_code == 409:
         # already registered
@@ -91,30 +91,52 @@ def dashboard_login(
     :return: user access token
     :rtype: string
     """
-    if method == 0:
-        # NOTE: password authentication to dashboard is not currently suppored by the API
-        if not (email and password):
-            raise XQException(message=f"Credential auth requested, but not provided")
-        payload = {"email": email, "pwd": password, "method": 0}
-    elif method == 1:  # oauth
-        payload = {"pwd": password, "method": 1}
-    else:  # unsuported method
-        raise XQException(message=f"Unsupported authentication method")
-    if workspace:
-        payload["workspace"] = workspace
+    if "?access_token=" not in password:
+        if method == 0:
+            # NOTE: password authentication to dashboard is not currently suppored by the API
+            if not (email and password):
+                raise XQException(
+                    message=f"Credential auth requested, but not provided"
+                )
+            payload = {"email": email, "pwd": password, "method": 0}
+        elif method == 1:  # oauth
+            payload = {"pwd": password, "method": 1}
+        else:  # unsuported method
+            raise XQException(message=f"Unsupported authentication method")
+        if workspace:
+            payload["workspace"] = workspace
 
-    api.headers.update(
-        {"api-key": DASHBOARD_API_KEY}
-    )  # dashboard api token needs to be set in the header
+        api.headers.update(
+            {"api-key": DASHBOARD_API_KEY}
+        )  # dashboard api token needs to be set in the header
 
-    status_code, auth_token = api.api_post(
-        "login", json=payload, subdomain=API_SUBDOMAIN
-    )
+        status_code, auth_token = api.api_post(
+            "login", json=payload, subdomain=API_SUBDOMAIN
+        )
+    else:
+        auth_token = password.split("?access_token=", 1)[1]
+        status_code = 200
 
     if status_code == 200:
+        print(auth_token)
         api.headers.update(
             {"authorization": f"Bearer {auth_token}"}
         )  # update auth header with Dashboard token
         return True
     else:
         raise XQException(message=f"Error authenticating to Dashboard: {auth_token}")
+
+
+def validate_access_token(api):
+    # https://xq.stoplight.io/docs/xqmsg/f260b4a8eb1ea-validate-an-access-token
+
+    api.headers.update(
+        {"api-key": DASHBOARD_API_KEY}
+    )  # dashboard api token needs to be set in the header
+
+    status_code, res = api.api_get("session", subdomain=API_SUBDOMAIN)
+
+    if status_code == 204:
+        return True
+    else:
+        raise XQException(message=f"Error sending Dashboard magic link: {res}")
