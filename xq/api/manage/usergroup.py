@@ -78,11 +78,13 @@ def update_usergroup(api, usergroup_id: int, name: str, members: list[str]):
     :return: updated usergroup
     :rtype: object
     """
-    params = {"id": usergroup_id, "members": members, "name": name}
+    params = {"members": members, "name": name}
 
-    status_code, res = api.api_patch("usergroup", json=params, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_patch(
+        f"usergroup/{usergroup_id}", json=params, subdomain=API_SUBDOMAIN
+    )
 
-    if status_code == 200:
+    if status_code == 204:
         return res
     else:
         raise XQException(message=f"Error updating Dashbaord usergroup: {res}")
@@ -104,7 +106,7 @@ def delete_usergroup(api, usergroup_id: int):
         f"usergroup/{usergroup_id}", subdomain=API_SUBDOMAIN
     )
 
-    if status_code == 200:
+    if status_code == 204:
         return True
     else:
         raise XQException(message=f"Error deleting Dashboard usergroup: {res}")
