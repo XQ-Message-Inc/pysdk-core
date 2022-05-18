@@ -54,9 +54,9 @@ xq = XQ(
 #### Examples
 There are detailed usage examples available in the [examples folder](https://github.com/XQ-Message-Inc/python-sdk/tree/main/examples) of this project.
 
-**Rountrip Encryption Examples:**
+**Roundtrip Encryption Examples:**
  - [BYOK w/ 2FA](examples/roundtrip_with_2fa.py)
- - [XQ Generated Enropy Key](examples/roundtrip_with_entropy_key.py)
+ - [XQ Generated Entropy Key](examples/roundtrip_with_entropy_key.py)
  - [File Encryption](examples/roundtrip_otp_file.py)
  - [Magic Encrypt Text](examples/magic_encryption.py)
  - [Magic Encrypt File](examples/magic_encryption_file.py)
