@@ -1,7 +1,7 @@
 # python-sdk
 A Python Implementation of XQ Message SDK (V.2) which provides convenient access to the XQ Message API.
 
-**Supports Python 3.8|3.9|3.10**
+**Supports Python 3.8 | 3.9 | 3.10**
 
 
 #### What is XQ Message?
