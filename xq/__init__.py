@@ -1,6 +1,7 @@
 import typing
 import io
 import os
+from typing import List
 
 from ._version import get_versions
 from xq.config import API_KEY, DASHBOARD_API_KEY
@@ -135,13 +136,13 @@ class XQ:
 
         return fh
 
-    def magic_encrypt(self, thing_to_encrypt: any, recipients: list[str]):
+    def magic_encrypt(self, thing_to_encrypt: any, recipients: List[str]):
         """easy button encryption: encrypt something with an entropy generated encryption key, and store the key in XQ
 
         :param thing_to_encrypt: something to encrypt (i.e. text, file path string, etc)
         :type thing_to_encrypt: any
         :param recipients: list of recipient emails
-        :type recipients: list[str]
+        :type recipients: List[str]
         :raises XQException: _description_
         :return: magic bundle, used for decryption
         :rtype: tuple
