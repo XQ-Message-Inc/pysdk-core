@@ -43,8 +43,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="xq.html">xq package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="xq.html#subpackages">Subpackages</a></li>
 <li class="toctree-l3"><a class="reference internal" href="xq.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="xq.html#xq-config-module">xq.config module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="xq.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="xq.html#module-xq.config">xq.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="xq.html#module-xq">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -84,7 +84,7 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="xq.api.manage.html">xq.api.manage package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="xq.api.manage.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="xq.api.manage.html#module-xq.api.manage">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="xq.api.subscription.html">xq.api.subscription package</a><ul>
@@ -104,8 +104,627 @@
 </ul>
 </div>
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="module-xq.api">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xq.api" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="xq.api.XQAPI">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.api.</span></span><span class="sig-name descname"><span class="pre">XQAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dashboard_api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_base_uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xqmsg.net/v2/'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.add_contact">
+<span class="sig-name descname"><span class="pre">add_contact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">firstName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notifications</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.add_contact" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.add_packet">
+<span class="sig-name descname"><span class="pre">add_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encrypted_key_packet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.add_packet" title="Permalink to this definition"></a></dt>
+<dd><p>upload an encrypted key packet to XQ
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDE4NTY2NDE-add-a-new-key-packet">https://xq.stoplight.io/docs/xqmsg/b3A6NDE4NTY2NDE-add-a-new-key-packet</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>encrypted_key_packet</strong> (<em>bytes</em>) – key packet to upload</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – packet creation failed</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>locator token to access key later</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.api_delete">
+<span class="sig-name descname"><span class="pre">api_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_delete" title="Permalink to this definition"></a></dt>
+<dd><p>static method for interacting with XQ API DELETE endpoints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>serviceEndpoint</strong> (<em>string</em>) – uri service extension to hit</p></li>
+<li><p><strong>subdomain</strong> (<em>string</em>) – subdomain of uri to use, api specific</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>status code, response</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(int, string)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.api_get">
+<span class="sig-name descname"><span class="pre">api_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_get" title="Permalink to this definition"></a></dt>
+<dd><p>static method for interacting with the XQ API GET endpoints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>serviceEndpoint</strong> (<em>string</em>) – uri service extension to hit</p></li>
+<li><p><strong>subdomain</strong> (<em>string</em>) – subdomain of uri to use, api specific</p></li>
+<li><p><strong>params</strong> (<em>dict</em>) – optional parameters to pass, defaults to {}</p></li>
+<li><p><strong>headers</strong> (<em>dict</em>) – optional headers to pass, defaults to {}</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>requests obj</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>requests response</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.api_patch">
+<span class="sig-name descname"><span class="pre">api_patch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_patch" title="Permalink to this definition"></a></dt>
+<dd><p>static method for interacting with XQ API PATCH endpoints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>serviceEndpoint</strong> (<em>string</em>) – uri service extension to hit</p></li>
+<li><p><strong>subdomain</strong> (<em>string</em>) – subdomain of uri to use, api specific</p></li>
+<li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – optional parameters to pass, defaults to None</p></li>
+<li><p><strong>json</strong> (<em>dict</em><em>, </em><em>optional</em>) – optional parameters to pass, POSTS as json contenttype, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>status code, response</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(int, string)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.api_post">
+<span class="sig-name descname"><span class="pre">api_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_post" title="Permalink to this definition"></a></dt>
+<dd><p>static method for interacting with XQ API POST endpoints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>serviceEndpoint</strong> (<em>string</em>) – uri service extension to hit</p></li>
+<li><p><strong>subdomain</strong> (<em>string</em>) – subdomain of uri to use, api specific</p></li>
+<li><p><strong>json</strong> (<em>dict</em><em>, </em><em>optional</em>) – optional parameters to pass, POSTS as json contenttype, defaults to None</p></li>
+<li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – optional parameters to pass, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>status code, response</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(int, string)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.api_put">
+<span class="sig-name descname"><span class="pre">api_put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_put" title="Permalink to this definition"></a></dt>
+<dd><p>static method for interacting with XQ API PUT endpoints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>serviceEndpoint</strong> (<em>string</em>) – uri service extension to hit</p></li>
+<li><p><strong>subdomain</strong> (<em>string</em>) – subdomain of uri to use, api specific</p></li>
+<li><p><strong>json</strong> (<em>dict</em><em>, </em><em>optional</em>) – optional parameters to pass, POSTS as json contenttype, defaults to None</p></li>
+<li><p><strong>data</strong> (<em>dict</em><em>, </em><em>optional</em>) – optional parameters to pass, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>status code, response</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(int, string)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.authorize_alias">
+<span class="sig-name descname"><span class="pre">authorize_alias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.authorize_alias" title="Permalink to this definition"></a></dt>
+<dd><p>request an access token for the given user information
+<a class="reference external" href="https://subscription.xqmsg.net/v2/authorizealias">https://subscription.xqmsg.net/v2/authorizealias</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>user_email</strong> (<em>str</em>) – email address of user requesting access token</p></li>
+<li><p><strong>firstName</strong> (<em>str</em>) – first name of user</p></li>
+<li><p><strong>lastName</strong> (<em>str</em>) – last name of user</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>access token</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.authorize_user">
+<span class="sig-name descname"><span class="pre">authorize_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newsletter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notifications</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.authorize_user" title="Permalink to this definition"></a></dt>
+<dd><p>request pre-auth token for a given email address, this token will need to be exchanged for an access token
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDE-request-access-for-a-user">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDE-request-access-for-a-user</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>user_email</strong> (<em>str</em>) – email address of user requesting access token</p></li>
+<li><p><strong>firstName</strong> (<em>str</em>) – first name of user</p></li>
+<li><p><strong>lastName</strong> (<em>str</em>) – last name of user</p></li>
+<li><p><strong>newsletter</strong> (<em>bool</em><em>, </em><em>optional</em>) – subscribe to newsletter, defaults to False</p></li>
+<li><p><strong>notifications</strong> (<em>int</em><em>, </em><em>optional</em>) – notification level: 0 = No Notifications, 1 = Receive Usage Reports, 2 = Receive Tutorials, 3 = Receive Both, defaults to 0</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pre-aut token, which can be exchanged for an access token</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.code_validate">
+<span class="sig-name descname"><span class="pre">code_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.code_validate" title="Permalink to this definition"></a></dt>
+<dd><p>validate the provided 2FA pin
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MjQ1MjM-validate-access-request-with-a-pin">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MjQ1MjM-validate-access-request-with-a-pin</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>pin</strong> (<em>int</em>) – 2FA code</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – invalid pin</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>isvalid? boolean response</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.create_packet">
+<span class="sig-name descname"><span class="pre">create_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.create_packet" title="Permalink to this definition"></a></dt>
+<dd><p>creates an encrypted packet from a secret key
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDQ5MTY-create-a-new-key-packet">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDQ5MTY-create-a-new-key-packet</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>recipients</strong> (<em>list</em>) – list of emails to grant access to</p></li>
+<li><p><strong>expires_hours</strong> (<em>int</em><em>, </em><em>optional</em>) – packet validation time in hours, defaults to 24</p></li>
+<li><p><strong>key</strong> (<em>bytes</em><em>, </em><em>optional</em>) – secret key to encrypt, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – failed packet creation</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>api response, the encrypted packet</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.create_usergroup">
+<span class="sig-name descname"><span class="pre">create_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.create_usergroup" title="Permalink to this definition"></a></dt>
+<dd><p>create a usergroup</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – name of usergroup</p></li>
+<li><p><strong>members</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – list of member emails to add to group</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – error creating usergroup</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>usergroup</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.dashboard_login">
+<span class="sig-name descname"><span class="pre">dashboard_login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.dashboard_login" title="Permalink to this definition"></a></dt>
+<dd><p>log a given user into their dashboard account
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDM-login-to-the-dashboard">https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDM-login-to-the-dashboard</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>email</strong> (<em>str</em><em>, </em><em>optional</em>) – email address of authenticating user, defaults to None</p></li>
+<li><p><strong>password</strong> (<em>str</em>) – password or magic link for user account</p></li>
+<li><p><strong>method</strong> (<em>int</em><em>, </em><em>optional</em>) – authentication method (0 = user/password, 1 = OAuth Token), defaults to 0</p></li>
+<li><p><strong>workspace</strong> (<em>string</em><em>, </em><em>optional - DEPRECATED</em>) – the account workspace. This field is deprecated and should not be used., defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – authentication error with request</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>user access token</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.dashboard_signup">
+<span class="sig-name descname"><span class="pre">dashboard_signup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emailOptIn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.dashboard_signup" title="Permalink to this definition"></a></dt>
+<dd><p>register a new user for XQ Dashboard access
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDI-self-sign-up">https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDI-self-sign-up</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>email</strong> (<em>str</em>) – email address of registering user</p></li>
+<li><p><strong>password</strong> (<em>str</em><em>, </em><em>optional</em>) – optional password, used for authenticating without email 2FA, defaults to None</p></li>
+<li><p><strong>emailOptIn</strong> (<em>bool</em><em>, </em><em>optional</em>) – opt in to email notifications, defaults to True</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.delete_usergroup">
+<span class="sig-name descname"><span class="pre">delete_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.delete_usergroup" title="Permalink to this definition"></a></dt>
+<dd><p>delete a usergroup by id
+WARNING: DELETE not supported by API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>usergroup_id</strong> (<em>int</em>) – id number of usergroup</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – error deleting usergroup</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>success</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.exchange_key">
+<span class="sig-name descname"><span class="pre">exchange_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.exchange_key" title="Permalink to this definition"></a></dt>
+<dd><p>exchange pre-auth token for an access token, and update headers accordingly
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5Mzc1NjA-exchange-for-access-token">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5Mzc1NjA-exchange-for-access-token</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – key exchange failure</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>success? boolean</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.get_entropy">
+<span class="sig-name descname"><span class="pre">get_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entropy_bits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_entropy" title="Permalink to this definition"></a></dt>
+<dd><p>Generate quantum entropy from XQ with the provided number of entropy bits, returns as decoded string
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDY-quantum-generator">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDY-quantum-generator</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>entropy_bits</strong> (<em>int</em><em>, </em><em>optional</em>) – number of entropy bits to fetch, defaults to 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.configuration.SDKConfigurationException" title="xq.exceptions.configuration.SDKConfigurationException"><strong>SDKConfigurationException</strong></a> – exception for http errors</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>entropy</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>base64 string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.get_packet">
+<span class="sig-name descname"><span class="pre">get_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_packet" title="Permalink to this definition"></a></dt>
+<dd><p>fetch key with provided locator token
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODE-retrieve-a-key-with-its-token">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODE-retrieve-a-key-with-its-token</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQPAI instance</p></li>
+<li><p><strong>locator_token</strong> (<em>str</em>) – url encoded locator token</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – packet retrieval failed</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>key</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.get_usergroup">
+<span class="sig-name descname"><span class="pre">get_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_usergroup" title="Permalink to this definition"></a></dt>
+<dd><p>get a usergroup by id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>usergroup_id</strong> (<em>int</em><em>, </em><em>optional</em>) – id of usergroup, defaults to None</p></li>
+<li><p><strong>groups</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – _description_ TODO, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – error getting usergroup</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>usergroup(s)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.grant_users">
+<span class="sig-name descname"><span class="pre">grant_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias_access</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.grant_users" title="Permalink to this definition"></a></dt>
+<dd><p>grant a list of recipients access to a given token
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDMzMTkyOTY-grant-a-user-access-to-a-key">https://xq.stoplight.io/docs/xqmsg/b3A6NDMzMTkyOTY-grant-a-user-access-to-a-key</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>locator_token</strong> (<em>str</em>) – url encoded locator token</p></li>
+<li><p><strong>recipients</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – list of user emails to grant</p></li>
+<li><p><strong>alias_access</strong> (<em>Boolean</em>) – grant the user access for alias (non-MFA)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – access grant failed</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>success</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.login_verify">
+<span class="sig-name descname"><span class="pre">login_verify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.login_verify" title="Permalink to this definition"></a></dt>
+<dd><p>verify a user’s login and exchange fake auth_token for a real auth_token</p>
+<p>WARNING: this is not documented anyway.  was found by reverse engineering the magic link auth flow</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – unable to verify login</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>validated</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.revoke_packet">
+<span class="sig-name descname"><span class="pre">revoke_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.revoke_packet" title="Permalink to this definition"></a></dt>
+<dd><p>revoke a key packet with the provided locator token
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODI-revoke-access-to-a-key">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODI-revoke-access-to-a-key</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>locator_token</strong> (<em>str</em>) – url encoded locator token</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – packet revokation failed</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>success</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.revoke_users">
+<span class="sig-name descname"><span class="pre">revoke_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias_access</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.revoke_users" title="Permalink to this definition"></a></dt>
+<dd><p>revoke a list of recipents from accessing a given token
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODU-revoke-user-access">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODU-revoke-user-access</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>locator_token</strong> (<em>str</em>) – url encoded locator token</p></li>
+<li><p><strong>recipients</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – list of user emails to revoke</p></li>
+<li><p><strong>alias_access</strong> (<em>Boolean</em>) – grant the user access for alias (non-MFA)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – acces revoke failed</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>success</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.send_login_link">
+<span class="sig-name descname"><span class="pre">send_login_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.send_login_link" title="Permalink to this definition"></a></dt>
+<dd><p>send login magic link to a users email for Dashboard authentication
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/5cde236a164ba-send-login-magic-link-to-a-user">https://xq.stoplight.io/docs/xqmsg/5cde236a164ba-send-login-magic-link-to-a-user</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>email</strong> (<em>str</em>) – email address of authenticating user</p></li>
+<li><p><strong>host</strong> (<em>str</em><em>, </em><em>optional</em>) – the host domain that login links will target.  if not provided, the default will be used, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – error sending magic link</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>success</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.update_usergroup">
+<span class="sig-name descname"><span class="pre">update_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.update_usergroup" title="Permalink to this definition"></a></dt>
+<dd><p>update a usergroup by id
+WARNING: PATCH and PUT not supported by API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>usergroup_id</strong> (<em>int</em>) – id of usergroup</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – new name of usergroup</p></li>
+<li><p><strong>members</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – new usergroup members</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – error updating usergroup</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>updated usergroup</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.validate_access_token">
+<span class="sig-name descname"><span class="pre">validate_access_token</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.validate_access_token" title="Permalink to this definition"></a></dt>
+<dd><p>validate that the set access_token is valid for the dashboard
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/f260b4a8eb1ea-validate-an-access-token">https://xq.stoplight.io/docs/xqmsg/f260b4a8eb1ea-validate-an-access-token</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – invalid access token</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>validated</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.validate_api_key">
+<span class="sig-name descname"><span class="pre">validate_api_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.validate_api_key" title="Permalink to this definition"></a></dt>
+<dd><p>static method for validating provided API keys
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDExNDU1MDg-check-if-valid-api-key">https://xq.stoplight.io/docs/xqmsg/b3A6NDExNDU1MDg-check-if-valid-api-key</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.configuration.SDKConfigurationException" title="xq.exceptions.configuration.SDKConfigurationException"><strong>SDKConfigurationException</strong></a> – exception for invalid keys</p></li>
+<li><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.configuration.SDKConfigurationException" title="xq.exceptions.configuration.SDKConfigurationException"><strong>SDKConfigurationException</strong></a> – exception for http errors</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>api response</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str OR json</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 
