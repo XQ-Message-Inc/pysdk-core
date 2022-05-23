@@ -3,12 +3,13 @@
 #
 # Assumed Requirements: Full CRUD on https://dashboard.xqmsg.net/v2/usergroup
 ##
+from typing import List
 
 from xq.exceptions import XQException
 from xq.api.manage import API_SUBDOMAIN
 
 
-def create_usergroup(api, name: str, members: list[str]):
+def create_usergroup(api, name: str, members: List[str]):
     """create a usergroup
 
     :param api: XQAPI instance
@@ -16,7 +17,7 @@ def create_usergroup(api, name: str, members: list[str]):
     :param name: name of usergroup
     :type name: str
     :param members: list of member emails to add to group
-    :type members: list[str]
+    :type members: List[str]
     :raises XQException: error creating usergroup
     :return: usergroup
     :rtype: dict
@@ -31,7 +32,7 @@ def create_usergroup(api, name: str, members: list[str]):
         raise XQException(message=f"Error creating Dashboard usergroup: {res}")
 
 
-def get_usergroup(api, usergroup_id: int = None, groups: list[str] = None):
+def get_usergroup(api, usergroup_id: int = None, groups: List[str] = None):
     """get a usergroup by id
 
     :param api: XQAPI instance
@@ -39,7 +40,7 @@ def get_usergroup(api, usergroup_id: int = None, groups: list[str] = None):
     :param usergroup_id: id of usergroup, defaults to None
     :type usergroup_id: int, optional
     :param groups: _description_ TODO, defaults to None
-    :type groups: list[str], optional
+    :type groups: List[str], optional
     :raises XQException: error getting usergroup
     :return: usergroup(s)
     :rtype: dict
@@ -62,7 +63,7 @@ def get_usergroup(api, usergroup_id: int = None, groups: list[str] = None):
         raise XQException(message=f"Error getting Dashboard usergroup: {res}")
 
 
-def update_usergroup(api, usergroup_id: int, name: str, members: list[str]):
+def update_usergroup(api, usergroup_id: int, name: str, members: List[str]):
     """update a usergroup by id
     WARNING: PATCH and PUT not supported by API
 
@@ -73,7 +74,7 @@ def update_usergroup(api, usergroup_id: int, name: str, members: list[str]):
     :param name: new name of usergroup
     :type name: str
     :param members: new usergroup members
-    :type members: list[str]
+    :type members: List[str]
     :raises XQException: error updating usergroup
     :return: updated usergroup
     :rtype: object

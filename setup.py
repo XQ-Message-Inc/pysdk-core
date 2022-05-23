@@ -38,4 +38,10 @@ setup(
         "requests",
     ],
     tests_requires=["coverage", "mock", "pytest"],
+    classifiers=[
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+    ],
 )
