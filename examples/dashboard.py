@@ -40,22 +40,27 @@ requested_usergroup = xq.api.get_usergroup(usergroup_id=new_usergroup["id"])
 print("\n\nGOT USERGROUP BY ID:")
 print(requested_usergroup)
 
-##
-# TODO: PUT, POST, and PATCH not supported by API
-##
+# update usergroup
+print("\n\nUPDATING USERGROUP BY ID:", new_usergroup["id"])
+res = xq.api.update_usergroup(
+    usergroup_id=new_usergroup["id"],
+    name="renamed usergroup",
+    members=["newmember@xq.com"],
+)
+print("updated:", res)
 
-# # update usergroup
-# res = xq.api.update_usergroup(usergroup_id=new_usergroup['id'], name="renamed usergroup", members=["newmember@xq.com"])
-# print('updated:', res)
+# verify update
+res = xq.api.get_usergroup(usergroup_id=new_usergroup["id"])
+print("got updated:", res)
 
-# # verify update
-# res = xq.api.get_usergroup(usergroup_id=new_usergroup['id'])
-# print('got updated:', res)
+# delete usergroup
+print("\n\nDELETING USERGROUP BY ID:", new_usergroup["id"])
+res = xq.api.delete_usergroup(usergroup_id=new_usergroup["id"])
+print("deleted:", res)
 
-# # delete usergroup
-# res = xq.api.delete_usergroup(usergroup_id=new_usergroup['id'])
-# print('deleted:', res)
-
-# # verify delete
-# res = xq.api.get_usergroup(usergroup_id=new_usergroup['id'])
-# print('got deleted:', res)
+# verify delete
+try:
+    res = xq.api.get_usergroup(usergroup_id=new_usergroup["id"])
+    print("BAD! Found deleted:", res)
+except:
+    print("Does not exist! We are good")
