@@ -4,9 +4,11 @@ A Python Implementation of XQ Message SDK (V.2) which provides convenient access
 **Supports Python 3.8 | 3.9 | 3.10**
 
 
-#### What is XQ Message?
+## What is XQ Message?
 
 XQ Message is an encryption-as-a-service (EaaS) platform which gives you the tools to encrypt and route data to and from devices like mobile phones, IoT, and connected devices that are at the "edge" of the internet. The XQ platform is a lightweight and highly secure cybersecurity solution that enables self protecting data for perimeterless [zero trust](https://en.wikipedia.org/wiki/Zero_trust_security_model) data protection, even to devices and apps that have no ability to do so natively.
+
+XQ is about the secure transfer of data in motion and throughout its lifecycle. XQ protects, controls, and tracks all the interactions with the data. XQ monitors what entities attempt access, where they are located and when the interaction occurs.
 
 
 ## installation
