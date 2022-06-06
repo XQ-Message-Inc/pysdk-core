@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -78,16 +79,16 @@
            <div itemprop="articleBody">
              
   <section id="xq-algorithms-package">
-<h1>xq.algorithms package<a class="headerlink" href="#xq-algorithms-package" title="Permalink to this headline"></a></h1>
+<h1>xq.algorithms package<a class="headerlink" href="#xq-algorithms-package" title="Permalink to this heading"></a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-xq.algorithms.aes_encryption">
-<span id="xq-algorithms-aes-encryption-module"></span><h2>xq.algorithms.aes_encryption module<a class="headerlink" href="#module-xq.algorithms.aes_encryption" title="Permalink to this headline"></a></h2>
+<span id="xq-algorithms-aes-encryption-module"></span><h2>xq.algorithms.aes_encryption module<a class="headerlink" href="#module-xq.algorithms.aes_encryption" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="xq.algorithms.aes_encryption.AESEncryption">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.algorithms.aes_encryption.</span></span><span class="sig-name descname"><span class="pre">AESEncryption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.aes_encryption.AESEncryption" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#xq.algorithms.encryption.Encryption" title="xq.algorithms.encryption.Encryption"><code class="xref py py-class docutils literal notranslate"><span class="pre">xq.algorithms.encryption.Encryption</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#xq.algorithms.encryption.Encryption" title="xq.algorithms.encryption.Encryption"><code class="xref py py-class docutils literal notranslate"><span class="pre">Encryption</span></code></a></p>
 <p>AES implimented encryption algorithm</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -138,7 +139,7 @@
 
 </section>
 <section id="module-xq.algorithms.encryption">
-<span id="xq-algorithms-encryption-module"></span><h2>xq.algorithms.encryption module<a class="headerlink" href="#module-xq.algorithms.encryption" title="Permalink to this headline"></a></h2>
+<span id="xq-algorithms-encryption-module"></span><h2>xq.algorithms.encryption module<a class="headerlink" href="#module-xq.algorithms.encryption" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="xq.algorithms.encryption.Encryption">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.algorithms.encryption.</span></span><span class="sig-name descname"><span class="pre">Encryption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.encryption.Encryption" title="Permalink to this definition"></a></dt>
@@ -201,11 +202,11 @@
 
 </section>
 <section id="module-xq.algorithms.otp_encryption">
-<span id="xq-algorithms-otp-encryption-module"></span><h2>xq.algorithms.otp_encryption module<a class="headerlink" href="#module-xq.algorithms.otp_encryption" title="Permalink to this headline"></a></h2>
+<span id="xq-algorithms-otp-encryption-module"></span><h2>xq.algorithms.otp_encryption module<a class="headerlink" href="#module-xq.algorithms.otp_encryption" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="xq.algorithms.otp_encryption.OTPEncryption">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.algorithms.otp_encryption.</span></span><span class="sig-name descname"><span class="pre">OTPEncryption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_encryption_chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2048</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.otp_encryption.OTPEncryption" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#xq.algorithms.encryption.Encryption" title="xq.algorithms.encryption.Encryption"><code class="xref py py-class docutils literal notranslate"><span class="pre">xq.algorithms.encryption.Encryption</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#xq.algorithms.encryption.Encryption" title="xq.algorithms.encryption.Encryption"><code class="xref py py-class docutils literal notranslate"><span class="pre">Encryption</span></code></a></p>
 <p>OTP implimented encryption algorithm</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -291,7 +292,7 @@
 
 </section>
 <section id="module-xq.algorithms">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xq.algorithms" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xq.algorithms" title="Permalink to this heading"></a></h2>
 </section>
 </section>
 
