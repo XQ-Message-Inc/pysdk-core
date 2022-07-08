@@ -91,8 +91,10 @@ class OTPEncryption(Encryption):
             # text io
             text = msg.read().encode()
         elif isinstance(msg, bytes):
-            text = msg.decode(encoding).encode()  # convert to utf-8
-
+            if encoding is not None:
+                text = msg.decode(encoding).encode()  # convert to utf-8
+            else:
+                text = msg
         else:
             raise SDKEncryptionException(f"Message type {type(msg)} is not supported!")
 
@@ -108,7 +110,12 @@ class OTPEncryption(Encryption):
         :return: decrypted text
         :rtype: str
         """
-        if encoding:
+        if encoding is not None:
             return self.xor_chunker(text).decode().encode(encoding)
         else:
-            return self.xor_chunker(text).decode()
+            try:
+                return self.xor_chunker(text).decode()
+            except UnicodeDecodeError as e:
+                raise Exception(
+                    f'Error decoding message, returned error: "{e}".  Ensure the correct encoding was passed to `encrypt` and `decrypt`'
+                )
