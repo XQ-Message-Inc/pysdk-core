@@ -1,7 +1,10 @@
 import pytest
+import os
 from io import StringIO, BytesIO
 import random
 import string
+
+conftest_dir = os.path.dirname(__file__)
 
 
 @pytest.fixture()
@@ -27,6 +30,11 @@ def plaintextFilelike():
 @pytest.fixture()
 def binaryFilelike():
     return BytesIO(b"some file contents")
+
+
+@pytest.fixture()
+def docxFilePath():
+    return f"{conftest_dir}/samples/word-example.docx"
 
 
 @pytest.fixture()

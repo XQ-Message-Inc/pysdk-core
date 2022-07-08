@@ -1,5 +1,15 @@
 import pytest
+import docx
+from io import BytesIO
 from xq.algorithms.otp_encryption import *
+
+# support function for reading docx file content
+def readDocx(filename):
+    doc = docx.Document(filename)
+    fullText = []
+    for para in doc.paragraphs:
+        fullText.append(para.text)
+    return "\n".join(fullText)
 
 
 def test_otp(key_bytes):
@@ -69,6 +79,29 @@ def test_roundtrip_bytesfile(key_bytes, binaryFilelike):
     plaintext = otp.decrypt(ciphertext)
 
     assert plaintext == binaryFilelike.getvalue().decode()
+
+
+# # test docx file
+# def test_roundtrip_bytesfile(key_bytes, docxFilePath):
+#     docxFileHandle = open(docxFilePath, 'rb')
+
+#     otp = OTPEncryption(key_bytes)
+#     ciphertext = otp.encrypt(docxFileHandle)
+#     plaintext = otp.decrypt(ciphertext)
+
+#     assert 'hello world' == readDocx(plaintext)
+
+
+# test docx file bytes
+def test_roundtrip_bytesfile(key_bytes, docxFilePath):
+    docxBytes = open(docxFilePath, "rb").read()
+    # docxFileLike = BytesIO(docxBytes)
+
+    otp = OTPEncryption(key_bytes)
+    ciphertext = otp.encrypt(docxBytes)
+    plaintext = otp.decrypt(ciphertext)
+
+    assert "hello world" == readDocx(plaintext)
 
 
 def test_roundtrip_seperate_instances_bytesfile(key_bytes, binaryFilelike):

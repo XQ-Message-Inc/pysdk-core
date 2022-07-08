@@ -72,6 +72,7 @@ class OTPEncryption(Encryption):
         :return: encrypted message
         :rtype: bytes
         """
+
         if isinstance(msg, str):
             # string support
             text = msg.encode()
@@ -87,6 +88,8 @@ class OTPEncryption(Encryption):
         elif isinstance(msg, TextIOWrapper):
             # text io
             text = msg.read().encode()
+        elif isinstance(msg, bytes):
+            text = msg
         else:
             raise SDKEncryptionException(f"Message type {type(msg)} is not supported!")
 

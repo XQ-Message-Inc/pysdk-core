@@ -37,7 +37,7 @@ setup(
         "sphinx_rtd_theme",
         "requests",
     ],
-    tests_requires=["coverage", "mock", "pytest"],
+    tests_requires=["coverage", "mock", "pytest", "python-docx"],
     classifiers=[
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3.8",
