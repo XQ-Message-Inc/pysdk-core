@@ -63,11 +63,13 @@ class OTPEncryption(Encryption):
             b = b + self.xor_bytes(self.key, textChunk)
         return b
 
-    def encrypt(self, msg, encoding="utf-8"):
+    def encrypt(self, msg, encoding: str = None):
         """encryption method for encrypting a string or file
 
         :param msg: message to encrypt
         :type msg: str OR FileLike
+        :param encoding: (optional) encoding override for bytes decoding, default = None
+        :type encoding: str
         :raises SDKEncryptionException: unsupported message type
         :return: encrypted message
         :rtype: bytes
@@ -96,12 +98,17 @@ class OTPEncryption(Encryption):
 
         return self.xor_chunker(text)
 
-    def decrypt(self, text: bytes):
+    def decrypt(self, text: bytes, encoding=None):
         """decryption method for decrypting a string or file
 
         :param text: text to decrypt
         :type text: bytes
+        :param encoding: (optional) encoding override for bytes decoding, default = None
+        :type encoding: str
         :return: decrypted text
         :rtype: str
         """
-        return self.xor_chunker(text).decode()
+        if encoding:
+            return self.xor_chunker(text).decode().encode(encoding)
+        else:
+            return self.xor_chunker(text).decode()
