@@ -1,5 +1,5 @@
 # @xqmsg/pysdk-core
-A Python Implementation of XQ Message SDK (V.2) which provides convenient access to the XQ Message API.
+A Python Implementation of XQ Message SDK (V.2) which provides convenient access to the XQ Message API. [Full Package Documentation](https://xq-message-inc.github.io/pysdk-core/).
 
 **Supports Python 3.8 | 3.9 | 3.10**
 
@@ -66,6 +66,21 @@ There are detailed usage examples available in the [examples folder](https://git
  - [Magic Encrypt Text](examples/magic_encryption.py)
  - [Magic Encrypt File](examples/magic_encryption_file.py)
  - [Dashboard (Beta)](examples/dashboard.py)
+
+
+## Help
+
+#### Decoding Error
+```'utf-8' codec can't decode byte 0xd2 in position 16: invalid continuation byte```
+
+This is caused by an incorrect encoding being used with the provide byte string on `encryption`/`decryption`.  This is prevalent for zip files, like `.docx`.
+
+To resolve, pass the correct encoding (zip typically uses `CP437`):
+```
+    cipherbytes = otp.encrypt(docxBytes, encoding="CP437")
+    decrypted_bytes = otp.decrypt(ciphertext, encoding="CP437")
+```
+
 
 ## Development
 

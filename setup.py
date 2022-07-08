@@ -33,11 +33,10 @@ setup(
         "python-dotenv",
         "pre-commit",
         "pycryptodome",
-        "python-dotenv",
         "sphinx_rtd_theme",
         "requests",
     ],
-    tests_requires=["coverage", "mock", "pytest"],
+    tests_requires=["coverage", "mock", "pytest", "python-docx", "PyPDF2"],
     classifiers=[
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3.8",

@@ -19,7 +19,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install pytest coverage
+        pip install pytest coverage python-docx PyPDF2
         pip install -e .
 
     - name: Run Tests and Coverage

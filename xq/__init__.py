@@ -147,23 +147,34 @@ class XQ:
         :return: magic bundle, used for decryption
         :rtype: tuple
         """
-        #   1. generate key
+        # generate key
         KEY = self.generate_key_from_entropy()
-        encrypted_key_packet = self.api.create_packet(recipients=recipients, key=KEY)
+        bundle_suffix = None
 
-        #   2. store key packet
-        locator_token = self.api.add_packet(encrypted_key_packet)
-
-        #   3. encrypt
+        # encrypt
         try:
             if isinstance(thing_to_encrypt, str) and not os.path.isfile(
                 thing_to_encrypt
             ):
-                return (locator_token,) + self.encrypt_message(
+                ciphertext, nonce, tag = self.encrypt_message(
                     thing_to_encrypt, key=KEY, algorithm="AES"
                 )
+                bundle_suffix = (ciphertext, nonce, tag)
             else:
-                return (locator_token,) + self.encrypt_file(thing_to_encrypt, key=KEY)
+                encryptedText, expanded_key = self.encrypt_file(
+                    thing_to_encrypt, key=KEY
+                )
+                bundle_suffix = (encryptedText, expanded_key)
+                KEY = expanded_key
+
+            # store key packet
+            encrypted_key_packet = self.api.create_packet(
+                recipients=recipients, key=KEY
+            )
+            locator_token = self.api.add_packet(encrypted_key_packet)
+
+            return (locator_token,) + bundle_suffix
+
         except Exception as e:
             raise XQException(
                 f"Encrypting {type(thing_to_encrypt)} is not currently supported, or another error occured: {e}"

@@ -1,5 +1,5 @@
 from typing import TextIO, BinaryIO
-from io import StringIO, BytesIO, TextIOWrapper
+from io import StringIO, BytesIO, TextIOWrapper, BufferedReader
 from urllib.parse import quote_plus
 from pathlib import PosixPath, Path
 import warnings
@@ -63,15 +63,18 @@ class OTPEncryption(Encryption):
             b = b + self.xor_bytes(self.key, textChunk)
         return b
 
-    def encrypt(self, msg):
+    def encrypt(self, msg, encoding: str = None):
         """encryption method for encrypting a string or file
 
         :param msg: message to encrypt
         :type msg: str OR FileLike
+        :param encoding: (optional) encoding override for bytes decoding, default = None
+        :type encoding: str
         :raises SDKEncryptionException: unsupported message type
         :return: encrypted message
         :rtype: bytes
         """
+
         if isinstance(msg, str):
             # string support
             text = msg.encode()
@@ -87,17 +90,39 @@ class OTPEncryption(Encryption):
         elif isinstance(msg, TextIOWrapper):
             # text io
             text = msg.read().encode()
+        elif isinstance(msg, bytes):
+            if encoding is not None:
+                text = msg.decode(encoding).encode()  # convert to utf-8
+            else:
+                text = msg
+        elif isinstance(msg, BufferedReader):
+            # bytes file handle
+            msg = msg.read()
+            if encoding is not None:
+                text = msg.decode(encoding).encode()  # convert to utf-8
+            else:
+                text = msg
         else:
             raise SDKEncryptionException(f"Message type {type(msg)} is not supported!")
 
         return self.xor_chunker(text)
 
-    def decrypt(self, text: bytes):
+    def decrypt(self, text: bytes, encoding=None):
         """decryption method for decrypting a string or file
 
         :param text: text to decrypt
         :type text: bytes
+        :param encoding: (optional) encoding override for bytes decoding, default = None
+        :type encoding: str
         :return: decrypted text
         :rtype: str
         """
-        return self.xor_chunker(text).decode()
+        if encoding is not None:
+            return self.xor_chunker(text).decode().encode(encoding)
+        else:
+            try:
+                return self.xor_chunker(text).decode()
+            except UnicodeDecodeError as e:
+                raise Exception(
+                    f'Error decoding message, returned error: "{e}".  Ensure the correct encoding was passed to `encrypt` and `decrypt`'
+                )
