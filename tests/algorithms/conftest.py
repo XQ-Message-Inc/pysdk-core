@@ -38,6 +38,11 @@ def docxFilePath():
 
 
 @pytest.fixture()
+def pdfFilePath():
+    return f"{conftest_dir}/samples/pdf-example.pdf"
+
+
+@pytest.fixture()
 def largePlaintextFilelike():
     return StringIO(
         "".join(random.choice(string.ascii_lowercase) for i in range(99999))

@@ -1,16 +1,9 @@
 from pydoc import plain
 import pytest
 import docx
+import PyPDF2
 from io import BytesIO
 from xq.algorithms.otp_encryption import *
-
-# support function for reading docx file content
-def readDocx(filename):
-    doc = docx.Document(filename)
-    fullText = []
-    for para in doc.paragraphs:
-        fullText.append(para.text)
-    return "\n".join(fullText)
 
 
 def test_otp(key_bytes):
@@ -82,13 +75,22 @@ def test_roundtrip_bytesfile(key_bytes, binaryFilelike):
     assert plaintext == binaryFilelike.getvalue().decode()
 
 
+# support function for reading docx file content
+def readDocx(filename):
+    doc = docx.Document(filename)
+    fullText = []
+    for para in doc.paragraphs:
+        fullText.append(para.text)
+    return "\n".join(fullText)
+
+
 # test docx file
-def test_roundtrip_bytesfile(tmpdir, key_bytes, docxFilePath):
+def test_roundtrip_docxfile(tmpdir, key_bytes, docxFilePath):
     docxFileHandle = open(docxFilePath, "rb")
 
     otp = OTPEncryption(key_bytes)
-    ciphertext = otp.encrypt(docxFileHandle)
-    decrypted_bytes = otp.decrypt(ciphertext)
+    ciphertext = otp.encrypt(docxFileHandle, encoding="CP437")
+    decrypted_bytes = otp.decrypt(ciphertext, encoding="CP437")
 
     # write bytes to file
     with open(f"{tmpdir}/temp.docx", "wb") as fh:
@@ -98,7 +100,7 @@ def test_roundtrip_bytesfile(tmpdir, key_bytes, docxFilePath):
 
 
 # test docx file bytes
-def test_roundtrip_bytesfile(key_bytes, docxFilePath):
+def test_roundtrip_docxbytes(key_bytes, docxFilePath):
     docxBytes = open(docxFilePath, "rb").read()
 
     otp = OTPEncryption(key_bytes)
@@ -108,6 +110,43 @@ def test_roundtrip_bytesfile(key_bytes, docxFilePath):
     decrypted_bytes = otp.decrypt(ciphertext, encoding="CP437")
 
     assert decrypted_bytes == docxBytes
+
+
+# support function for reading pdf file content
+def readPDF(filename):
+    with open(filename, "rb") as fh:
+        pdfReader = PyPDF2.PdfFileReader(fh)
+        pageObj = pdfReader.getPage(0)
+
+        return pageObj.extractText()
+
+
+# test pdf file
+def test_roundtrip_pdffile(tmpdir, key_bytes, pdfFilePath):
+    docxFileHandle = open(pdfFilePath, "rb")
+
+    otp = OTPEncryption(key_bytes)
+    ciphertext = otp.encrypt(docxFileHandle, encoding="CP437")
+    decrypted_bytes = otp.decrypt(ciphertext, encoding="CP437")
+
+    # write bytes to file
+    with open(f"{tmpdir}/temp.pdf", "wb") as fh:
+        fh.write(decrypted_bytes)
+
+        assert "hello world " == readPDF(f"{tmpdir}/temp.pdf")
+
+
+# test pdf file bytes
+def test_roundtrip_pdfbytes(key_bytes, pdfFilePath):
+    pdfBytes = open(pdfFilePath, "rb").read()
+
+    otp = OTPEncryption(key_bytes)
+
+    # assert False
+    ciphertext = otp.encrypt(pdfBytes, encoding="CP437")
+    decrypted_bytes = otp.decrypt(ciphertext, encoding="CP437")
+
+    assert decrypted_bytes == pdfBytes
 
 
 def test_roundtrip_seperate_instances_bytesfile(key_bytes, binaryFilelike):

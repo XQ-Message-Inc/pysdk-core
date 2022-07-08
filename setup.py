@@ -35,9 +35,8 @@ setup(
         "pycryptodome",
         "sphinx_rtd_theme",
         "requests",
-        "python-doc",
     ],
-    tests_requires=["coverage", "mock", "pytest", "python-docx"],
+    tests_requires=["coverage", "mock", "pytest", "python-docx", "PyPDF2"],
     classifiers=[
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3.8",

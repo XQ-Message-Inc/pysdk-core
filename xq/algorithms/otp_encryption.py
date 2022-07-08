@@ -1,5 +1,5 @@
 from typing import TextIO, BinaryIO
-from io import StringIO, BytesIO, TextIOWrapper
+from io import StringIO, BytesIO, TextIOWrapper, BufferedReader
 from urllib.parse import quote_plus
 from pathlib import PosixPath, Path
 import warnings
@@ -91,6 +91,13 @@ class OTPEncryption(Encryption):
             # text io
             text = msg.read().encode()
         elif isinstance(msg, bytes):
+            if encoding is not None:
+                text = msg.decode(encoding).encode()  # convert to utf-8
+            else:
+                text = msg
+        elif isinstance(msg, BufferedReader):
+            # bytes file handle
+            msg = msg.read()
             if encoding is not None:
                 text = msg.decode(encoding).encode()  # convert to utf-8
             else:
