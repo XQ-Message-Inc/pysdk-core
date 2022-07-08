@@ -63,7 +63,7 @@ class OTPEncryption(Encryption):
             b = b + self.xor_bytes(self.key, textChunk)
         return b
 
-    def encrypt(self, msg):
+    def encrypt(self, msg, encoding="utf-8"):
         """encryption method for encrypting a string or file
 
         :param msg: message to encrypt
@@ -89,7 +89,8 @@ class OTPEncryption(Encryption):
             # text io
             text = msg.read().encode()
         elif isinstance(msg, bytes):
-            text = msg
+            text = msg.decode(encoding).encode()  # convert to utf-8
+
         else:
             raise SDKEncryptionException(f"Message type {type(msg)} is not supported!")
 
