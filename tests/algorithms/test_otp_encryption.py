@@ -87,8 +87,8 @@ def test_roundtrip_bytesfile(tmpdir, key_bytes, docxFilePath):
     docxFileHandle = open(docxFilePath, "rb")
 
     otp = OTPEncryption(key_bytes)
-    ciphertext = otp.encrypt(docxFileHandle, encoding="CP437")
-    decrypted_bytes = otp.decrypt(ciphertext, encoding="CP437")
+    ciphertext = otp.encrypt(docxFileHandle)
+    decrypted_bytes = otp.decrypt(ciphertext)
 
     # write bytes to file
     with open(f"{tmpdir}/temp.docx", "wb") as fh:
