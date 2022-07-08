@@ -33,9 +33,9 @@ setup(
         "python-dotenv",
         "pre-commit",
         "pycryptodome",
-        "python-dotenv",
         "sphinx_rtd_theme",
         "requests",
+        "python-doc",
     ],
     tests_requires=["coverage", "mock", "pytest", "python-docx"],
     classifiers=[
