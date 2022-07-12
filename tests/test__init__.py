@@ -97,9 +97,9 @@ def test_generate_key_from_entropy(mock_xq):
 
 
 def test_file_encryption(mock_xq, tmp_path):
-    text = "text to encrypt"
+    text = b"text to encrypt"
     fh = tmp_path / "filetoencrypt"
-    fh.write_text(text)
+    fh.write_bytes(text)
 
     encryptedText, expanded_key = mock_xq.encrypt_file(fh, key="thisisabytestext")
     decrypted_file = mock_xq.decrypt_file(encryptedText, key=expanded_key)
@@ -143,9 +143,9 @@ def test_magic_encryption_file(mock_xq, tmp_path):
 
     # make a file
     # tmp_file_path = "/tmp/filetoencrypt"
-    filecontent = "some text to encrypt"
+    filecontent = b"some text to encrypt"
     fh = tmp_path / "filetoencrypt"
-    fh.write_text(filecontent)
+    fh.write_bytes(filecontent)
 
     # encrypt
     magic_bundle = mock_xq.magic_encrypt(fh, recipients=["mock@xqtest.com"])
