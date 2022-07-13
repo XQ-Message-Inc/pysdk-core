@@ -215,34 +215,28 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.algorithms.otp_encryption.OTPEncryption.decrypt">
-<span class="sig-name descname"><span class="pre">decrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.otp_encryption.OTPEncryption.decrypt" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">decrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#xq.algorithms.otp_encryption.OTPEncryption.decrypt" title="Permalink to this definition"></a></dt>
 <dd><p>decryption method for decrypting a string or file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> (<em>bytes</em>) – text to decrypt</p></li>
-<li><p><strong>encoding</strong> (<em>str</em>) – (optional) encoding override for bytes decoding, default = None</p></li>
-</ul>
+<dd class="field-odd"><p><strong>text</strong> (<em>bytes</em>) – text to decrypt</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>decrypted text</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p>bytes</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.algorithms.otp_encryption.OTPEncryption.encrypt">
-<span class="sig-name descname"><span class="pre">encrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.otp_encryption.OTPEncryption.encrypt" title="Permalink to this definition"></a></dt>
-<dd><p>encryption method for encrypting a string or file</p>
+<span class="sig-name descname"><span class="pre">encrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.algorithms.otp_encryption.OTPEncryption.encrypt" title="Permalink to this definition"></a></dt>
+<dd><p>encryption method for encrypting a bytes-string or bytes-file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>msg</strong> (<em>str OR FileLike</em>) – message to encrypt</p></li>
-<li><p><strong>encoding</strong> (<em>str</em>) – (optional) encoding override for bytes decoding, default = None</p></li>
-</ul>
+<dd class="field-odd"><p><strong>msg</strong> (<em>bytes OR FileLike</em>) – message to encrypt</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.encryption.SDKEncryptionException" title="xq.exceptions.encryption.SDKEncryptionException"><strong>SDKEncryptionException</strong></a> – unsupported message type</p>
