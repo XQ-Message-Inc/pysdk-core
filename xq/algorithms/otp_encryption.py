@@ -63,13 +63,11 @@ class OTPEncryption(Encryption):
             b = b + self.xor_bytes(self.key, textChunk)
         return b
 
-    def encrypt(self, msg, encoding: str = None):
-        """encryption method for encrypting a string or file
+    def encrypt(self, msg: bytes):
+        """encryption method for encrypting a bytes-string or bytes-file
 
         :param msg: message to encrypt
-        :type msg: str OR FileLike
-        :param encoding: (optional) encoding override for bytes decoding, default = None
-        :type encoding: str
+        :type msg: bytes OR FileLike
         :raises SDKEncryptionException: unsupported message type
         :return: encrypted message
         :rtype: bytes
@@ -77,52 +75,56 @@ class OTPEncryption(Encryption):
 
         if isinstance(msg, str):
             # string support
+            warnings.warn(
+                "A string was submitted for encryption, the decrypted result will be UTF-8 bytes!"
+            )
             text = msg.encode()
         elif isinstance(msg, TextIO) or isinstance(msg, StringIO):
             # string file
+            warnings.warn(
+                "A string file was submitted for encryption, the decrypted result will be UTF-8 bytes!"
+            )
             text = msg.getvalue().encode()
         elif isinstance(msg, BinaryIO) or isinstance(msg, BytesIO):
             # binary file
             text = msg.getvalue()
         elif isinstance(msg, PosixPath):
             # unix file
-            text = msg.open("r").read().encode()
+            text = msg.open("rb").read()
         elif isinstance(msg, TextIOWrapper):
             # text io
+            warnings.warn(
+                "A TextIO file was submitted for encryption, the decrypted result will be UTF-8 bytes!"
+            )
             text = msg.read().encode()
         elif isinstance(msg, bytes):
-            if encoding is not None:
-                text = msg.decode(encoding).encode()  # convert to utf-8
-            else:
-                text = msg
+            text = msg
         elif isinstance(msg, BufferedReader):
             # bytes file handle
-            msg = msg.read()
-            if encoding is not None:
-                text = msg.decode(encoding).encode()  # convert to utf-8
-            else:
-                text = msg
+            text = msg.read()
         else:
-            raise SDKEncryptionException(f"Message type {type(msg)} is not supported!")
+            # raise SDKEncryptionException(f"Message type {type(msg)} is not supported!")
+            warnings.warn(
+                f"Message type {type(msg)} is not officially supported, but trying anyway"
+            )
+            text = msg
 
         return self.xor_chunker(text)
 
-    def decrypt(self, text: bytes, encoding=None):
+    def decrypt(self, text: bytes) -> bytes:
         """decryption method for decrypting a string or file
 
         :param text: text to decrypt
         :type text: bytes
-        :param encoding: (optional) encoding override for bytes decoding, default = None
-        :type encoding: str
         :return: decrypted text
-        :rtype: str
+        :rtype: bytes
         """
-        if encoding is not None:
-            return self.xor_chunker(text).decode().encode(encoding)
-        else:
-            try:
-                return self.xor_chunker(text).decode()
-            except UnicodeDecodeError as e:
-                raise Exception(
-                    f'Error decoding message, returned error: "{e}".  Ensure the correct encoding was passed to `encrypt` and `decrypt`'
-                )
+        return self.xor_chunker(text)
+
+        # TODO: this gives unpredictable behavior
+        # try:
+        #     # attempt to return string
+        #     return decrypted.decode()
+        # except UnicodeDecodeError as e:
+        #     # return bytes
+        #     return decrypted

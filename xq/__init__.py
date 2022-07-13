@@ -113,7 +113,7 @@ class XQ:
         :rtype: tuple
         """
         if isinstance(fileObj, str):
-            fileObj = open(fileObj, "r")
+            fileObj = open(fileObj, "rb")
 
         otp = OTPEncryption(key)
         ciphertext = otp.encrypt(fileObj)
@@ -132,7 +132,7 @@ class XQ:
         """
         otp = OTPEncryption(key)
         plaintext = otp.decrypt(encryptedText)
-        fh = io.StringIO(plaintext)
+        fh = io.BytesIO(plaintext)
 
         return fh
 

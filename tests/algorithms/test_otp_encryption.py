@@ -16,7 +16,7 @@ def test_roundtrip(key_bytes, plaintextFixiture):
     ciphertext = otp.encrypt(plaintextFixiture)
     plaintext = otp.decrypt(ciphertext)
 
-    assert plaintext == plaintextFixiture
+    assert plaintext == plaintextFixiture.encode()
 
 
 def test_roundtrip_seperate_instances(key_bytes, plaintextFixiture):
@@ -26,7 +26,7 @@ def test_roundtrip_seperate_instances(key_bytes, plaintextFixiture):
     otp = OTPEncryption(key_bytes)
     plaintext = otp.decrypt(ciphertext)
 
-    assert plaintext == plaintextFixiture
+    assert plaintext == plaintextFixiture.encode()
 
 
 # test file
@@ -35,7 +35,7 @@ def test_roundtrip_file(key_bytes, plaintextFilelike):
     ciphertext = otp.encrypt(plaintextFilelike)
     plaintext = otp.decrypt(ciphertext)
 
-    assert plaintext == plaintextFilelike.getvalue()
+    assert plaintext == plaintextFilelike.getvalue().encode()
 
 
 def test_roundtrip_seperate_instances_file(key_bytes, plaintextFilelike):
@@ -48,16 +48,16 @@ def test_roundtrip_seperate_instances_file(key_bytes, plaintextFilelike):
         otp = OTPEncryption(expandedKey)
         plaintext = otp.decrypt(ciphertext)
 
-        assert plaintext == plaintextFilelike.getvalue()
+        assert plaintext == plaintextFilelike.getvalue().encode()
 
 
 def test_roundtrip_fh(tmp_path, key_bytes):
-    file_content = "some text to encrypt"
+    file_content = b"some text to encrypt"
 
-    with open(f"{tmp_path}/filetoencrypt", "w") as fh_write:
+    with open(f"{tmp_path}/filetoencrypt", "wb") as fh_write:
         fh_write.write(file_content)
 
-    fh_read = open(f"{tmp_path}/filetoencrypt", "r")
+    fh_read = open(f"{tmp_path}/filetoencrypt", "rb")
 
     otp = OTPEncryption(key_bytes)
     ciphertext = otp.encrypt(fh_read)
@@ -72,7 +72,7 @@ def test_roundtrip_bytesfile(key_bytes, binaryFilelike):
     ciphertext = otp.encrypt(binaryFilelike)
     plaintext = otp.decrypt(ciphertext)
 
-    assert plaintext == binaryFilelike.getvalue().decode()
+    assert plaintext == binaryFilelike.getvalue()
 
 
 # support function for reading docx file content
@@ -89,8 +89,8 @@ def test_roundtrip_docxfile(tmpdir, key_bytes, docxFilePath):
     docxFileHandle = open(docxFilePath, "rb")
 
     otp = OTPEncryption(key_bytes)
-    ciphertext = otp.encrypt(docxFileHandle, encoding="CP437")
-    decrypted_bytes = otp.decrypt(ciphertext, encoding="CP437")
+    ciphertext = otp.encrypt(docxFileHandle)
+    decrypted_bytes = otp.decrypt(ciphertext)
 
     # write bytes to file
     with open(f"{tmpdir}/temp.docx", "wb") as fh:
@@ -106,8 +106,8 @@ def test_roundtrip_docxbytes(key_bytes, docxFilePath):
     otp = OTPEncryption(key_bytes)
 
     # assert False
-    ciphertext = otp.encrypt(docxBytes, encoding="CP437")
-    decrypted_bytes = otp.decrypt(ciphertext, encoding="CP437")
+    ciphertext = otp.encrypt(docxBytes)
+    decrypted_bytes = otp.decrypt(ciphertext)
 
     assert decrypted_bytes == docxBytes
 
@@ -126,8 +126,8 @@ def test_roundtrip_pdffile(tmpdir, key_bytes, pdfFilePath):
     docxFileHandle = open(pdfFilePath, "rb")
 
     otp = OTPEncryption(key_bytes)
-    ciphertext = otp.encrypt(docxFileHandle, encoding="CP437")
-    decrypted_bytes = otp.decrypt(ciphertext, encoding="CP437")
+    ciphertext = otp.encrypt(docxFileHandle)
+    decrypted_bytes = otp.decrypt(ciphertext)
 
     # write bytes to file
     with open(f"{tmpdir}/temp.pdf", "wb") as fh:
@@ -143,8 +143,8 @@ def test_roundtrip_pdfbytes(key_bytes, pdfFilePath):
     otp = OTPEncryption(key_bytes)
 
     # assert False
-    ciphertext = otp.encrypt(pdfBytes, encoding="CP437")
-    decrypted_bytes = otp.decrypt(ciphertext, encoding="CP437")
+    ciphertext = otp.encrypt(pdfBytes)
+    decrypted_bytes = otp.decrypt(ciphertext)
 
     assert decrypted_bytes == pdfBytes
 
@@ -159,7 +159,7 @@ def test_roundtrip_seperate_instances_bytesfile(key_bytes, binaryFilelike):
         otp = OTPEncryption(expandedKey)
         plaintext = otp.decrypt(ciphertext)
 
-        assert plaintext == binaryFilelike.getvalue().decode()
+        assert plaintext == binaryFilelike.getvalue()
 
 
 # test large files, over key length
@@ -186,4 +186,4 @@ def test_roundtrip_seperate_instances_bytesfile(key_bytes, largeBinaryFilelike):
         otp = OTPEncryption(expandedKey)
         plaintext = otp.decrypt(ciphertext)
 
-        assert plaintext == largeBinaryFilelike.getvalue().decode()
+        assert plaintext == largeBinaryFilelike.getvalue()
