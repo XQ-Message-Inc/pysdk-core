@@ -1,10 +1,8 @@
 import requests
-import os
 import requests
-import importlib
 
 from xq.config import API_KEY, DASHBOARD_API_KEY, API_BASE_URI
-from xq.exceptions import XQException, SDKConfigurationException
+from xq.exceptions import SDKConfigurationException
 
 
 class XQAPI:
@@ -51,7 +49,7 @@ class XQAPI:
         self.api_key = api_key
         self.dashboard_api_key = dashboard_api_key
         self.api_base_uri = api_base_uri
-        self.session = requests.Session()  # Create a session object
+        self.session = requests.Session()
         self.headers = {
             "authorization": "Bearer xyz123",
             "Content-Type": "application/json",
