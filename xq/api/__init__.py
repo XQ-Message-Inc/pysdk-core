@@ -16,10 +16,12 @@ class XQAPI:
         code_validate,
         exchange_key,
         create_packet,
+        create_and_store_packet,
         authorize_alias,
     )
     from xq.api.validation import (
         get_packet,
+        get_packets,
         add_packet,
         revoke_packet,
         grant_users,
@@ -49,6 +51,7 @@ class XQAPI:
         self.api_key = api_key
         self.dashboard_api_key = dashboard_api_key
         self.api_base_uri = api_base_uri
+        self.session = requests.Session()  # Create a session object
         self.headers = {
             "authorization": "Bearer xyz123",
             "Content-Type": "application/json",
@@ -74,7 +77,7 @@ class XQAPI:
         :return: requests obj
         :rtype: requests response
         """
-        r = requests.get(
+        r = self.session.get(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             params=params,
             headers=self.headers,
@@ -101,11 +104,12 @@ class XQAPI:
         :return: status code, response
         :rtype: tuple(int, string)
         """
-        r = requests.post(
+        r = self.session.post(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             json=json,
             data=data,
             headers=self.headers,
+            timeout=30
         )
 
         try:
@@ -129,7 +133,7 @@ class XQAPI:
         :return: status code, response
         :rtype: tuple(int, string)
         """
-        r = requests.put(
+        r = self.session.put(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             json=json,
             data=data,
@@ -153,7 +157,7 @@ class XQAPI:
         :return: status code, response
         :rtype: tuple(int, string)
         """
-        r = requests.delete(
+        r = self.session.delete(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             headers=self.headers,
         )
@@ -179,7 +183,7 @@ class XQAPI:
         :return: status code, response
         :rtype: tuple(int, string)
         """
-        r = requests.patch(
+        r = self.session.patch(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             data=data,
             json=json,
