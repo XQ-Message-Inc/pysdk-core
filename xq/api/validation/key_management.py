@@ -3,6 +3,7 @@ from typing import List
 from xq.exceptions import XQException
 from xq.api.validation import API_SUBDOMAIN
 
+
 def get_packet(api, locator_token: str):
     """fetch key with provided locator token
     https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODE-retrieve-a-key-with-its-token
@@ -38,8 +39,7 @@ def get_packets(api, locator_tokens: List[str]):
     :rtype: string
     """
     status_code, res = api.api_post(
-        f"keys", subdomain=API_SUBDOMAIN,
-        json=locator_tokens
+        f"keys", subdomain=API_SUBDOMAIN, json=locator_tokens
     )
 
     if status_code == 200:

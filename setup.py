@@ -1,8 +1,10 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Extension
 from setuptools.command.develop import develop
 from setuptools.command.install import install
-import versioneer
 from subprocess import check_call
+from Cython.Build import cythonize
+
+import versioneer
 
 
 class PostDevelopCommand(develop):
@@ -21,6 +23,18 @@ class PostInstallCommand(install):
         # prod install, keep vanilla
 
 
+extensions = [
+    Extension(
+        "xor",
+        sources=[
+            "xq/algorithms/c_functions/xor.pyx",
+            "xq/algorithms/c_functions/neon_wrapper.c",
+        ],
+        extra_compile_args=["-O3", "-march=native"],
+        extra_link_args=["-O3"],
+    )
+]
+
 setup(
     name="xq-sdk",
     version=versioneer.get_version(),
@@ -35,12 +49,14 @@ setup(
         "pycryptodome",
         "sphinx_rtd_theme",
         "requests",
+        "Cython",
     ],
-    tests_requires=["coverage", "mock", "pytest", "python-docx", "PyPDF2"],
+    tests_require=["coverage", "mock", "pytest", "python-docx", "PyPDF2"],
     classifiers=[
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
     ],
+    ext_modules=cythonize(extensions),
 )

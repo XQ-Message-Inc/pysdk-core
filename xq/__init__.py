@@ -118,7 +118,7 @@ class XQ:
         otp = OTPEncryption(key)
         ciphertext = otp.encrypt(fileObj)
 
-        return ciphertext, otp.key
+        return ciphertext
 
     def decrypt_file(self, encryptedText: bytes, key: bytes) -> io.StringIO:
         """decrypt a given bytes string back into a FileLike object

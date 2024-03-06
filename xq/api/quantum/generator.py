@@ -15,7 +15,7 @@ def get_entropy(api, entropy_bits=2):
     :rtype: base64 string
     """
     status_code, res = api.api_get(
-        "/v2", params={"ks": entropy_bits}, subdomain=API_SUBDOMAIN
+        "/", params={"ks": entropy_bits}, subdomain=API_SUBDOMAIN
     )
 
     if status_code == 200:

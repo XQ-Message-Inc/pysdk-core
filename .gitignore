@@ -5,6 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
+xq/algorithms/c_functions/xor.c
 
 # Distribution / packaging
 .Python

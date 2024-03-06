@@ -107,7 +107,7 @@ class XQAPI:
             json=json,
             data=data,
             headers=self.headers,
-            timeout=30
+            timeout=30,
         )
 
         try:
