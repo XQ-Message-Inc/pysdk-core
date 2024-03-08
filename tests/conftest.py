@@ -1,6 +1,7 @@
 from unittest import mock
 import pytest
 from unittest.mock import patch, MagicMock
+import requests
 import copy
 
 from xq import XQ
@@ -25,6 +26,7 @@ def mock_xqapi():
         xqapi = XQAPI()
         xqapi.headers = {}
         xqapi.api_base_uri = "mockbaseuri"
+        xqapi.session = requests.session()
         # obj.loaddata()  # This will call your mock method
         return xqapi
 

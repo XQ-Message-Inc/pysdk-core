@@ -51,7 +51,7 @@ setup(
         "requests",
         "Cython",
     ],
-    tests_require=["coverage", "mock", "pytest", "python-docx", "PyPDF2"],
+    tests_require=["coverage", "mock", "pytest", "python-docx", "PyPDF2", "requests"],
     classifiers=[
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3.8",
