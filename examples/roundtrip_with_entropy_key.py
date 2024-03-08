@@ -31,10 +31,7 @@ locator_token = xq.api.add_packet(encrypted_key_packet)
 message_to_encrypt = "sometexttoencrypt"
 print("\nencrypting message:", message_to_encrypt)
 encrypted_message, nonce, tag = xq.encrypt_message(
-    message_to_encrypt,
-    key=KEY,
-    algorithm="AES",
-    recipients=[email],
+    message_to_encrypt, key=KEY, algorithm="AES"
 )
 print("\nencrypted_message", encrypted_message)
 

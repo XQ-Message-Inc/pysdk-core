@@ -1,5 +1,4 @@
 from Crypto.Cipher import AES
-
 from xq.algorithms import Encryption
 from xq.exceptions import SDKEncryptionException
 

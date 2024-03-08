@@ -7,6 +7,12 @@ __pycache__/
 *.so
 xq/algorithms/c_functions/xor.c
 
+# Examples
+examples/demonstration_1.py
+examples/demonstration.py
+examples/fake_data.csv
+examples/output.csv
+
 # Distribution / packaging
 .Python
 build/

@@ -1,11 +1,8 @@
+import warnings
 from typing import TextIO, BinaryIO
 from io import StringIO, BytesIO, TextIOWrapper, BufferedReader
-from urllib.parse import quote_plus
-from pathlib import PosixPath, Path
-import warnings
-
+from pathlib import PosixPath
 from xq.algorithms import Encryption
-from xq.exceptions import SDKEncryptionException
 from xor import xor_simd_neon_python
 
 
@@ -83,5 +80,4 @@ class OTPEncryption(Encryption):
         :return: decrypted text
         :rtype: bytes
         """
-
         return xor_simd_neon_python(text, self.key)
