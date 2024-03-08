@@ -1,5 +1,4 @@
 import requests
-import requests
 
 from xq.config import API_KEY, DASHBOARD_API_KEY, API_BASE_URI
 from xq.exceptions import SDKConfigurationException
