@@ -1,5 +1,5 @@
 from pydoc import plain
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 import pytest
 import docx
 from io import BytesIO

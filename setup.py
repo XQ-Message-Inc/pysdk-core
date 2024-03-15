@@ -50,13 +50,17 @@ setup(
         "sphinx_rtd_theme",
         "requests",
         "Cython",
+        "pypdf",
+        "python-docx",
     ],
-    tests_require=["coverage", "mock", "pytest", "python-docx", "PyPDF2", "requests"],
+    tests_require=["coverage", "mock", "pytest", "python-docx", "pypdf", "python-docx"],
     classifiers=[
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
     ext_modules=cythonize(extensions),
 )

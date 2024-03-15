@@ -30,7 +30,7 @@ def create_packet(
         "type": type,
         "recipients": recipients,
         "expires": expires_hours,
-        "key": key.decode("utf-8"),
+        "key": key.decode("utf-8") if isinstance(key, bytes) else key,
     }
     status_code, res = api.api_post("packet", json=payload, subdomain=API_SUBDOMAIN)
 
@@ -68,7 +68,7 @@ def create_and_store_packet(
         "type": type,
         "recipients": recipients,
         "expires": expires_hours,
-        "key": key.decode("utf-8"),
+        "key": key.decode("utf-8") if isinstance(key, bytes) else key,
     }
     status_code, res = api.api_post("packet/add", json=payload, subdomain=API_SUBDOMAIN)
 

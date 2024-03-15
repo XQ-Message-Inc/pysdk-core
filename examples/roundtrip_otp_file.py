@@ -21,7 +21,8 @@ last_name = input(f"Please provide your last name:")
 xq.api.authorize_alias(email, first_name, last_name)
 
 # create key packet from qunatum entropy
-KEY = xq.generate_key_from_entropy()
+# KEY = xq.generate_key_from_entropy()
+KEY = "Test this is a string"
 encrypted_key_packet = xq.api.create_packet(recipients=[email], key=KEY)
 
 # make a file

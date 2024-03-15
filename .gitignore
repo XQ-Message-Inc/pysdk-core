@@ -10,6 +10,7 @@ xq/algorithms/c_functions/xor.c
 # Examples
 examples/demonstration_1.py
 examples/demonstration.py
+examples/faker_script.py
 examples/fake_data.csv
 examples/output.csv
 
