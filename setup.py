@@ -2,9 +2,30 @@ from setuptools import setup, find_packages, Extension
 from setuptools.command.develop import develop
 from setuptools.command.install import install
 from subprocess import check_call
-from Cython.Build import cythonize
 
 import versioneer
+
+
+def check_and_install_cython():
+    """Check if Cython is installed, if not, install it."""
+    try:
+        from Cython.Build import cythonize
+    except ImportError:
+        print("Cython is not installed. Installing Cython...")
+        check_call([sys.executable, "-m", "pip", "install", "Cython"])
+        # Check if Cython installation was successful
+        try:
+            from Cython.Build import cythonize
+        except ImportError:
+            raise ImportError(
+                "Failed to install Cython. Please install Cython manually before proceeding."
+            )
+
+    return cythonize
+
+
+# Custom Cython import that ensures it's installed before importing Cython related modules
+cythonize = check_and_install_cython()
 
 
 class PostDevelopCommand(develop):
@@ -50,8 +71,6 @@ setup(
         "sphinx_rtd_theme",
         "requests",
         "Cython",
-        "pypdf",
-        "python-docx",
     ],
     tests_require=["coverage", "mock", "pytest", "python-docx", "pypdf", "python-docx"],
     classifiers=[
