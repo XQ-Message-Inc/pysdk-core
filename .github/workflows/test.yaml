@@ -9,28 +9,28 @@ jobs:
         python-version: ["3.8", "3.9", "3.10"]
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v2
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install dependencies
-      run: |
-        pip install pytest coverage python-docx PyPDF2
-        pip install -e .
+      - name: Install dependencies
+        run: |
+          pip install pytest coverage python-docx pypdf wheel cython
+          pip install -e .
 
-    - name: Run Tests and Coverage
-      run: |
-        coverage run -m --omit="*/test*" --omit="xq/_version.py" pytest
-        coverage xml
+      - name: Run Tests and Coverage
+        run: |
+          coverage run -m --omit="*/test*" --omit="xq/_version.py" pytest
+          coverage xml
 
-    - name: Display Coverage
-      uses: 5monkeys/cobertura-action@master
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        minimum_coverage: 75
-        skip_covered: false
-        fail_below_threshold: true
+      - name: Display Coverage
+        uses: 5monkeys/cobertura-action@master
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          minimum_coverage: 75
+          skip_covered: false
+          fail_below_threshold: true
