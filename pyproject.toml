@@ -1,0 +1,49 @@
+[build-system]
+requires = [
+    "setuptools",
+    "wheel",
+    "Cython",
+    "versioneer",
+    "black",
+    "python-dotenv",
+    "pre-commit",
+    "pycryptodome",
+    "sphinx_rtd_theme",
+    "requests"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xq-sdk"
+dynamic = ["version"]
+description = "A Python Implementation of XQ Message SDK (V.2) which provides convenient access to the XQ Message API. [Full Package Documentation](https://xq-message-inc.github.io/pysdk-core/)."
+authors = [{name = "Traian Talpalaru", email = "traian@xqmsg.com"}]
+dependencies = [
+    "black",
+    "python-dotenv",
+    "pre-commit",
+    "pycryptodome",
+    "sphinx_rtd_theme",
+    "requests"
+]
+optional-dependencies = {}
+requires-python = ">=3.8"
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440"
+versionfile_source = "xq/_version.py"
+versionfile_build = "xq/_version.py"
+tag_prefix = ""
+parentdir_prefix = "xq-"
+
+[tool.setuptools.dynamic]
+version = {attr = "xq.__version__"}

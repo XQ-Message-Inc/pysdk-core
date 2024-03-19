@@ -3,7 +3,11 @@ from typing import TextIO, BinaryIO
 from io import StringIO, BytesIO, TextIOWrapper, BufferedReader
 from pathlib import PosixPath
 from xq.algorithms import Encryption
-from xor import xor_simd_neon_python
+
+try:
+    from xq.algorithms.xor import xor_simd_neon_python
+except ImportError:
+    xor_simd_neon_python = None
 
 
 class OTPEncryption(Encryption):
@@ -69,8 +73,10 @@ class OTPEncryption(Encryption):
                 f"Message type {type(msg)} is not officially supported, but trying anyway"
             )
             text = msg
-
-        return xor_simd_neon_python(text, self.key)
+        if xor_simd_neon_python is not None:
+            return xor_simd_neon_python(text, self.key)
+        else:
+            return
 
     def decrypt(self, text: bytes) -> bytes:
         """decryption method for decrypting a string or file
@@ -80,4 +86,7 @@ class OTPEncryption(Encryption):
         :return: decrypted text
         :rtype: bytes
         """
-        return xor_simd_neon_python(text, self.key)
+        if xor_simd_neon_python is not None:
+            return xor_simd_neon_python(text, self.key)
+        else:
+            return
