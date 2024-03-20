@@ -1,15 +1,14 @@
 import typing
 import io
 import os
+import base64
 from typing import List
-
 from ._version import get_versions
 from xq.config import API_KEY, DASHBOARD_API_KEY
 from xq.exceptions import SDKConfigurationException, SDKEncryptionException
 from xq.algorithms import OTPEncryption, Encryption, Algorithms
 from xq.exceptions import XQException
 from xq.api import XQAPI  # import all api endpoint integrations
-import base64
 
 __version__ = get_versions()["version"]
 del get_versions
@@ -51,7 +50,7 @@ class XQ:
 
         return generatedKey
 
-    def encrypt_message(self, text: str, key: bytes, algorithm: Algorithms = "AES"):
+    def encrypt_message(self, text: str, key: bytes, algorithm: Algorithms = "OTP"):
         """encrypt a string
 
         :param text: string to encrypt
@@ -63,19 +62,24 @@ class XQ:
         :return: ciphertext, nonce, tag from encryption
         :rtype: tuple(bytes)
         """
+        encryptionAlgorithm = Algorithms[algorithm](key)
+
         if isinstance(key, str):
             key = key.encode()
 
-        encryptionAlgorithm = Algorithms[algorithm](key)
-        ciphertext, nonce, tag = encryptionAlgorithm.encrypt(text)
-
-        return ciphertext, nonce, tag
+        if algorithm == "OTP":
+            ciphertext = encryptionAlgorithm.encrypt(text)
+            return ciphertext
+        if algorithm != "OTP":
+            encryptionAlgorithm = Algorithms[algorithm](key)
+            ciphertext, nonce, tag = encryptionAlgorithm.encrypt(text)
+            return ciphertext, nonce, tag
 
     def decrypt_message(
         self,
         encryptedText: bytes,
         key: bytes,
-        algorithm: Algorithms = "AES",
+        algorithm: Algorithms = "OTP",
         nonce: bytearray = None,
     ):
         """decrypt a previoulsy encrypted string
@@ -97,12 +101,18 @@ class XQ:
         if isinstance(key, str):
             key = key.encode()
 
-        encryptionAlgorithm = Algorithms[algorithm](key, nonce=nonce)
-        plaintext = encryptionAlgorithm.decrypt(encryptedText)
+        if algorithm != "OTP":
+            encryptionAlgorithm = Algorithms[algorithm](key, nonce=nonce)
+            plaintext = encryptionAlgorithm.decrypt(encryptedText)
+            return plaintext
+        else:
+            encryptionAlgorithm = Algorithms[algorithm](key)
+            plaintext = encryptionAlgorithm.decrypt(encryptedText)
+            return plaintext
 
-        return plaintext
-
-    def encrypt_file(self, fileObj: typing.TextIO, key: bytes) -> bytearray:
+    def encrypt_file(
+        self, fileObj: typing.TextIO, key: bytes, algorithm: Algorithms = "OTP"
+    ) -> bytearray:
         """encrypt the contents of a given file object
 
         :param fileObj: FileLike object to encrypt
@@ -112,15 +122,29 @@ class XQ:
         :return: encrypted text, encryption key
         :rtype: tuple
         """
+        if isinstance(key, str):
+            key = key.encode()
+
         if isinstance(fileObj, str):
             fileObj = open(fileObj, "rb")
 
-        otp = OTPEncryption(key)
-        ciphertext = otp.encrypt(fileObj)
+        if algorithm == "OTP":
+            otp = OTPEncryption(key)
+            ciphertext = otp.encrypt(fileObj)
+            return ciphertext, otp.key
 
-        return ciphertext, otp.key
+        if algorithm != "OTP":
+            encryptionAlgorithm = Algorithms[algorithm](key)
+            ciphertext, nonce, tag = encryptionAlgorithm.encrypt(fileObj)
+            return ciphertext, nonce, tag
 
-    def decrypt_file(self, encryptedText: bytes, key: bytes) -> io.StringIO:
+    def decrypt_file(
+        self,
+        encryptedText: bytes,
+        key: bytes,
+        algorithm: Algorithms = "OTP",
+        nonce: bytearray = None,
+    ) -> io.StringIO:
         """decrypt a given bytes string back into a FileLike object
 
         :param encryptedText: encrypted file contents
@@ -130,9 +154,14 @@ class XQ:
         :return: FileLike StringIO handle
         :rtype: StringIO
         """
-        otp = OTPEncryption(key)
-        plaintext = otp.decrypt(encryptedText)
-        fh = io.BytesIO(plaintext)
+        if algorithm == "OTP":
+            otp = OTPEncryption(key)
+            plaintext = otp.decrypt(encryptedText)
+            fh = io.BytesIO(plaintext)
+        if algorithm != "OTP":
+            encryptionAlgorithm = Algorithms[algorithm](key, nonce=nonce)
+            plaintext = encryptionAlgorithm.decrypt(encryptedText)
+            fh = plaintext
 
         return fh
 

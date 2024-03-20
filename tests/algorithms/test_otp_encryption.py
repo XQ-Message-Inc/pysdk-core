@@ -1,7 +1,7 @@
 from pydoc import plain
+from pypdf import PdfReader
 import pytest
 import docx
-import PyPDF2
 from io import BytesIO
 from xq.algorithms.otp_encryption import *
 
@@ -115,10 +115,9 @@ def test_roundtrip_docxbytes(key_bytes, docxFilePath):
 # support function for reading pdf file content
 def readPDF(filename):
     with open(filename, "rb") as fh:
-        pdfReader = PyPDF2.PdfFileReader(fh)
-        pageObj = pdfReader.getPage(0)
-
-        return pageObj.extractText()
+        pdfReader = PdfReader(fh)
+        pageObj = pdfReader.pages[0]
+        return pageObj.extract_text()
 
 
 # test pdf file
@@ -150,40 +149,25 @@ def test_roundtrip_pdfbytes(key_bytes, pdfFilePath):
 
 
 def test_roundtrip_seperate_instances_bytesfile(key_bytes, binaryFilelike):
-    with pytest.warns(UserWarning):
-        otp = OTPEncryption(key_bytes)
-        ciphertext = otp.encrypt(binaryFilelike)
+    otp = OTPEncryption(key_bytes)
+    ciphertext = otp.encrypt(binaryFilelike)
+    plaintext = otp.decrypt(ciphertext)
 
-        expandedKey = otp.key
-
-        otp = OTPEncryption(expandedKey)
-        plaintext = otp.decrypt(ciphertext)
-
-        assert plaintext == binaryFilelike.getvalue()
+    assert plaintext == binaryFilelike.getvalue()
 
 
 # test large files, over key length
 def test_roundtrip_seperate_instances_bytesfile(key_bytes, largePlaintextFilelike):
-    with pytest.warns(UserWarning):
-        otp = OTPEncryption(key_bytes)
-        ciphertext = otp.encrypt(largePlaintextFilelike)
+    otp = OTPEncryption(key_bytes)
+    ciphertext = otp.encrypt(largePlaintextFilelike)
+    plaintext = otp.decrypt(ciphertext)
 
-        expandedKey = otp.key
-
-        otp = OTPEncryption(expandedKey)
-        plaintext = otp.decrypt(ciphertext)
-
-        assert plaintext == largePlaintextFilelike.getvalue()
+    assert plaintext == largePlaintextFilelike.getvalue()
 
 
 def test_roundtrip_seperate_instances_bytesfile(key_bytes, largeBinaryFilelike):
-    with pytest.warns(UserWarning):
-        otp = OTPEncryption(key_bytes)
-        ciphertext = otp.encrypt(largeBinaryFilelike)
+    otp = OTPEncryption(key_bytes)
+    ciphertext = otp.encrypt(largeBinaryFilelike)
+    plaintext = otp.decrypt(ciphertext)
 
-        expandedKey = otp.key
-
-        otp = OTPEncryption(expandedKey)
-        plaintext = otp.decrypt(ciphertext)
-
-        assert plaintext == largeBinaryFilelike.getvalue()
+    assert plaintext == largeBinaryFilelike.getvalue()

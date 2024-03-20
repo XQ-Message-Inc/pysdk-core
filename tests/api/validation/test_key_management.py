@@ -15,6 +15,17 @@ def test_get_packet_error(mock_xqapi):
         get_packet(mock_xqapi, "mocklocatortoken")
 
 
+def test_get_packets_200(mock_xqapi):
+    mock_xqapi.api_post = MagicMock(return_value=(200, "mock server success"))
+    assert get_packets(mock_xqapi, "mocklocatortoken")
+
+
+def test_get_packets_error(mock_xqapi):
+    mock_xqapi.api_post = MagicMock(return_value=(500, "mock server error"))
+    with pytest.raises(XQException):
+        get_packets(mock_xqapi, "mocklocatortoken")
+
+
 def test_add_packet_200(mock_xqapi):
     mock_xqapi.api_post = MagicMock(return_value=(200, "mock server success"))
     assert add_packet(mock_xqapi, "mocklocatortoken")

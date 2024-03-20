@@ -1,11 +1,13 @@
+import warnings
 from typing import TextIO, BinaryIO
 from io import StringIO, BytesIO, TextIOWrapper, BufferedReader
-from urllib.parse import quote_plus
-from pathlib import PosixPath, Path
-import warnings
-
+from pathlib import PosixPath
 from xq.algorithms import Encryption
-from xq.exceptions import SDKEncryptionException
+
+try:
+    from xq.algorithms.xor import xor_simd_neon_python
+except ImportError:
+    xor_simd_neon_python = None
 
 
 class OTPEncryption(Encryption):
@@ -24,44 +26,7 @@ class OTPEncryption(Encryption):
         :type max_encryption_chunk_size: int, optional
         """
         self.max_encryption_chunk_size = max_encryption_chunk_size
-        key_string = key if isinstance(key, str) else key.decode()
-        self.expandedKey = self.expandKey(key_string, self.max_encryption_chunk_size)
-
         Encryption.__init__(self, key)
-
-        if self.expandedKey != self.originalKey:
-            warnings.warn(
-                "The provided key was expanded!  Make sure you save your reference of `Encryption.key`. i.e. `newKey = EncryptionObj.key`"
-            )
-
-    def xor_bytes(self, key: bytes, text: bytes):
-        """xor the provided text to key bytes
-        * replicated from jssdk-core
-
-        :param key: encryption key
-        :type key: bytes
-        :param text: text to encrypt
-        :type text: bytes
-        :return: padded text bytes
-        :rtype: bytes
-        """
-        return bytes([text[i] ^ key[i] for i in range(len(text))])
-
-    def xor_chunker(self, text: bytes):
-        """break text into maximum sized chunks, encrypt, and join
-
-        :param text: text to encrypt
-        :type text: bytes
-        :return: encrypted bytes
-        :rtype: bytes
-        """
-        b: bytes = b""
-        for textChunk in [
-            text[i : i + self.max_encryption_chunk_size]
-            for i in range(0, len(text), self.max_encryption_chunk_size)
-        ]:
-            b = b + self.xor_bytes(self.key, textChunk)
-        return b
 
     def encrypt(self, msg: bytes):
         """encryption method for encrypting a bytes-string or bytes-file
@@ -108,8 +73,10 @@ class OTPEncryption(Encryption):
                 f"Message type {type(msg)} is not officially supported, but trying anyway"
             )
             text = msg
-
-        return self.xor_chunker(text)
+        if xor_simd_neon_python is not None:
+            return xor_simd_neon_python(text, self.key)
+        else:
+            return
 
     def decrypt(self, text: bytes) -> bytes:
         """decryption method for decrypting a string or file
@@ -119,12 +86,7 @@ class OTPEncryption(Encryption):
         :return: decrypted text
         :rtype: bytes
         """
-        return self.xor_chunker(text)
-
-        # TODO: this gives unpredictable behavior
-        # try:
-        #     # attempt to return string
-        #     return decrypted.decode()
-        # except UnicodeDecodeError as e:
-        #     # return bytes
-        #     return decrypted
+        if xor_simd_neon_python is not None:
+            return xor_simd_neon_python(text, self.key)
+        else:
+            return

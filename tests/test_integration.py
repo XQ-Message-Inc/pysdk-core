@@ -58,6 +58,36 @@ def test_roundtrip():
 
 
 @pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
+def test_roundtrip_create_and_add_packet():
+    # init SDK (creds from ENV or input params)
+    xq = XQ()
+
+    # get user authentication token
+    email = "mockuser@xqtest.com"
+    xq.api.authorize_alias(email, "test", "runner")
+
+    # create key packet from qunatum entropy
+    KEY = xq.generate_key_from_entropy()
+    locator_token = xq.api.create_and_store_packet(recipients=[email], key=KEY)
+
+    # encrypt something
+    message_to_encrypt = "sometexttoencrypt"
+    encrypted_message, nonce, tag = xq.encrypt_message(
+        message_to_encrypt, key=KEY, algorithm="AES"
+    )
+
+    # get key packet by lookup
+    retrieved_key_packet = xq.api.get_packet(locator_token)
+
+    # deycrypt
+    decrypted_message = xq.decrypt_message(
+        encrypted_message, key=retrieved_key_packet, algorithm="AES", nonce=nonce
+    )
+
+    assert decrypted_message == message_to_encrypt
+
+
+@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
 def test_revoke_key():
     # init SDK (creds from ENV or input params)
     xq = XQ()

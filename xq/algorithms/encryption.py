@@ -12,8 +12,7 @@ class Encryption:
         :param key: encryption key
         :type key: bytes
         """
-        key_string = key if isinstance(key, str) else key.decode()
-        self.originalKey = key_string.encode()
+        self.originalKey = key.encode() if isinstance(key, str) else key
 
     @property
     def key(self):
@@ -22,38 +21,7 @@ class Encryption:
         :return: key used for encryption
         :rtype: bytes
         """
-        key = self.expandedKey if hasattr(self, "expandedKey") else self.originalKey
-
-        if isinstance(key, str):
-            key = key.encode()
-
-        return key
-
-    def expandKey(self, key=None, extendTo=2048):
-        """expands a key to a minimum defined length
-        * replicated from jssdk-core
-
-        :param key: encryption key
-        :type key: bytes
-        :param extendTo: length to expand key to, defaults to 2048
-        :type extendTo: int, optional
-        :return: expanded key
-        :rtype: bytes
-        """
-        key = key if key else self.key
-
-        if not isinstance(key, str):
-            key = key.decode()
-
-        key = re.sub("/\n$/", "", key)
-        if len(key) >= extendTo:
-            return key
-
-        expandedKey = key
-        while len(expandedKey) < extendTo:
-            expandedKey += self.shuffle(key)
-
-        return expandedKey.encode()
+        return self.originalKey
 
     def shuffle(self, string: str = None):
         """psudo-randomize a provided string
