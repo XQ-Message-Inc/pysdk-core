@@ -34,4 +34,4 @@ magic_bundle = xq.magic_encrypt(tmp_file_path, recipients=[email])
 # decrypt
 decrypted_file = xq.magic_decrypt(magic_bundle)
 
-assert decrypted_file.getvalue() == filecontent
+assert decrypted_file.getvalue().decode() == filecontent

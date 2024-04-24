@@ -22,7 +22,6 @@ xq.api.authorize_alias(email, first_name, last_name)
 
 # create key packet from qunatum entropy
 KEY = xq.generate_key_from_entropy()
-encrypted_key_packet = xq.api.create_packet(recipients=[email], key=KEY)
 
 # make a file
 tmp_file_path = "/tmp/filetoencrypt"
@@ -33,8 +32,8 @@ with open(tmp_file_path, "w") as fh_write:
 encryptedText, expanded_key = xq.encrypt_file(tmp_file_path, key=KEY)
 print("\nencrypted_message", encryptedText)
 
-# store key packet
-locator_token = xq.api.add_packet(encrypted_key_packet)
+# Create and store the encrypted key packet
+locator_token = xq.api.create_and_store_packet(recipients=[email], key=expanded_key)
 
 # get key packet by lookup
 retrieved_key_packet = xq.api.get_packet(locator_token)

@@ -2,6 +2,7 @@ import typing
 import io
 import os
 import base64
+import warnings
 from typing import List
 from ._version import get_versions
 from xq.config import API_KEY, DASHBOARD_API_KEY
@@ -68,10 +69,15 @@ class XQ:
             key = key.encode()
 
         if algorithm == "OTP":
-            ciphertext = encryptionAlgorithm.encrypt(text)
-            return ciphertext
+            ciphertext, expanded_key = encryptionAlgorithm.encrypt(text)
+            if key != expanded_key:
+                warnings.warn(
+                    f"Encryption key was resized from {len(key)} to {len(expanded_key)} bytes to match size of inputted data for security, please store the resized key for decryption."
+                )
+                return ciphertext, expanded_key
+            else:
+                return ciphertext
         if algorithm != "OTP":
-            encryptionAlgorithm = Algorithms[algorithm](key)
             ciphertext, nonce, tag = encryptionAlgorithm.encrypt(text)
             return ciphertext, nonce, tag
 
@@ -122,6 +128,7 @@ class XQ:
         :return: encrypted text, encryption key
         :rtype: tuple
         """
+        
         if isinstance(key, str):
             key = key.encode()
 
@@ -129,12 +136,18 @@ class XQ:
             fileObj = open(fileObj, "rb")
 
         if algorithm == "OTP":
-            otp = OTPEncryption(key)
-            ciphertext = otp.encrypt(fileObj)
-            return ciphertext, otp.key
+            encryptionAlgorithm = Algorithms[algorithm](key)
+            ciphertext, expanded_key = encryptionAlgorithm.encrypt(fileObj)
+            if key != expanded_key:
+                warnings.warn(
+                    f"Encryption key was resized from {len(key)} to {len(expanded_key)} bytes to match size of inputted data for security, please store the resized key for decryption."
+                )
+                return ciphertext, expanded_key
+            else:
+                return ciphertext
 
         if algorithm != "OTP":
-            encryptionAlgorithm = Algorithms[algorithm](key)
+            encryptionAlgorithm = Algorithms[algorithm](key, nonce=nonce)
             ciphertext, nonce, tag = encryptionAlgorithm.encrypt(fileObj)
             return ciphertext, nonce, tag
 

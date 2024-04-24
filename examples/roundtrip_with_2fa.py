@@ -29,10 +29,6 @@ new_key = xq.api.exchange_key()
 
 # create key packet
 MYSUPERSECRETKEY = b"itissixteenbytes"
-encrypted_key_packet = xq.api.create_packet(recipients=[email], key=MYSUPERSECRETKEY)
-
-# store key packet
-locator_token = xq.api.add_packet(encrypted_key_packet)
 
 # encrypt something
 message_to_encrypt = "sometexttoencrypt"
@@ -41,6 +37,9 @@ encrypted_message, nonce, tag = xq.encrypt_message(
     message_to_encrypt, key=MYSUPERSECRETKEY, algorithm="AES"
 )
 print("\nencrypted_message", encrypted_message)
+
+# Create and store the encrypted key packet
+locator_token = xq.api.create_and_store_packet(recipients=[email], key=MYSUPERSECRETKEY)
 
 # get key packet by lookup
 retrieved_key_packet = xq.api.get_packet(locator_token)

@@ -21,4 +21,4 @@ def xor_simd_neon_python(bytes aa, bytes bb):
     cdef bytearray result = bytearray(real_size)
     neon_xor(aa, bb, result, real_size)
 
-    return bytes(result)
+    return bytes(result), bb
