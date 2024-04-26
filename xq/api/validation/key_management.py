@@ -43,7 +43,12 @@ def get_packets(api, locator_tokens: List[str]):
     )
 
     if status_code == 200:
-        return res
+        merged_dict = {}
+
+        for single_dict in res['exported']:
+            for key, value in single_dict.items():
+                merged_dict[key] = value
+        return merged_dict
     else:
         raise XQException(message=f"Packet retrieval failed: {res}")
 

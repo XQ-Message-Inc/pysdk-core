@@ -114,7 +114,7 @@ def dashboard_login(
             "login", json=payload, subdomain=API_SUBDOMAIN
         )
     else:
-        auth_token = password.split("?access_token=", 1)[1]
+        auth_token = password.split("?access_token=", 1)[1].split("&token=")[0]
         status_code = 200
 
     if status_code == 200:

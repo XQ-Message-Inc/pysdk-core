@@ -87,6 +87,7 @@ class OTPEncryption(Encryption):
         :rtype: bytes
         """
         if xor_simd_neon_python is not None:
-            return xor_simd_neon_python(text, self.key)
+            result, key = xor_simd_neon_python(text, self.key)
+            return result
         else:
             return
