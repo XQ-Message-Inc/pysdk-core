@@ -1,8 +1,6 @@
 import re
 import random
 import math
-
-
 class Encryption:
     """parent class for all encryption algorithms"""
 

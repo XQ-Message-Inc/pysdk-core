@@ -12,7 +12,8 @@
 
 void neon_xor(const unsigned char* a, const unsigned char* b, unsigned char* result, int length) {
     int i = 0;
-    // NEON implementation
+
+   // NEON implementation
     #if defined(__ARM_NEON)
         for (; i <= length - 16; i += 16) {
             uint8x16_t va = vld1q_u8(&a[i]);
@@ -20,26 +21,19 @@ void neon_xor(const unsigned char* a, const unsigned char* b, unsigned char* res
             uint8x16_t vr = veorq_u8(va, vb);
             vst1q_u8(&result[i], vr);
         }
-        for (; i < length; ++i) {
-            result[i] = a[i] ^ b[i % 16];
-        }
-    // SSE2 implementation
-    #elif defined(__SSE2__)
+    #elif defined(__SSE2__) // SSE2 implementation
         for (; i <= length - 16; i += 16) {
             __m128i va = _mm_loadu_si128((__m128i const*)&a[i]);
-            __m128i vb = _mm_loadu_si128((__m128i const*)&b[i]);
+            __m128i vb = _mm_loadu_si128((__m128i const*)&b[i]); // Use the cyclic key buffer
             __m128i vr = _mm_xor_si128(va, vb);
             _mm_storeu_si128((__m128i*)&result[i], vr);
         }
-        for (; i < length; ++i) {
-            result[i] = a[i] ^ b[i % 16];
-        }
-    // Default implementation
-    #else
-        for (; i < length; ++i) {
-            result[i] = a[i] ^ b[i];
-        }
     #endif
+
+    // Handle remaining bytes with correct key cycling
+    for (; i < length; ++i) {
+        result[i] = a[i] ^ b[i];
+    }
 }
 
 

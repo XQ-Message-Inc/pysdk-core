@@ -29,11 +29,11 @@ with open(tmp_file_path, "w") as fh_write:
     fh_write.write("some text to encrypt")
 
 # encrypt file
-encryptedText, expanded_key = xq.encrypt_file(tmp_file_path, key=KEY)
+encryptedText = xq.encrypt_file(tmp_file_path, key=KEY)
 print("\nencrypted_message", encryptedText)
 
 # Create and store the encrypted key packet
-locator_token = xq.api.create_and_store_packet(recipients=[email], key=expanded_key)
+locator_token = xq.api.create_and_store_packet(recipients=[email], key=KEY)
 
 # get key packet by lookup
 retrieved_key_packet = xq.api.get_packet(locator_token)
