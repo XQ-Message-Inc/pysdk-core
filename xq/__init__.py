@@ -11,9 +11,13 @@ from xq.algorithms import OTPEncryption, Encryption, Algorithms
 from xq.exceptions import XQException
 from xq.api import XQAPI  # import all api endpoint integrations
 
+try:
+    from xq.algorithms.xor import expand_key_python
+except ImportError:
+    expand_key_python = None
+
 __version__ = get_versions()["version"]
 del get_versions
-
 
 class XQ:
     def __init__(self, api_key=API_KEY, dashboard_api_key=DASHBOARD_API_KEY):
@@ -50,6 +54,30 @@ class XQ:
         assert len(decodedEntropyBytes) == len(generatedKey)
 
         return generatedKey
+    
+    def expand_key(self, data: bytes, key: bytes) -> bytes:
+        """expand a key to the size of the text to be encrypted
+        
+        :param data: data you are going to encrypt
+        :type data: bytes
+        :param key: encryption key you were going to utilize to encrypt the data
+        :type key: bytes, defaults to None
+        :return: expanded key to utilize for encryption
+        :rtype: bytes
+        """
+        if isinstance(key, str):
+            key = key.encode()
+        
+        if isinstance(data, str):
+            data = data.encode()
+
+        if len(key) >= len(data):
+            return key
+        
+        if expand_key_python is not None:
+            return expand_key_python(data, key)
+        else:
+            return key
 
     def encrypt_message(self, text: str, key: bytes, algorithm: Algorithms = "OTP"):
         """encrypt a string
@@ -69,14 +97,7 @@ class XQ:
             key = key.encode()
 
         if algorithm == "OTP":
-            ciphertext, expanded_key = encryptionAlgorithm.encrypt(text)
-            if key != expanded_key:
-                warnings.warn(
-                    f"Encryption key was resized from {len(key)} to {len(expanded_key)} bytes to match size of inputted data for security, please store the resized key for decryption."
-                )
-                return ciphertext, expanded_key
-            else:
-                return ciphertext
+            return encryptionAlgorithm.encrypt(text)
         if algorithm != "OTP":
             ciphertext, nonce, tag = encryptionAlgorithm.encrypt(text)
             return ciphertext, nonce, tag
@@ -137,15 +158,8 @@ class XQ:
 
         if algorithm == "OTP":
             encryptionAlgorithm = Algorithms[algorithm](key)
-            ciphertext, expanded_key = encryptionAlgorithm.encrypt(fileObj)
-            if key != expanded_key:
-                warnings.warn(
-                    f"Encryption key was resized from {len(key)} to {len(expanded_key)} bytes to match size of inputted data for security, please store the resized key for decryption."
-                )
-                return ciphertext, expanded_key
-            else:
-                return ciphertext
-
+            ciphertext = encryptionAlgorithm.encrypt(fileObj)
+            return ciphertext
         if algorithm != "OTP":
             encryptionAlgorithm = Algorithms[algorithm](key, nonce=nonce)
             ciphertext, nonce, tag = encryptionAlgorithm.encrypt(fileObj)
@@ -203,11 +217,8 @@ class XQ:
                 )
                 bundle_suffix = (ciphertext, nonce, tag)
             else:
-                encryptedText, expanded_key = self.encrypt_file(
-                    thing_to_encrypt, key=KEY
-                )
-                bundle_suffix = (encryptedText, expanded_key)
-                KEY = expanded_key
+                encryptedText = self.encrypt_file(thing_to_encrypt, key=KEY)
+                bundle_suffix = (encryptedText, KEY)
 
             # store key packet
             encrypted_key_packet = self.api.create_packet(
@@ -239,7 +250,7 @@ class XQ:
 
         else:
             # OTP bundle - locator_token, encryptedText, expanded_key
-            locator_token, encrypted_message, expanded_key = magic_bundle
+            locator_token, encrypted_message, key = magic_bundle
 
         # get key packet by lookup
         retrieved_key_packet = self.api.get_packet(locator_token)

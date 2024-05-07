@@ -13,7 +13,7 @@ def test_otp(key_bytes):
 
 def test_roundtrip(key_bytes, plaintextFixiture):
     otp = OTPEncryption(key_bytes)
-    ciphertext, expanded_key = otp.encrypt(plaintextFixiture)
+    ciphertext = otp.encrypt(plaintextFixiture)
     plaintext = otp.decrypt(ciphertext)
 
     assert plaintext == plaintextFixiture.encode()
@@ -21,7 +21,7 @@ def test_roundtrip(key_bytes, plaintextFixiture):
 
 def test_roundtrip_seperate_instances(key_bytes, plaintextFixiture):
     otp = OTPEncryption(key_bytes)
-    ciphertext, expanded_key = otp.encrypt(plaintextFixiture)
+    ciphertext = otp.encrypt(plaintextFixiture)
 
     otp = OTPEncryption(key_bytes)
     plaintext = otp.decrypt(ciphertext)
@@ -32,7 +32,7 @@ def test_roundtrip_seperate_instances(key_bytes, plaintextFixiture):
 # test file
 def test_roundtrip_file(key_bytes, plaintextFilelike):
     otp = OTPEncryption(key_bytes)
-    ciphertext, expanded_key = otp.encrypt(plaintextFilelike)
+    ciphertext = otp.encrypt(plaintextFilelike)
     plaintext = otp.decrypt(ciphertext)
 
     assert plaintext == plaintextFilelike.getvalue().encode()
@@ -41,7 +41,7 @@ def test_roundtrip_file(key_bytes, plaintextFilelike):
 def test_roundtrip_seperate_instances_file(key_bytes, plaintextFilelike):
     with pytest.warns(UserWarning):
         otp = OTPEncryption(key_bytes)
-        ciphertext, expanded_key = otp.encrypt(plaintextFilelike)
+        ciphertext = otp.encrypt(plaintextFilelike)
 
         expandedKey = otp.key
 
@@ -60,7 +60,7 @@ def test_roundtrip_fh(tmp_path, key_bytes):
     fh_read = open(f"{tmp_path}/filetoencrypt", "rb")
 
     otp = OTPEncryption(key_bytes)
-    ciphertext, expanded_key = otp.encrypt(fh_read)
+    ciphertext = otp.encrypt(fh_read)
     plaintext = otp.decrypt(ciphertext)
 
     assert plaintext == file_content
@@ -69,7 +69,7 @@ def test_roundtrip_fh(tmp_path, key_bytes):
 # test binary file
 def test_roundtrip_bytesfile(key_bytes, binaryFilelike):
     otp = OTPEncryption(key_bytes)
-    ciphertext, expanded_key = otp.encrypt(binaryFilelike)
+    ciphertext = otp.encrypt(binaryFilelike)
     plaintext = otp.decrypt(ciphertext)
 
     assert plaintext == binaryFilelike.getvalue()
@@ -89,7 +89,7 @@ def test_roundtrip_docxfile(tmpdir, key_bytes, docxFilePath):
     docxFileHandle = open(docxFilePath, "rb")
 
     otp = OTPEncryption(key_bytes)
-    ciphertext, expanded_key = otp.encrypt(docxFileHandle)
+    ciphertext = otp.encrypt(docxFileHandle)
     decrypted_bytes = otp.decrypt(ciphertext)
 
     # write bytes to file
@@ -106,7 +106,7 @@ def test_roundtrip_docxbytes(key_bytes, docxFilePath):
     otp = OTPEncryption(key_bytes)
 
     # assert False
-    ciphertext, expanded_key = otp.encrypt(docxBytes)
+    ciphertext = otp.encrypt(docxBytes)
     decrypted_bytes = otp.decrypt(ciphertext)
 
     assert decrypted_bytes == docxBytes
@@ -125,7 +125,7 @@ def test_roundtrip_pdffile(tmpdir, key_bytes, pdfFilePath):
     docxFileHandle = open(pdfFilePath, "rb")
 
     otp = OTPEncryption(key_bytes)
-    ciphertext, expanded_key = otp.encrypt(docxFileHandle)
+    ciphertext = otp.encrypt(docxFileHandle)
     decrypted_bytes = otp.decrypt(ciphertext)
 
     # write bytes to file
@@ -142,7 +142,7 @@ def test_roundtrip_pdfbytes(key_bytes, pdfFilePath):
     otp = OTPEncryption(key_bytes)
 
     # assert False
-    ciphertext, expanded_key = otp.encrypt(pdfBytes)
+    ciphertext = otp.encrypt(pdfBytes)
     decrypted_bytes = otp.decrypt(ciphertext)
 
     assert decrypted_bytes == pdfBytes
@@ -150,7 +150,7 @@ def test_roundtrip_pdfbytes(key_bytes, pdfFilePath):
 
 def test_roundtrip_seperate_instances_bytesfile(key_bytes, binaryFilelike):
     otp = OTPEncryption(key_bytes)
-    ciphertext, expanded_key = otp.encrypt(binaryFilelike)
+    ciphertext = otp.encrypt(binaryFilelike)
     plaintext = otp.decrypt(ciphertext)
 
     assert plaintext == binaryFilelike.getvalue()
@@ -159,7 +159,7 @@ def test_roundtrip_seperate_instances_bytesfile(key_bytes, binaryFilelike):
 # test large files, over key length
 def test_roundtrip_seperate_instances_bytesfile(key_bytes, largePlaintextFilelike):
     otp = OTPEncryption(key_bytes)
-    ciphertext, expanded_key = otp.encrypt(largePlaintextFilelike)
+    ciphertext = otp.encrypt(largePlaintextFilelike)
     plaintext = otp.decrypt(ciphertext)
 
     assert plaintext == largePlaintextFilelike.getvalue()
@@ -167,7 +167,7 @@ def test_roundtrip_seperate_instances_bytesfile(key_bytes, largePlaintextFilelik
 
 def test_roundtrip_seperate_instances_bytesfile(key_bytes, largeBinaryFilelike):
     otp = OTPEncryption(key_bytes)
-    ciphertext, expanded_key = otp.encrypt(largeBinaryFilelike)
+    ciphertext = otp.encrypt(largeBinaryFilelike)
     plaintext = otp.decrypt(ciphertext)
 
     assert plaintext == largeBinaryFilelike.getvalue()

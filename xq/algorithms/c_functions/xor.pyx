@@ -10,6 +10,20 @@ cdef extern from "neon_wrapper.h":
 def xor_simd_neon_python(bytes aa, bytes bb):
     cdef int real_size = len(aa)
     cdef int key_size = len(bb)
+
+    if key_size < real_size:
+        bb = (bb * (real_size // key_size + 1))[:real_size]
+    elif key_size > real_size:
+        bb = bb[:real_size]
+
+    cdef bytearray result = bytearray(real_size)
+    neon_xor(aa, bb, result, real_size)
+
+    return bytes(result)
+
+def expand_key_python(bytes aa, bytes bb):
+    cdef int real_size = len(aa)
+    cdef int key_size = len(bb)
     cdef bytearray expanded_bb = bytearray(real_size)
 
     if key_size < real_size:
@@ -18,7 +32,4 @@ def xor_simd_neon_python(bytes aa, bytes bb):
     else:
         bb = bb[:real_size]
 
-    cdef bytearray result = bytearray(real_size)
-    neon_xor(aa, bb, result, real_size)
-
-    return bytes(result), bb
+    return bb

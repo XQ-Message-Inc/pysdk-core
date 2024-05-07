@@ -78,31 +78,38 @@ def test_generate_key_from_entropy(mock_xq):
     assert len(key) == len(base64.b64decode(entropy128))
     assert len(key) in [16, 24, 32]
 
+def test_expand_key(mock_xq):
+    entropy128 = "MmJjMjc4MzU1N2RkYjdkODYzY2YzNmZmOGRhMDMxZmM="
+    message = b"thisisareallylongtesttoensurethatthekeygetsexpanded thisisareallylongtesttoensurethatthekeygetsexpanded"
+    mock_xq.api.get_entropy = MagicMock(return_value=entropy128)
+    key = mock_xq.generate_key_from_entropy()
+    expandedKey = mock_xq.expand_key(message, key)
 
-# def test_decrypt_message(mock_xq):
-#     mock_xq.decrypt_message(
-#         "mockencryption",
-#         key=b"thisisabytestext",
-#         algorithm="AES",
-#         nonce=None
-#     )
+    len(key) <= len(expandedKey)
 
-# def test_decrypt_message_stringkey(mock_xq):
-#     mock_xq.decrypt_message(
-#         "mockencryption",
-#         key="thisisabytestext",
-#         algorithm="AES",
-#         nonce=None
-#     )
+def test_decrypt_message(mock_xq):
+    mock_xq.decrypt_message(
+        b"mockencryption",
+        key=b"thisisabytestext",
+        algorithm="OTP",
+        nonce=None
+    )
 
+def test_decrypt_message_stringkey(mock_xq):
+    mock_xq.decrypt_message(
+        b"mockencryption",
+        key=b"thisisabytestext",
+        algorithm="OTP",
+        nonce=None
+    )
 
 def test_file_encryption(mock_xq, tmp_path):
     text = b"text to encrypt"
     fh = tmp_path / "filetoencrypt"
     fh.write_bytes(text)
 
-    encryptedText, expanded_key = mock_xq.encrypt_file(fh, key="thisisabytestext")
-    decrypted_file = mock_xq.decrypt_file(encryptedText, key=expanded_key)
+    encryptedText = mock_xq.encrypt_file(fh, key="thisisabytestext")
+    decrypted_file = mock_xq.decrypt_file(encryptedText, key="thisisabytestext")
 
     assert decrypted_file.getvalue() == text
 

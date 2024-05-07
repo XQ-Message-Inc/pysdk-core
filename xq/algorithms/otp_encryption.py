@@ -9,7 +9,6 @@ try:
 except ImportError:
     xor_simd_neon_python = None
 
-
 class OTPEncryption(Encryption):
     """OTP implimented encryption algorithm
 
@@ -74,6 +73,10 @@ class OTPEncryption(Encryption):
             )
             text = msg
         if xor_simd_neon_python is not None:
+            if len(text) > len(self.key):
+                warnings.warn(
+                    f"Message length ({len(text)}) exceeds key length ({len(self.key)}). For enhanced security, consider expanding the key using the `expand_key` function."
+                )
             return xor_simd_neon_python(text, self.key)
         else:
             return
@@ -86,8 +89,8 @@ class OTPEncryption(Encryption):
         :return: decrypted text
         :rtype: bytes
         """
-        if xor_simd_neon_python is not None:
-            result, key = xor_simd_neon_python(text, self.key)
-            return result
+
+        if xor_simd_neon_python is not None: 
+            return xor_simd_neon_python(text, self.key)
         else:
             return
