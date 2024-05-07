@@ -295,6 +295,26 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="xq.XQ.expand_key">
+<span class="sig-name descname"><span class="pre">expand_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#xq.XQ.expand_key" title="Permalink to this definition"></a></dt>
+<dd><p>expand a key to the size of the text to be encrypted</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>bytes</em>) – data you are going to encrypt</p></li>
+<li><p><strong>key</strong> (<em>bytes</em><em>, </em><em>defaults to None</em>) – encryption key you were going to utilize to encrypt the data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>expanded key to utilize for encryption</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="xq.XQ.generate_key_from_entropy">
 <span class="sig-name descname"><span class="pre">generate_key_from_entropy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.generate_key_from_entropy" title="Permalink to this definition"></a></dt>
 <dd><p>helper method for automatically requesting entropy and shuffling key</p>
