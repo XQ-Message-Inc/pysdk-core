@@ -2,9 +2,13 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 
-# load dotenv file into ENV
-dotenv_path = join(dirname(__file__), "..", ".env")
-d = load_dotenv(dotenv_path)
+def configure_env(dotenv_path=None):
+    if dotenv_path:
+        load_dotenv(dotenv_path)
+    else:
+        load_dotenv()
+
+configure_env()
 
 # set global XQ config variables
 API_BASE_URI = "xqmsg.net/v2/"
