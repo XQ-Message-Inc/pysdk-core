@@ -2,18 +2,17 @@ from Crypto.Cipher import AES
 from Crypto.Protocol.KDF import PBKDF2
 from Crypto.Hash import SHA256
 from Crypto.Util import Counter
-import struct
+from xq.algorithms import Encryption
 import os
-import warnings
 
-class AESEncryption:
+class AESEncryption(Encryption):
     """AES implemented encryption algorithm"""
 
     def __init__(self, key: bytes, scheme: int = 1):
         """Initialize AESEncryption class with an encryption key"""
-        self.key = key
+        Encryption.__init__(self, key)
         self.scheme = scheme
-    
+        
     def add_header_salt(self, header=None, salt_size=16, iv_size=12):
         """Generates a salt and IV, and adds them to the header"""
 
@@ -55,16 +54,23 @@ class AESEncryption:
             password = password.encode()
 
         # Add salt and iv to the header
-        context = self.add_header_salt(header)
+        if self.scheme == 2:
+            context = self.add_header_salt(header, iv_size=16)
+        else:
+            context = self.add_header_salt(header)
         header = context['header']
         salt = context['salt']
         iv = context['iv']
 
         # Derive key using PBKDF2
-        key = self.derive_key(salt, password)
+        if self.scheme == 2:
+            key = self.derive_key(salt, password, iterations=2048)
+        else:
+            key = self.derive_key(salt, password)
 
         if self.scheme == 2:
-            counter = Counter.new(128, initial_value=int.from_bytes(iv, byteorder='big'))
+            counter_value = int.from_bytes(iv[:8], byteorder='big') << 64
+            counter = Counter.new(128, initial_value=counter_value)
             cipher = AES.new(key, AES.MODE_CTR, counter=counter)
         else:
             # Create the AES-GCM cipher object using the derived IV
@@ -97,6 +103,9 @@ class AESEncryption:
         
         if isinstance(password, str):
             password = password.encode()
+        
+        if self.scheme == 2:
+            iv_size = 16
 
         """Decrypts the provided data using AES-GCM"""
         # Find the position of 'Salted__' in the encrypted data
@@ -127,10 +136,14 @@ class AESEncryption:
             tag = data[ciphertext_end:]
 
         # Derive the key using PBKDF2 and the extracted salt
-        key = self.derive_key(salt , password)
+        if self.scheme == 2:
+            key = self.derive_key(salt, password, iterations=2048)
+        else:   
+            key = self.derive_key(salt , password)
 
         if self.scheme == 2:
-            counter = Counter.new(128, initial_value=int.from_bytes(iv, byteorder='big'))
+            counter_value = int.from_bytes(iv[:8], byteorder='big') << 64
+            counter = Counter.new(128, initial_value=counter_value)
             cipher = AES.new(key, AES.MODE_CTR, counter=counter)
             plaintext = cipher.decrypt(ciphertext)
         else:
@@ -140,120 +153,3 @@ class AESEncryption:
             plaintext = cipher.decrypt_and_verify(ciphertext, tag)
 
         return plaintext.decode("utf-8")
-    
-    def decryptFile(self, data: bytes, password: str = None):
-        # If no password is provided, use self.key
-        if password is None:
-            password = self.key
-        
-        if isinstance(password, str):
-            password = password.encode()
-        
-        if password[0] == ord('.'):
-            password = password[2:]
-
-        header = self.get_file_header(data, 1)
-        buf = data[header["length"]:]
-
-        # Originally the filename was encrypted to be obfuscated, but that is no longer the case as per client requests.
-        decrypted_filename = self.decrypt(header["filename"], password)
-
-        decrypted_data = self.decrypt(buf, password)
-        return decrypted_data.encode("utf-8")
-    
-    def encryptFile(self, filename, data, token, password):
-        if filename:
-            filename = filename.encode('utf-8')
-        
-        if filename:
-            try:
-                filename = self.encrypt(filename, password)
-            except Exception as err:
-                return None
-        
-        header = self.create_file_header(filename, token)
-
-        data = data.read()
-        encrypted = self.encrypt(data, password)
-
-        return header + encrypted 
-
-    
-    def create_file_header(self, filename, token, version=1):
-        token_size = 43
-        token_bytes = token.encode('utf-8') 
-
-        if isinstance(filename, str):
-            name_bytes = filename.encode('utf-8') 
-        else:
-            name_bytes = filename
-
-        name_size = len(name_bytes)
-        tail = 0
-
-        buffer = bytearray(4 + token_size + 4 + name_size + 1)
-
-        # Write version number + token size
-        struct.pack_into('I', buffer, tail, token_size + version)
-        tail += 4
-
-        # Write token bytes
-        buffer[tail:tail + token_size] = token_bytes
-        tail += token_size
-
-        # Write name size as a 4-byte integer
-        struct.pack_into('I', buffer, tail, name_size)
-        tail += 4
-
-        # Write the name bytes if name_size > 0
-        if name_size > 0:
-            buffer[tail:tail + name_size] = name_bytes
-        tail += name_size
-
-        # Write the algorithm mode (1 byte)
-        if tail < len(buffer):
-            buffer[tail] = 1
-        else:
-            raise IndexError(f"Tail index {tail} is out of range for buffer length {len(buffer)}")
-        
-
-        # Write the algorithm mode (1 byte)
-        # buffer[tail] = 1
-
-        return buffer
-
-    def get_file_header(self, data, version, token_size=43):
-        view = bytearray(data)
-        tail = 0
-        result = {"version": version, "length": 0}
-
-        # Read the version (extract first 4 bytes and unpack as Uint32)
-        v = struct.unpack('I', view[tail:tail + 4])[0] 
-        result["version"] = v - token_size
-        
-        if result["version"] != version and v != token_size:
-            warnings.warn(f'Cannot decrypt due to incompatible version: {result["version"]}')
-            return result 
-
-        tail += 4
-        # Read the token (decode from bytes to string)
-        result["token"] = view[tail:tail + token_size].decode('utf-8')
-        tail += token_size
-
-        # Read the nameSize (next 4 bytes as Uint32)
-        name_size = struct.unpack('I', view[tail:tail + 4])[0]
-        tail += 4
-
-        # If there is a filename, extract it
-        if name_size > 0:
-            result["filename"] = view[tail:tail + name_size]
-            tail += name_size
-        else:
-            result["filename"] = ""
-
-        if result["version"] > 0:
-            # Skip over the scheme (for compatibility)
-            tail += 1
-
-        result["length"] = tail
-        return result

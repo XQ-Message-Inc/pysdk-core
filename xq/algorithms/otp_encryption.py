@@ -27,7 +27,7 @@ class OTPEncryption(Encryption):
         self.max_encryption_chunk_size = max_encryption_chunk_size
         Encryption.__init__(self, key)
 
-    def encrypt(self, msg: bytes):
+    def encrypt(self, msg: bytes, password: bytes = None):
         """encryption method for encrypting a bytes-string or bytes-file
 
         :param msg: message to encrypt
@@ -36,6 +36,8 @@ class OTPEncryption(Encryption):
         :return: encrypted message
         :rtype: bytes
         """
+        if password is None:
+            password = self.key
 
         if isinstance(msg, str):
             # string support
@@ -77,11 +79,11 @@ class OTPEncryption(Encryption):
             #     warnings.warn(
             #         f"Message length ({len(text)}) exceeds key length ({len(self.key)}). For enhanced security, consider expanding the key using the `expand_key` function."
             #     )
-            return xor_simd_neon_python(text, self.key)
+            return xor_simd_neon_python(text, password)
         else:
             return
 
-    def decrypt(self, text: bytes) -> bytes:
+    def decrypt(self, text: bytes, password: bytes = None) -> bytes:
         """decryption method for decrypting a string or file
 
         :param text: text to decrypt
@@ -89,8 +91,13 @@ class OTPEncryption(Encryption):
         :return: decrypted text
         :rtype: bytes
         """
+        if password is None:
+            password = self.key
+        
+        if isinstance(text, bytearray):
+            text = bytes(text)  
 
         if xor_simd_neon_python is not None: 
-            return xor_simd_neon_python(text, self.key)
+            return xor_simd_neon_python(text, password)
         else:
             return

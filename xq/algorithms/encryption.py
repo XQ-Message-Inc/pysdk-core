@@ -1,6 +1,8 @@
 import re
 import random
 import math
+import struct
+import warnings
 class Encryption:
     """parent class for all encryption algorithms"""
 
@@ -49,3 +51,122 @@ class Encryption:
         except:
             # just a regular string
             return "".join(string_list)
+    
+    def encryptFile(self, filename, data, token, password):
+        if filename:
+                filename = filename.encode('utf-8')
+            
+        if filename:
+            try:
+                filename = self.encrypt(filename, password)
+            except Exception as err:
+                return None
+            
+        header = self.create_file_header(filename, token)
+
+        data = data.read()
+        encrypted = self.encrypt(data, password)
+
+        return header + encrypted 
+    
+    def decryptFile(self, data: bytes, password: str = None):
+        # If no password is provided, use self.key
+        if password is None:
+            password = self.key
+        
+        if isinstance(password, str):
+            password = password.encode()
+        
+        if password[0] == ord('.'):
+            password = password[2:]
+
+        header = self.get_file_header(data, 1)
+        buf = data[header["length"]:]
+
+        # Originally the filename was encrypted to be obfuscated, but that is no longer the case as per client requests.
+        decrypted_filename = self.decrypt(header["filename"], password)
+
+        decrypted_data = self.decrypt(buf, password)
+        
+        if isinstance(decrypted_data, str):
+            return decrypted_data.encode("utf-8")
+        else:
+            return decrypted_data
+    
+    def create_file_header(self, filename, token, version=1):
+        token_size = 43
+        token_bytes = token.encode('utf-8') 
+
+        if isinstance(filename, str):
+            name_bytes = filename.encode('utf-8') 
+        else:
+            name_bytes = filename
+
+        name_size = len(name_bytes)
+        tail = 0
+
+        buffer = bytearray(4 + token_size + 4 + name_size + 1)
+
+        # Write version number + token size
+        struct.pack_into('I', buffer, tail, token_size + version)
+        tail += 4
+
+        # Write token bytes
+        buffer[tail:tail + token_size] = token_bytes
+        tail += token_size
+
+        # Write name size as a 4-byte integer
+        struct.pack_into('I', buffer, tail, name_size)
+        tail += 4
+
+        # Write the name bytes if name_size > 0
+        if name_size > 0:
+            buffer[tail:tail + name_size] = name_bytes
+        tail += name_size
+
+        # Write the algorithm mode (1 byte)
+        if tail < len(buffer):
+            buffer[tail] = 1
+        else:
+            raise IndexError(f"Tail index {tail} is out of range for buffer length {len(buffer)}")
+
+        return buffer
+
+    def get_file_header(self, data, version, token_size=43):
+        if not isinstance(data, (bytes, bytearray)):
+            raise TypeError("Expected data to be bytes or bytearray.")
+        view = bytearray(data)
+
+        tail = 0
+        result = {"version": version, "length": 0}
+
+        # Read the version (extract first 4 bytes and unpack as Uint32)
+        v = struct.unpack('I', view[tail:tail + 4])[0] 
+        result["version"] = v - token_size
+        
+        if result["version"] != version and v != token_size:
+            warnings.warn(f'Cannot decrypt due to incompatible version: {result["version"]}')
+            return result 
+
+        tail += 4
+        # Read the token (decode from bytes to string)
+        result["token"] = view[tail:tail + token_size].decode('utf-8')
+        tail += token_size
+
+        # Read the nameSize (next 4 bytes as Uint32)
+        name_size = struct.unpack('I', view[tail:tail + 4])[0]
+        tail += 4
+
+        # If there is a filename, extract it
+        if name_size > 0:
+            result["filename"] = view[tail:tail + name_size]
+            tail += name_size
+        else:
+            result["filename"] = ""
+
+        if result["version"] > 0:
+            # Skip over the scheme (for compatibility)
+            tail += 1
+
+        result["length"] = tail
+        return result

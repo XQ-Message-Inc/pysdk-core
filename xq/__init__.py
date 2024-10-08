@@ -148,8 +148,9 @@ class XQ:
             fileObj = open(fileObj, "rb").read()
 
         if algorithm == "OTP":
+            locator_token = self.api.create_and_store_packet(recipients=recipients, key=((b".B") + key), type="file", subject=os.path.basename(fileObj.name))
             encryptionAlgorithm = Algorithms[algorithm](key)
-            ciphertext = encryptionAlgorithm.encrypt(fileObj)
+            ciphertext = encryptionAlgorithm.encryptFile(os.path.basename(fileObj.name), fileObj, locator_token, key)
             return ciphertext
         else:
             locator_token = self.api.create_and_store_packet(recipients=recipients, key=((b".2" if algorithm == "CTR" else b".1") + key), type="file", subject=os.path.basename(fileObj.name))
@@ -161,8 +162,7 @@ class XQ:
         self,
         encryptedText: bytes | BufferedReader,
         key: bytes = None,
-        algorithm: Algorithms = "OTP",
-        nonce: bytearray = None,
+        algorithm: Algorithms = "OTP"
     ) -> io.StringIO:
         """decrypt a given bytes string back into a FileLike object
 
@@ -179,9 +179,9 @@ class XQ:
             encryptedText = content_encrypted
 
         if algorithm == "OTP":
-            otp = OTPEncryption(key)
-            plaintext = otp.decrypt(encryptedText)
-            fh = io.BytesIO(plaintext)
+            encryptionAlgorithm = Algorithms[algorithm](key)
+            plaintext = encryptionAlgorithm.decryptFile(encryptedText)
+            fh = plaintext
         else:
             encryptionAlgorithm = Algorithms[algorithm](key, scheme=2 if algorithm == "CTR" else 1)
             plaintext = encryptionAlgorithm.decryptFile(encryptedText)

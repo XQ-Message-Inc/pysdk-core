@@ -10,6 +10,7 @@
 #
 ###############################################################################
 from xq import XQ
+import os
 
 # init SDK (creds from ENV or input params)
 xq = XQ()
@@ -18,26 +19,34 @@ xq = XQ()
 email = input(f"Please provide the email address that will be used for authentication:")
 first_name = input(f"Please provide your first name:")
 last_name = input(f"Please provide your last name:")
-xq.api.authorize_alias(email, first_name, last_name)
+xq.api.authorize_user(email, first_name, last_name)  # returns success boolean
+
+# 2FA
+pin = input(f"Please provide the PIN sent to the email address '{email}':")
+xq.api.code_validate(pin)
+
+# exchange for token
+xq.api.exchange_key()
 
 # create key packet from qunatum entropy
 KEY = xq.generate_key_from_entropy()
 
 # make a file
-tmp_file_path = "/tmp/filetoencrypt"
+tmp_file_path = os.path.dirname(os.path.abspath(__file__)) + "/fileToEncrypt.txt"
 with open(tmp_file_path, "w") as fh_write:
-    fh_write.write("some text to encrypt")
+    fh_write.write("A test file that will get encrypted with XQ")
 
 # encrypt file
-encryptedText = xq.encrypt_file(tmp_file_path, key=KEY)
-print("\nencrypted_message", encryptedText)
+with open(tmp_file_path, "r+b") as file:
+    encryptedText = xq.encrypt_file(file, KEY, algorithm="OTP", recipients=[email])
+    file.seek(0)
+    file.write(encryptedText)
+    file.truncate()
 
-# Create and store the encrypted key packet
-locator_token = xq.api.create_and_store_packet(recipients=[email], key=KEY)
+# Rename the file to add the .xqf extension
+new_file_path = tmp_file_path + ".xqf"
+os.rename(tmp_file_path, new_file_path)
 
-# get key packet by lookup
-retrieved_key_packet = xq.api.get_packet(locator_token)
-
-# deycrypt
-decrypted_file = xq.decrypt_file(encryptedText, key=retrieved_key_packet)
-print("\ndecrypted message:", decrypted_file.getvalue())
+with open(new_file_path, "rb") as file:
+    decrypted_file = xq.decrypt_file(file, algorithm="OTP")
+    print("\nDecrypted File Contents:", decrypted_file.decode())
