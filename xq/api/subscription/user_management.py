@@ -117,10 +117,10 @@ def authorize_device(
 
     if status_code == 200:
         payload = base64.b64decode(encrypted_payload)
+        
+        AES = AESEncryption(api.locator_key.encode())
 
-        AES = AESEncryption(XQ_LOCATOR_KEY.encode())
-
-        decrypted_data = AES.decrypt(payload, XQ_LOCATOR_KEY.encode())
+        decrypted_data = AES.decrypt(payload, api.locator_key.encode())
         
         data = json.loads(decrypted_data)
 

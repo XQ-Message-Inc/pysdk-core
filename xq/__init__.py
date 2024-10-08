@@ -5,7 +5,7 @@ import base64
 import struct
 from typing import List
 from ._version import get_versions
-from xq.config import API_KEY, DASHBOARD_API_KEY
+from xq.config import API_KEY, DASHBOARD_API_KEY, XQ_LOCATOR_KEY
 from xq.algorithms import OTPEncryption, Encryption, Algorithms
 from xq.exceptions import XQException
 from xq.api import XQAPI  # import all api endpoint integrations
@@ -22,7 +22,7 @@ __version__ = get_versions()["version"]
 del get_versions
 
 class XQ:
-    def __init__(self, api_key=API_KEY, dashboard_api_key=DASHBOARD_API_KEY):
+    def __init__(self, api_key=API_KEY, dashboard_api_key=DASHBOARD_API_KEY, locator_key=XQ_LOCATOR_KEY):
         """initializes the XQ SDK with API keys, in priority order:
             1. params
             2. ENV
@@ -32,8 +32,10 @@ class XQ:
         :type api_key: _type_, optional
         :param dashboard_api_key: _description_, defaults to ENV value
         :type dashboard_api_key: _type_, optional
+        :param locator_key: _description_, defaults to ENV value
+        :type locator_key: _type_, optional
         """
-        self.api = XQAPI(api_key, dashboard_api_key)  # bind api functions as methods
+        self.api = XQAPI(api_key, dashboard_api_key, locator_key)  # bind api functions as methods
 
     def generate_key_from_entropy(self):
         """helper method for automatically requesting entropy and shuffling key
