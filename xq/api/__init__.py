@@ -16,6 +16,7 @@ class XQAPI:
         create_and_store_packet,
         create_and_store_packets,
         authorize_alias,
+        authorize_device
     )
     from xq.api.validation import (
         get_packet,
@@ -37,7 +38,8 @@ class XQAPI:
         send_login_link,
         validate_access_token,
         login_verify,
-        get_communication_by_locator_token
+        get_communication_by_locator_token,
+        announce_device
     )
 
     def __init__(

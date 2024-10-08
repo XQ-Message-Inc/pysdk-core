@@ -45,7 +45,7 @@ def create_and_store_packet(
     recipients: list,
     expires_hours: int = 24,
     key: bytes = None,
-    type: int = 2,
+    type: int|str = 'msg',
     subject: str = None,
 ):
     """creates an encrypted packet from a secret key
@@ -64,7 +64,7 @@ def create_and_store_packet(
     :rtype: text
     """
     payload = {
-        "meta": {"subject": subject},
+        "meta": {"subject": subject,"title": subject},
         "type": type,
         "recipients": recipients,
         "expires": expires_hours,

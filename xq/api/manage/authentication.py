@@ -1,6 +1,6 @@
 from xq.exceptions import XQException
 from xq.api.manage import API_SUBDOMAIN
-from xq.config import DASHBOARD_API_KEY
+from xq.config import DASHBOARD_API_KEY, API_KEY
 
 
 def dashboard_signup(api, email: str, password: str = None, emailOptIn=True):
@@ -128,9 +128,6 @@ def dashboard_login(
 
 def login_verify(api):
     """verify a user's login and exchange fake auth_token for a real auth_token
-
-    WARNING: this is not documented anyway.  was found by reverse engineering the magic link auth flow
-
     :param api: XQAPI instance
     :type api: XQAPI
     :raises XQException: unable to verify login
@@ -174,3 +171,43 @@ def validate_access_token(api):
         return True
     else:
         raise XQException(message=f"Unable to validate access token: {res}")
+    
+def announce_device(api, afirst: str = "", alast: str = "", aphone: str = ""):
+    """static method for announcing the trusted device to the dashboard, registering
+    the device as a team member.
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param afirst (optional): The name of the device
+    :type afirst: str
+    :param alast (optional): The last name of the device
+    :type alast: str
+    :param aphone (optional): The phone number of the device
+    :type aphone: str
+    :return: api response status code
+    :rtype: str
+    """
+    api.headers.update(
+        {"api-key": DASHBOARD_API_KEY}
+    )  # dashboard api token needs to be set in the header
+
+    payload = {
+        "afirst": afirst,
+        "alast": alast,
+        'aphone': aphone 
+    }
+
+    status_code = api.api_post("trusted/announce", json=payload, subdomain=API_SUBDOMAIN)
+    
+    api.headers.update(
+        {"api-key": API_KEY}
+    )
+
+    if status_code == 200 or 204:
+        return status_code
+    if status_code == 401:
+        raise XQException(message="The provided API Key is not valid")
+    else:
+        raise XQException(
+            message=f"Failed to verify API key, error: {status_code}"
+        )

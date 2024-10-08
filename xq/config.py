@@ -10,3 +10,4 @@ d = load_dotenv(dotenv_path)
 API_BASE_URI = "xqmsg.net/v2/"
 API_KEY = os.environ.get("XQ_API_KEY", None)
 DASHBOARD_API_KEY = os.environ.get("XQ_DASHBOARD_API_KEY", None)
+XQ_LOCATOR_KEY= os.environ.get("XQ_LOCATOR_KEY", None)

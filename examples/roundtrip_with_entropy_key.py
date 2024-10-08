@@ -26,7 +26,7 @@ KEY = xq.generate_key_from_entropy()
 # encrypt something
 message_to_encrypt = "sometexttoencrypt"
 print("\nencrypting message:", message_to_encrypt)
-encrypted_message, nonce, tag = xq.encrypt_message(
+encrypted_message = xq.encrypt_message(
     message_to_encrypt, key=KEY, algorithm="AES"
 )
 print("\nencrypted_message", encrypted_message)
@@ -39,6 +39,6 @@ retrieved_key_packet = xq.api.get_packet(locator_token)
 
 # deycrypt
 decrypted_message = xq.decrypt_message(
-    encrypted_message, key=retrieved_key_packet, algorithm="AES", nonce=nonce
+    encrypted_message, key=retrieved_key_packet, algorithm="AES"
 )
 print("\ndecrypted message:", decrypted_message)

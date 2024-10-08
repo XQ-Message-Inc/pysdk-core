@@ -73,10 +73,10 @@ class OTPEncryption(Encryption):
             )
             text = msg
         if xor_simd_neon_python is not None:
-            if len(text) > len(self.key):
-                warnings.warn(
-                    f"Message length ({len(text)}) exceeds key length ({len(self.key)}). For enhanced security, consider expanding the key using the `expand_key` function."
-                )
+            # if len(text) > len(self.key):
+            #     warnings.warn(
+            #         f"Message length ({len(text)}) exceeds key length ({len(self.key)}). For enhanced security, consider expanding the key using the `expand_key` function."
+            #     )
             return xor_simd_neon_python(text, self.key)
         else:
             return

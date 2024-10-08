@@ -42,7 +42,7 @@ def test_roundtrip():
 
     # encrypt something
     message_to_encrypt = "sometexttoencrypt"
-    encrypted_message, nonce, tag = xq.encrypt_message(
+    encrypted_message= xq.encrypt_message(
         message_to_encrypt, key=KEY, algorithm="AES"
     )
 
@@ -51,7 +51,7 @@ def test_roundtrip():
 
     # deycrypt
     decrypted_message = xq.decrypt_message(
-        encrypted_message, key=retrieved_key_packet, algorithm="AES", nonce=nonce
+        encrypted_message, key=retrieved_key_packet, algorithm="AES"
     )
 
     assert decrypted_message == message_to_encrypt
@@ -72,7 +72,7 @@ def test_roundtrip_create_and_add_packet():
 
     # encrypt something
     message_to_encrypt = "sometexttoencrypt"
-    encrypted_message, nonce, tag = xq.encrypt_message(
+    encrypted_message= xq.encrypt_message(
         message_to_encrypt, key=KEY, algorithm="AES"
     )
 
@@ -81,7 +81,7 @@ def test_roundtrip_create_and_add_packet():
 
     # deycrypt
     decrypted_message = xq.decrypt_message(
-        encrypted_message, key=retrieved_key_packet, algorithm="AES", nonce=nonce
+        encrypted_message, key=retrieved_key_packet, algorithm="AES"
     )
 
     assert decrypted_message == message_to_encrypt
