@@ -10,31 +10,30 @@ class AESEncryption(Encryption):
 
     def __init__(self, key: bytes, scheme: int = 1):
         """Initialize AESEncryption class with an encryption key"""
+        
         Encryption.__init__(self, key)
         self.scheme = scheme
         
     def add_header_salt(self, header=None, salt_size=16, iv_size=12):
         """Generates a salt and IV, and adds them to the header"""
 
-        # Generate a random salt of the specified size
         salt = os.urandom(salt_size)
-        # Generate a random IV of the specified size
         iv = os.urandom(iv_size)
         salt_code = b'Salted__'
 
         if header is None:
             # Create a new header with salt_code, salt, and iv
             header = bytearray(8 + salt_size + iv_size)
-            header[:8] = salt_code  # Insert "Salted__" code
-            header[8:8 + salt_size] = salt  # Insert salt
-            header[8 + salt_size:] = iv  # Insert iv
+            header[:8] = salt_code 
+            header[8:8 + salt_size] = salt  
+            header[8 + salt_size:] = iv 
         else:
             # Expand the existing header and append salt_code, salt, and iv
             expanded = bytearray(len(header) + 8 + salt_size + iv_size)
-            expanded[:len(header)] = header  # Copy existing header
-            expanded[len(header):len(header) + 8] = salt_code  # Insert "Salted__" code
-            expanded[len(header) + 8:len(header) + 8 + salt_size] = salt  # Insert salt
-            expanded[len(header) + 8 + salt_size:] = iv  # Insert iv
+            expanded[:len(header)] = header 
+            expanded[len(header):len(header) + 8] = salt_code 
+            expanded[len(header) + 8:len(header) + 8 + salt_size] = salt  
+            expanded[len(header) + 8 + salt_size:] = iv  
             header = expanded
 
         return {"header": header, "salt": salt, "iv": iv}
@@ -46,7 +45,6 @@ class AESEncryption(Encryption):
 
     def encrypt(self, data: str, password: str=None, header=None):
         """Encrypts the provided data using AES-GCM"""
-        # If no password is provided, use self.key
         if password is None:
             password = self.key
         
@@ -73,10 +71,8 @@ class AESEncryption(Encryption):
             counter = Counter.new(128, initial_value=counter_value)
             cipher = AES.new(key, AES.MODE_CTR, counter=counter)
         else:
-            # Create the AES-GCM cipher object using the derived IV
             cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
         
-        # Encrypt the data
         if isinstance(data, str):
             data = data.encode()
         
@@ -90,14 +86,13 @@ class AESEncryption(Encryption):
         else:
             ciphertext, tag = cipher.encrypt_and_digest(data)
             # Return the combined result: Header + Ciphertext + Tag
-            combined.extend(header)       # Add the header (with "Salted__", salt, and IV)
-            combined.extend(ciphertext)   # Add ciphertext
-            combined.extend(tag)          # Add authentication tag
+            combined.extend(header)      
+            combined.extend(ciphertext)   
+            combined.extend(tag)          
 
         return combined
 
     def decrypt(self, data: bytes, password: str = None, salt_size=16, iv_size=12):
-        # If no password is provided, use self.key
         if password is None:
             password = self.key
         
@@ -107,32 +102,25 @@ class AESEncryption(Encryption):
         if self.scheme == 2:
             iv_size = 16
 
-        """Decrypts the provided data using AES-GCM"""
-        # Find the position of 'Salted__' in the encrypted data
         salted_marker = b'Salted__'
         start_pos = data.find(salted_marker)
         if start_pos == -1:
             raise ValueError("Invalid data format")
         
-        # Skip to after 'Salted__' (8 bytes)
         salt_start = start_pos + len(salted_marker)
     
-        # Extract salt (16 bytes after the 'Salted__' marker)
         salt = data[salt_start:salt_start + salt_size]
 
-        # Extract IV (12 bytes after the salt)
         iv_start = salt_start + salt_size
         iv = data[iv_start:iv_start + iv_size]
 
-        # Extract ciphertext (everything after IV, excluding TAG_LENGTH at the end)
         ciphertext_start = iv_start + iv_size
 
         if self.scheme == 2:
             ciphertext = data[ciphertext_start:]
         else:
-            ciphertext_end = -16  # TAG_LENGTH
+            ciphertext_end = -16
             ciphertext = data[ciphertext_start:ciphertext_end]
-            # Extract the authentication tag (last 16 bytes)
             tag = data[ciphertext_end:]
 
         # Derive the key using PBKDF2 and the extracted salt
@@ -147,9 +135,7 @@ class AESEncryption(Encryption):
             cipher = AES.new(key, AES.MODE_CTR, counter=counter)
             plaintext = cipher.decrypt(ciphertext)
         else:
-            # Create the AES-GCM cipher object for decryption
             cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
-            # Decrypt the ciphertext and verify the tag
             plaintext = cipher.decrypt_and_verify(ciphertext, tag)
 
         return plaintext.decode("utf-8")

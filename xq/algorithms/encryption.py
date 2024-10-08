@@ -70,7 +70,6 @@ class Encryption:
         return header + encrypted 
     
     def decryptFile(self, data: bytes, password: str = None):
-        # If no password is provided, use self.key
         if password is None:
             password = self.key
         
@@ -107,24 +106,19 @@ class Encryption:
 
         buffer = bytearray(4 + token_size + 4 + name_size + 1)
 
-        # Write version number + token size
         struct.pack_into('I', buffer, tail, token_size + version)
         tail += 4
 
-        # Write token bytes
         buffer[tail:tail + token_size] = token_bytes
         tail += token_size
 
-        # Write name size as a 4-byte integer
         struct.pack_into('I', buffer, tail, name_size)
         tail += 4
 
-        # Write the name bytes if name_size > 0
         if name_size > 0:
             buffer[tail:tail + name_size] = name_bytes
         tail += name_size
 
-        # Write the algorithm mode (1 byte)
         if tail < len(buffer):
             buffer[tail] = 1
         else:
@@ -149,15 +143,13 @@ class Encryption:
             return result 
 
         tail += 4
-        # Read the token (decode from bytes to string)
+        
         result["token"] = view[tail:tail + token_size].decode('utf-8')
         tail += token_size
 
-        # Read the nameSize (next 4 bytes as Uint32)
         name_size = struct.unpack('I', view[tail:tail + 4])[0]
         tail += 4
 
-        # If there is a filename, extract it
         if name_size > 0:
             result["filename"] = view[tail:tail + name_size]
             tail += name_size
