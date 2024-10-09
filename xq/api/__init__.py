@@ -1,6 +1,6 @@
 import requests
 
-from xq.config import API_KEY, DASHBOARD_API_KEY, API_BASE_URI
+from xq.config import API_KEY, DASHBOARD_API_KEY, XQ_LOCATOR_KEY, API_BASE_URI
 from xq.exceptions import SDKConfigurationException
 
 
@@ -16,6 +16,7 @@ class XQAPI:
         create_and_store_packet,
         create_and_store_packets,
         authorize_alias,
+        authorize_device
     )
     from xq.api.validation import (
         get_packet,
@@ -37,18 +38,21 @@ class XQAPI:
         send_login_link,
         validate_access_token,
         login_verify,
-        get_communication_by_locator_token
+        get_communication_by_locator_token,
+        announce_device
     )
 
     def __init__(
         self,
         api_key=API_KEY,
         dashboard_api_key=DASHBOARD_API_KEY,
+        locator_key=XQ_LOCATOR_KEY,
         api_base_uri=API_BASE_URI,
     ):
 
         self.api_key = api_key
         self.dashboard_api_key = dashboard_api_key
+        self.locator_key = locator_key
         self.api_base_uri = api_base_uri
         self.session = requests.Session()
         self.headers = {

@@ -15,37 +15,30 @@ from xq import XQ
 xq = XQ()
 
 # get user authentication token
-email = input(f"Please provide the email address that will be used for authentication:")
-first_name = input(f"Please provide your first name:")
-last_name = input(f"Please provide your last name:")
-xq.api.authorize_user(email, first_name, last_name)  # returns success boolean
-
-# 2FA
-pin = input(f"Please provide the PIN sent to the email address '{email}':")
-xq.api.code_validate(pin)
-
-# exchange for token
-new_key = xq.api.exchange_key()
+device = input(f"Please provide the device name that will be used for authentication:")
+businessId = input(f"Please provide the business ID that will be used for authentication:")
+recipients = input(f"Please provide the recipients that will be used for authentication (If you wish to do multiple split using a comma):")
+xq.api.authorize_device(device=device, business_id=businessId)
 
 # create key packet
-MYSUPERSECRETKEY = b"itissixteenbytes"
+MYSUPERSECRETKEY = xq.generate_key_from_entropy()
 
 # encrypt something
 message_to_encrypt = "sometexttoencrypt"
 print("\nencrypting message:", message_to_encrypt)
 encrypted_message = xq.encrypt_message(
-    message_to_encrypt, key=MYSUPERSECRETKEY, algorithm="AES"
+    message_to_encrypt, key=MYSUPERSECRETKEY, algorithm="CTR"
 )
 print("\nencrypted_message", encrypted_message)
 
 # Create and store the encrypted key packet
-locator_token = xq.api.create_and_store_packet(recipients=[email], key=MYSUPERSECRETKEY, subject='test', type=2)
+locator_token = xq.api.create_and_store_packet(recipients=[recipients.split(',')], key=MYSUPERSECRETKEY, type="msg", subject='TraianTestingProd')
 
 # get key packet by lookup
 retrieved_key_packet = xq.api.get_packet(locator_token)
 
 # deycrypt
 decrypted_message = xq.decrypt_message(
-    encrypted_message, key=retrieved_key_packet, algorithm="AES"
+    encrypted_message, key=retrieved_key_packet, algorithm="CTR"
 )
 print("\ndecrypted message:", decrypted_message)

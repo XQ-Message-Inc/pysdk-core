@@ -2,14 +2,16 @@ import typing
 import io
 import os
 import base64
-import warnings
+import struct
 from typing import List
 from ._version import get_versions
-from xq.config import API_KEY, DASHBOARD_API_KEY
-from xq.exceptions import SDKConfigurationException, SDKEncryptionException
+from xq.config import API_KEY, DASHBOARD_API_KEY, XQ_LOCATOR_KEY
 from xq.algorithms import OTPEncryption, Encryption, Algorithms
 from xq.exceptions import XQException
 from xq.api import XQAPI  # import all api endpoint integrations
+from typing import Dict
+from io import BufferedReader
+
 
 try:
     from xq.algorithms.xor import expand_key_python
@@ -20,7 +22,7 @@ __version__ = get_versions()["version"]
 del get_versions
 
 class XQ:
-    def __init__(self, api_key=API_KEY, dashboard_api_key=DASHBOARD_API_KEY):
+    def __init__(self, api_key=API_KEY, dashboard_api_key=DASHBOARD_API_KEY, locator_key=XQ_LOCATOR_KEY):
         """initializes the XQ SDK with API keys, in priority order:
             1. params
             2. ENV
@@ -30,8 +32,10 @@ class XQ:
         :type api_key: _type_, optional
         :param dashboard_api_key: _description_, defaults to ENV value
         :type dashboard_api_key: _type_, optional
+        :param locator_key: _description_, defaults to ENV value
+        :type locator_key: _type_, optional
         """
-        self.api = XQAPI(api_key, dashboard_api_key)  # bind api functions as methods
+        self.api = XQAPI(api_key, dashboard_api_key, locator_key)  # bind api functions as methods
 
     def generate_key_from_entropy(self):
         """helper method for automatically requesting entropy and shuffling key
@@ -79,7 +83,7 @@ class XQ:
         else:
             return key
 
-    def encrypt_message(self, text: str, key: bytes, algorithm: Algorithms = "OTP"):
+    def encrypt_message(self, text: str, key: bytes, algorithm: Algorithms = "OTP", recipients: List[str] = None):
         """encrypt a string
 
         :param text: string to encrypt
@@ -87,27 +91,22 @@ class XQ:
         :param key: encryption key to use to encrypted text
         :type key: bytes, defaults to None
         :param algorithm: the encryption algorithm to use
-        :type algorithm: Algorithms, defaults to AES
-        :return: ciphertext, nonce, tag from encryption
-        :rtype: tuple(bytes)
+        :type algorithm: Algorithms, defaults to OTP
+        :return: ciphertext
+        :rtype: bytes
         """
         encryptionAlgorithm = Algorithms[algorithm](key)
 
         if isinstance(key, str):
             key = key.encode()
 
-        if algorithm == "OTP":
-            return encryptionAlgorithm.encrypt(text)
-        if algorithm != "OTP":
-            ciphertext, nonce, tag = encryptionAlgorithm.encrypt(text)
-            return ciphertext, nonce, tag
+        return encryptionAlgorithm.encrypt(text)
 
     def decrypt_message(
         self,
         encryptedText: bytes,
         key: bytes,
-        algorithm: Algorithms = "OTP",
-        nonce: bytearray = None,
+        algorithm: Algorithms = "OTP"
     ):
         """decrypt a previoulsy encrypted string
 
@@ -122,23 +121,15 @@ class XQ:
         :return: decrypted text
         :rtype: str
         """
-        if algorithm != "OTP" and not nonce:
-            raise XQException("`nonce` is required for {algorithm} encryption")
-
         if isinstance(key, str):
             key = key.encode()
-
-        if algorithm != "OTP":
-            encryptionAlgorithm = Algorithms[algorithm](key, nonce=nonce)
-            plaintext = encryptionAlgorithm.decrypt(encryptedText)
-            return plaintext
-        else:
-            encryptionAlgorithm = Algorithms[algorithm](key)
-            plaintext = encryptionAlgorithm.decrypt(encryptedText)
-            return plaintext
+        
+        encryptionAlgorithm = Algorithms[algorithm](key)
+        plaintext = encryptionAlgorithm.decrypt(encryptedText)
+        return plaintext
 
     def encrypt_file(
-        self, fileObj: typing.TextIO, key: bytes, algorithm: Algorithms = "OTP"
+        self, fileObj: typing.TextIO, key: bytes, algorithm: Algorithms = "OTP", recipients: List[str] = None
     ) -> bytearray:
         """encrypt the contents of a given file object
 
@@ -154,23 +145,24 @@ class XQ:
             key = key.encode()
 
         if isinstance(fileObj, str):
-            fileObj = open(fileObj, "rb")
+            fileObj = open(fileObj, "rb").read()
 
         if algorithm == "OTP":
+            locator_token = self.api.create_and_store_packet(recipients=recipients, key=((b".B") + key), type="file", subject=os.path.basename(fileObj.name))
             encryptionAlgorithm = Algorithms[algorithm](key)
-            ciphertext = encryptionAlgorithm.encrypt(fileObj)
+            ciphertext = encryptionAlgorithm.encryptFile(os.path.basename(fileObj.name), fileObj, locator_token, key)
             return ciphertext
-        if algorithm != "OTP":
-            encryptionAlgorithm = Algorithms[algorithm](key, nonce=nonce)
-            ciphertext, nonce, tag = encryptionAlgorithm.encrypt(fileObj)
-            return ciphertext, nonce, tag
+        else:
+            locator_token = self.api.create_and_store_packet(recipients=recipients, key=((b".2" if algorithm == "CTR" else b".1") + key), type="file", subject=os.path.basename(fileObj.name))
+            encryptionAlgorithm = Algorithms[algorithm](key, scheme=2 if algorithm == "CTR" else 1)
+            ciphertext = encryptionAlgorithm.encryptFile(os.path.basename(fileObj.name), fileObj, locator_token, key)
+            return ciphertext
 
     def decrypt_file(
         self,
-        encryptedText: bytes,
-        key: bytes,
-        algorithm: Algorithms = "OTP",
-        nonce: bytearray = None,
+        encryptedText: bytes | BufferedReader,
+        key: bytes = None,
+        algorithm: Algorithms = "OTP"
     ) -> io.StringIO:
         """decrypt a given bytes string back into a FileLike object
 
@@ -181,87 +173,59 @@ class XQ:
         :return: FileLike StringIO handle
         :rtype: StringIO
         """
+        if key is None:
+            locator, name_encrypted, content_encrypted = self.parse_file_for_decrypt(encryptedText)
+            key = self.api.get_packet(locator)
+            encryptedText = content_encrypted
+
         if algorithm == "OTP":
-            otp = OTPEncryption(key)
-            plaintext = otp.decrypt(encryptedText)
-            fh = io.BytesIO(plaintext)
-        if algorithm != "OTP":
-            encryptionAlgorithm = Algorithms[algorithm](key, nonce=nonce)
-            plaintext = encryptionAlgorithm.decrypt(encryptedText)
+            encryptionAlgorithm = Algorithms[algorithm](key)
+            plaintext = encryptionAlgorithm.decryptFile(encryptedText)
+            fh = plaintext
+        else:
+            encryptionAlgorithm = Algorithms[algorithm](key, scheme=2 if algorithm == "CTR" else 1)
+            plaintext = encryptionAlgorithm.decryptFile(encryptedText)
             fh = plaintext
 
         return fh
-
-    def magic_encrypt(self, thing_to_encrypt: any, recipients: List[str]):
-        """easy button encryption: encrypt something with an entropy generated encryption key, and store the key in XQ
-
-        :param thing_to_encrypt: something to encrypt (i.e. text, file path string, etc)
-        :type thing_to_encrypt: any
-        :param recipients: list of recipient emails
-        :type recipients: List[str]
-        :raises XQException: _description_
-        :return: magic bundle, used for decryption
-        :rtype: tuple
-        """
-        # generate key
-        KEY = self.generate_key_from_entropy()
-        bundle_suffix = None
-
-        # encrypt
-        try:
-            if isinstance(thing_to_encrypt, str) and not os.path.isfile(
-                thing_to_encrypt
-            ):
-                ciphertext, nonce, tag = self.encrypt_message(
-                    thing_to_encrypt, key=KEY, algorithm="AES"
-                )
-                bundle_suffix = (ciphertext, nonce, tag)
-            else:
-                encryptedText = self.encrypt_file(thing_to_encrypt, key=KEY)
-                bundle_suffix = (encryptedText, KEY)
-
-            # store key packet
-            encrypted_key_packet = self.api.create_packet(
-                recipients=recipients, key=KEY
-            )
-            locator_token = self.api.add_packet(encrypted_key_packet)
-
-            return (locator_token,) + bundle_suffix
-
-        except Exception as e:
-            raise XQException(
-                f"Encrypting {type(thing_to_encrypt)} is not currently supported, or another error occured: {e}"
-            )
-
-    def magic_decrypt(self, magic_bundle):
-        """easy button decryption: decrypt a magic encrypted with it's magic bundle
-
-        :param magic_bundle: magic bundle created by magic_encryption
-        :type magic_bundle: tuple
-        :return: decrypted item
-        :rtype: any
-        """
-        aes_encryption = False
-
-        if len(magic_bundle) == 4:
-            # AES bundle - locator_token, encrypted_message, nonce, tag
-            locator_token, encrypted_message, nonce, tag = magic_bundle
-            aes_encryption = True
-
+    
+    def parse_file_for_decrypt(self, input_data) -> Dict[str, bytes]:
+        # Check if the input is a file (BufferedReader) or bytes
+        if hasattr(input_data, 'read'):
+            file_data_bytes = input_data.read()
+        elif isinstance(input_data, bytes):
+            file_data_bytes = input_data
         else:
-            # OTP bundle - locator_token, encryptedText, expanded_key
-            locator_token, encrypted_message, key = magic_bundle
+            raise TypeError("Input must be a file-like object or bytes")
 
-        # get key packet by lookup
-        retrieved_key_packet = self.api.get_packet(locator_token)
+        # Fetch the length of the token (locatorSize)
+        start = 0
+        end = 4
+        locator_size = struct.unpack('<I', file_data_bytes[start:end])[0]
+        
+        # Validate the locatorSize
+        if locator_size > 256:
+            raise ValueError("Unable to parse file, check that the file is valid and not damaged")
+        
+        # Fetch the locator string based on locatorSize
+        start = end
+        end = start + locator_size - 1
+        locator = file_data_bytes[start:end].decode('utf-8')
 
-        # decrypt message
-        if aes_encryption:
-            return self.decrypt_message(
-                encrypted_message,
-                key=retrieved_key_packet,
-                algorithm="AES",
-                nonce=nonce,
-            )
-        else:
-            return self.decrypt_file(encrypted_message, retrieved_key_packet)
+        # Fetch the fileNameSize
+        start = end
+        end = start + 4
+        file_name_size = struct.unpack('<I', file_data_bytes[start:end])[0]
+        
+        # Validate the fileNameSize
+        if file_name_size < 2 or file_name_size > 2000:
+            raise ValueError("Unable to parse file, check that the file is valid and not damaged")
+        
+        # Fetch the nameEncrypted (based on fileNameSize)
+        start = end
+        end = start + file_name_size - 1
+        name_encrypted = file_data_bytes[start:end]
+
+        content_encrypted = file_data_bytes
+
+        return locator, name_encrypted, content_encrypted

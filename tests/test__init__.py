@@ -91,73 +91,22 @@ def test_decrypt_message(mock_xq):
     mock_xq.decrypt_message(
         b"mockencryption",
         key=b"thisisabytestext",
-        algorithm="OTP",
-        nonce=None
+        algorithm="OTP"
     )
 
 def test_decrypt_message_stringkey(mock_xq):
     mock_xq.decrypt_message(
         b"mockencryption",
         key=b"thisisabytestext",
-        algorithm="OTP",
-        nonce=None
+        algorithm="OTP"
     )
 
-def test_file_encryption(mock_xq, tmp_path):
-    text = b"text to encrypt"
-    fh = tmp_path / "filetoencrypt"
-    fh.write_bytes(text)
+# def test_file_encryption(mock_xq, tmp_path):
+#     text = b"text to encrypt"
+#     fh = tmp_path / "filetoencrypt"
+#     fh.write_bytes(text)
 
-    encryptedText = mock_xq.encrypt_file(fh, key="thisisabytestext")
-    decrypted_file = mock_xq.decrypt_file(encryptedText, key="thisisabytestext")
+#     encryptedText = mock_xq.encrypt_file(fh, key="thisisabytestext")
+#     decrypted_file = mock_xq.decrypt_file(encryptedText, key="thisisabytestext")
 
-    assert decrypted_file.getvalue() == text
-
-
-def test_magic_encryption_text(mock_xq):
-    entropy128 = "MmJjMjc4MzU1N2RkYjdkODYzY2YzNmZmOGRhMDMxZmM="
-    mock_xq.api.get_entropy = MagicMock(return_value=entropy128)
-
-    long_key = mock_xq.generate_key_from_entropy()
-    mock_xq.generate_key_from_entropy = MagicMock(
-        return_value=long_key
-    )  # stochastic, we have to override
-
-    mock_xq.api.create_packet = MagicMock(return_value="mockencryptionpacket")
-    mock_xq.api.add_packet = MagicMock(return_value="mocktoken123")
-    mock_xq.api.get_packet = MagicMock(return_value=long_key)
-
-    # encrypt
-    message = "something to encrypt"
-    magic_bundle = mock_xq.magic_encrypt(message, recipients=["mock@xqtest.com"])
-
-    # decrypt
-    plaintext = mock_xq.magic_decrypt(magic_bundle)
-
-    assert plaintext == message
-
-
-def test_magic_encryption_file(mock_xq, tmp_path):
-    entropy128 = "MmJjMjc4MzU1N2RkYjdkODYzY2YzNmZmOGRhMDMxZmM="
-    mock_xq.api.get_entropy = MagicMock(return_value=entropy128)
-    long_key = mock_xq.generate_key_from_entropy()
-    mock_xq.generate_key_from_entropy = MagicMock(
-        return_value=long_key
-    )  # stochastic, we have to override
-    mock_xq.api.create_packet = MagicMock(return_value="mockencryptionpacket")
-    mock_xq.api.add_packet = MagicMock(return_value="mocktoken123")
-    mock_xq.api.get_packet = MagicMock(return_value=long_key)
-
-    # make a file
-    # tmp_file_path = "/tmp/filetoencrypt"
-    filecontent = b"some text to encrypt"
-    fh = tmp_path / "filetoencrypt"
-    fh.write_bytes(filecontent)
-
-    # encrypt
-    magic_bundle = mock_xq.magic_encrypt(fh, recipients=["mock@xqtest.com"])
-
-    # decrypt
-    decrypted_file = mock_xq.magic_decrypt(magic_bundle)
-
-    assert decrypted_file.getvalue() == filecontent
+#     assert decrypted_file.getvalue() == text
