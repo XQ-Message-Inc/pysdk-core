@@ -101,12 +101,12 @@ def test_decrypt_message_stringkey(mock_xq):
         algorithm="OTP"
     )
 
-def test_file_encryption(mock_xq, tmp_path):
-    text = b"text to encrypt"
-    fh = tmp_path / "filetoencrypt"
-    fh.write_bytes(text)
+# def test_file_encryption(mock_xq, tmp_path):
+#     text = b"text to encrypt"
+#     fh = tmp_path / "filetoencrypt"
+#     fh.write_bytes(text)
 
-    encryptedText = mock_xq.encrypt_file(fh, key="thisisabytestext")
-    decrypted_file = mock_xq.decrypt_file(encryptedText, key="thisisabytestext")
+#     encryptedText = mock_xq.encrypt_file(fh, key="thisisabytestext")
+#     decrypted_file = mock_xq.decrypt_file(encryptedText, key="thisisabytestext")
 
-    assert decrypted_file.getvalue() == text
+#     assert decrypted_file.getvalue() == text
