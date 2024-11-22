@@ -129,7 +129,7 @@ class XQ:
         return plaintext
 
     def encrypt_file(
-        self, fileObj: typing.TextIO, key: bytes, algorithm: Algorithms = "OTP", recipients: List[str] = None
+        self, fileObj: typing.TextIO, key: bytes, algorithm: Algorithms = "OTP", recipients: List[str] = None, expires_hours: int = 24
     ) -> bytearray:
         """encrypt the contents of a given file object
 
@@ -148,12 +148,12 @@ class XQ:
             fileObj = open(fileObj, "rb").read()
 
         if algorithm == "OTP":
-            locator_token = self.api.create_and_store_packet(recipients=recipients, key=((b".B") + key), type="file", subject=os.path.basename(fileObj.name))
+            locator_token = self.api.create_and_store_packet(recipients=recipients, key=((b".B") + key), type="file", subject=os.path.basename(fileObj.name), expires_hours=expires_hours)
             encryptionAlgorithm = Algorithms[algorithm](key)
             ciphertext = encryptionAlgorithm.encryptFile(os.path.basename(fileObj.name), fileObj, locator_token, key)
             return ciphertext
         else:
-            locator_token = self.api.create_and_store_packet(recipients=recipients, key=((b".2" if algorithm == "CTR" else b".1") + key), type="file", subject=os.path.basename(fileObj.name))
+            locator_token = self.api.create_and_store_packet(recipients=recipients, key=((b".2" if algorithm == "CTR" else b".1") + key), type="file", subject=os.path.basename(fileObj.name),  expires_hours=expires_hours)
             encryptionAlgorithm = Algorithms[algorithm](key, scheme=2 if algorithm == "CTR" else 1)
             ciphertext = encryptionAlgorithm.encryptFile(os.path.basename(fileObj.name), fileObj, locator_token, key)
             return ciphertext
