@@ -52,7 +52,7 @@ class Encryption:
             # just a regular string
             return "".join(string_list)
     
-    def encryptFile(self, filename, data, token, password):
+    def encryptFile(self, filename, data, token, password, scheme = 1):
         if filename:
                 filename = filename.encode('utf-8')
             
@@ -61,8 +61,8 @@ class Encryption:
                 filename = self.encrypt(filename, password)
             except Exception as err:
                 return None
-            
-        header = self.create_file_header(filename, token)
+        
+        header = self.create_file_header(filename, token, scheme=scheme)
 
         data = data.read()
         encrypted = self.encrypt(data, password)
@@ -92,7 +92,7 @@ class Encryption:
         else:
             return decrypted_data
     
-    def create_file_header(self, filename, token, version=1):
+    def create_file_header(self, filename, token, scheme=1, version=1):
         token_size = 43
         token_bytes = token.encode('utf-8') 
 
@@ -120,7 +120,7 @@ class Encryption:
         tail += name_size
 
         if tail < len(buffer):
-            buffer[tail] = 1
+            buffer[tail] = scheme if isinstance(scheme, int) else ord(scheme)
         else:
             raise IndexError(f"Tail index {tail} is out of range for buffer length {len(buffer)}")
 

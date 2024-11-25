@@ -150,12 +150,12 @@ class XQ:
         if algorithm == "OTP":
             locator_token = self.api.create_and_store_packet(recipients=recipients, key=((b".B") + key), type="file", subject=os.path.basename(fileObj.name), expires_hours=expires_hours)
             encryptionAlgorithm = Algorithms[algorithm](key)
-            ciphertext = encryptionAlgorithm.encryptFile(os.path.basename(fileObj.name), fileObj, locator_token, key)
+            ciphertext = encryptionAlgorithm.encryptFile(os.path.basename(fileObj.name), fileObj, locator_token, key, 'B')
             return ciphertext
         else:
-            locator_token = self.api.create_and_store_packet(recipients=recipients, key=((b".2" if algorithm == "CTR" else b".1") + key), type="file", subject=os.path.basename(fileObj.name),  expires_hours=expires_hours)
+            locator_token = self.api.create_and_store_packet(recipients=recipients, key=((b".2" if algorithm == "CTR" else b".1") + key), type="file", subject=os.path.basename(fileObj.name), expires_hours=expires_hours)
             encryptionAlgorithm = Algorithms[algorithm](key, scheme=2 if algorithm == "CTR" else 1)
-            ciphertext = encryptionAlgorithm.encryptFile(os.path.basename(fileObj.name), fileObj, locator_token, key)
+            ciphertext = encryptionAlgorithm.encryptFile(os.path.basename(fileObj.name), fileObj, locator_token, key, 2 if algorithm == "CTR" else 1)
             return ciphertext
 
     def decrypt_file(
