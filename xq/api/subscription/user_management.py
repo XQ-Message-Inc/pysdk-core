@@ -173,22 +173,29 @@ def _normalize_transport_key(raw: str) -> str:
         raise XQException("No transport key has been provided.")
     return raw
 
-def authorize_device_cert(api, cert_id: int, cert_file_path: str, transport_key_file_path: str, private_key_file_path: str, device_name: str = "device", announce: bool = True):
-    """Authorize a device using a certificate and transport key.
-        Args:
-            cert_id: Certificate ID
-            cert_file_path: Path to client.crt file
-            transport_key_file_path: Path to transport.key file
-            private_key_file_path: Path to client.key file (will be base64 encoded)
-            device_name: Device name (max 48 characters)
-            announce: Whether to announce the device to dashboard
-            
-        Returns:
-            bool: True if successful, False otherwise
-            
-        Raises:
-            XQError: If authorization fails
+def authorize_device_cert(api, cert_id: int, cert_file_path: str, transport_key_file_path: str, private_key_file_path: str, device_name: str = "Device", announce: bool = True):
+    """Authorize a device using an XQ certificate and transport key, returning an access token.
+
+    :param api: XQ API client instance
+    :type api: XQAPI
+    :param cert_id: Certificate identifier issued for the device/tenant
+    :type cert_id: int
+    :param cert_file_path: Path to the client certificate (client.crt)
+    :type cert_file_path: str
+    :param transport_key_file_path: Path to the transport key used to encrypt the request payload (transport.key)
+    :type transport_key_file_path: str
+    :param private_key_file_path: Path to the device private key (client.key) used to decrypt the returned token
+    :type private_key_file_path: str
+    :param device_name: Human-readable device name (max 48 characters), defaults to Device
+    :type device_name: str
+    :param announce: If True, announce the device to the dashboard after authorization, defaults to True
+    :type announce: bool, optional
+    :return: Access token for subsequent authenticated requests
+    :rtype: str
+    :raises XQException: If files are missing/empty, the server time cannot be fetched, encryption/decryption fails, \
+or the authorization request is rejected
     """
+    ...
     if not device_name or len(device_name) > 48:
         raise XQException(message="Device name must be provided and cannot exceed 48 characters.")
     try:
