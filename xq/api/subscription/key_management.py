@@ -47,6 +47,7 @@ def create_and_store_packet(
     key: bytes = None,
     type: int|str = 'msg',
     subject: str = None,
+    labels: list = None
 ):
     """creates an encrypted packet from a secret key
     https://xq.stoplight.io/docs/xqmsg/1f9bc1713a7cd-create-and-save-a-new-key-packet
@@ -64,7 +65,7 @@ def create_and_store_packet(
     :rtype: text
     """
     payload = {
-        "meta": {"subject": subject,"title": subject},
+        "meta": {"subject": subject,"title": subject, "labels": labels},
         "type": type,
         "recipients": recipients,
         "expires": expires_hours,

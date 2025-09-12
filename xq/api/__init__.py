@@ -15,7 +15,8 @@ class XQAPI:
         create_and_store_packet,
         create_and_store_packets,
         authorize_alias,
-        authorize_device
+        authorize_device,
+        authorize_device_cert
     )
     from xq.api.validation import (
         get_packet,
