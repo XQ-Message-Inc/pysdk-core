@@ -73,3 +73,58 @@ def test_validate_access_token_error(mock_xqapi):
     mock_xqapi.api_get = MagicMock(return_value=(500, "mock server error"))
     with pytest.raises(XQException):
         validate_access_token(mock_xqapi)
+
+def test_announce_device_success_200(mock_xqapi):
+    mock_xqapi.api_post = MagicMock(return_value=200)
+    result = announce_device(mock_xqapi, afirst="TestDevice")
+    assert result == 200
+
+
+def test_announce_device_success_204(mock_xqapi):
+    mock_xqapi.api_post = MagicMock(return_value=204)
+    result = announce_device(mock_xqapi, afirst="TestDevice")
+    assert result == 204
+
+
+def test_announce_device_with_all_params(mock_xqapi):
+    mock_xqapi.api_post = MagicMock(return_value=200)
+    result = announce_device(
+        mock_xqapi, 
+        afirst="TestDevice", 
+        alast="LastName", 
+        aphone="123-456-7890"
+    )
+    assert result == 200
+    
+    # Verify the correct payload was sent
+    mock_xqapi.api_post.assert_called_once()
+    call_args = mock_xqapi.api_post.call_args
+    assert call_args[1]["json"]["afirst"] == "TestDevice"
+    assert call_args[1]["json"]["alast"] == "LastName"
+    assert call_args[1]["json"]["aphone"] == "123-456-7890"
+
+
+def test_announce_device_default_params(mock_xqapi):
+    mock_xqapi.api_post = MagicMock(return_value=200)
+    result = announce_device(mock_xqapi)
+    assert result == 200
+    
+    # Verify default empty values were sent
+    call_args = mock_xqapi.api_post.call_args
+    assert call_args[1]["json"]["afirst"] == ""
+    assert call_args[1]["json"]["alast"] == ""
+    assert call_args[1]["json"]["aphone"] == ""
+
+
+def test_announce_device_401_error(mock_xqapi):
+    mock_xqapi.api_post = MagicMock(return_value=401)
+    with pytest.raises(XQException) as exc_info:
+        announce_device(mock_xqapi, afirst="TestDevice")
+    assert "The provided API Key is not valid" in str(exc_info.value)
+
+
+def test_announce_device_other_error(mock_xqapi):
+    mock_xqapi.api_post = MagicMock(return_value=500)
+    with pytest.raises(XQException) as exc_info:
+        announce_device(mock_xqapi, afirst="TestDevice")
+    assert "Failed to verify API key, error: 500" in str(exc_info.value)

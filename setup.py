@@ -6,6 +6,7 @@ from Cython.Build import cythonize
 import versioneer
 import subprocess
 import platform
+import os
 
 system = platform.system()
 arch = platform.machine()
@@ -14,11 +15,14 @@ arch = platform.machine()
 extra_compile_args = ["-O3"]
 extra_link_args = ["-O3"]
 
-if system == "Darwin":  
-    if arch == "arm64": 
-        extra_compile_args.append("-mcpu=apple-m1")
-    else: 
-        extra_compile_args.append("-march=native")
+# Allow override via env var
+user_mcpu = os.environ.get("MCPU")
+
+if system == "Darwin" and arch in ("arm64", "aarch64"):
+    if user_mcpu:
+        extra_compile_args.append(f"-mcpu={user_mcpu}")
+    else:
+        extra_compile_args.append("-mcpu=native")
 
 elif system == "Windows":
     if "amd64" in arch or "x86" in arch: 
@@ -42,15 +46,11 @@ class PostDevelopCommand(develop):
     def run(self):
         develop.run(self)
         subprocess.check_call("pre-commit install".split(" "))
-
-
 class PostInstallCommand(install):
     """Post-installation for installation mode."""
 
     def run(self):
         install.run(self)
-        # prod install, keep vanilla
-
 
 setup(
     version=versioneer.get_version(),

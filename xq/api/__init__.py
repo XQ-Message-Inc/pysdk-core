@@ -3,7 +3,6 @@ import requests
 from xq.config import API_KEY, DASHBOARD_API_KEY, XQ_LOCATOR_KEY, API_BASE_URI
 from xq.exceptions import SDKConfigurationException
 
-
 class XQAPI:
 
     # import submodules as methods
@@ -16,7 +15,8 @@ class XQAPI:
         create_and_store_packet,
         create_and_store_packets,
         authorize_alias,
-        authorize_device
+        authorize_device,
+        authorize_device_cert
     )
     from xq.api.validation import (
         get_packet,

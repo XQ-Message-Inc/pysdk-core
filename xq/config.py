@@ -15,7 +15,7 @@ def configure_env(dotenv_path=None):
     else:
         load_dotenv(os.path.join(os.getcwd(), '.env'))
     
-    API_BASE_URI = "xqmsg.net/v2/"
+    API_BASE_URI = os.environ.get("XQ_BASE_URI", "xqmsg.net/v2/")
     API_KEY = os.environ.get("XQ_API_KEY")
     DASHBOARD_API_KEY = os.environ.get("XQ_DASHBOARD_API_KEY")
     XQ_LOCATOR_KEY = os.environ.get("XQ_LOCATOR_KEY")

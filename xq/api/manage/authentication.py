@@ -203,7 +203,7 @@ def announce_device(api, afirst: str = "", alast: str = "", aphone: str = ""):
         {"api-key": API_KEY}
     )
 
-    if status_code == 200 or 204:
+    if status_code in (200, 204):
         return status_code
     if status_code == 401:
         raise XQException(message="The provided API Key is not valid")
