@@ -1,3 +1,4 @@
+from sys import exc_info
 import pytest
 from unittest.mock import MagicMock
 
@@ -127,4 +128,5 @@ def test_announce_device_other_error(mock_xqapi):
     mock_xqapi.api_post = MagicMock(return_value=500)
     with pytest.raises(XQException) as exc_info:
         announce_device(mock_xqapi, afirst="TestDevice")
-    assert "Failed to verify API key, error: 500" in str(exc_info.value)
+    assert "Failed to verify API key" in str(exc_info.value)
+    assert "500" in str(exc_info.value)

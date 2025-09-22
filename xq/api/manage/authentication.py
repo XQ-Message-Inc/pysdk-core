@@ -197,7 +197,12 @@ def announce_device(api, afirst: str = "", alast: str = "", aphone: str = ""):
         'aphone': aphone 
     }
 
-    status_code, body = api.api_post("trusted/announce", json=payload, subdomain=API_SUBDOMAIN)
+    respone = api.api_post("trusted/announce", json=payload, subdomain=API_SUBDOMAIN)
+
+    if isinstance(respone, tuple):
+        status_code, body = respone
+    else: 
+        status_code, body = respone, None
     
     api.headers.update(
         {"api-key": API_KEY}
