@@ -197,7 +197,7 @@ def announce_device(api, afirst: str = "", alast: str = "", aphone: str = ""):
         'aphone': aphone 
     }
 
-    status_code = api.api_post("trusted/announce", json=payload, subdomain=API_SUBDOMAIN)
+    status_code, body = api.api_post("trusted/announce", json=payload, subdomain=API_SUBDOMAIN)
     
     api.headers.update(
         {"api-key": API_KEY}
@@ -209,5 +209,5 @@ def announce_device(api, afirst: str = "", alast: str = "", aphone: str = ""):
         raise XQException(message="The provided API Key is not valid")
     else:
         raise XQException(
-            message=f"Failed to verify API key, error: {status_code}"
+            message=f"Failed to verify API key, status: {status_code}, body: {body!r}"
         )
