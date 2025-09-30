@@ -64,8 +64,12 @@ class Encryption:
         
         header = self.create_file_header(filename, token, scheme=scheme)
 
-        data = data.read()
-        encrypted = self.encrypt(data, password)
+        if(scheme == 'B'):
+            encrypted = self.encrypt_file_streaming(data, password, header)
+            return encrypted
+        else:
+            data = data.read()
+            encrypted = self.encrypt(data, password)
 
         return header + encrypted 
     
@@ -76,6 +80,13 @@ class Encryption:
         if isinstance(password, str):
             password = password.encode()
         
+        if password[1] == ord('B'):
+            decrypted_data = self.decrypt_file_streaming(data, password)
+            if isinstance(decrypted_data, str):
+                return decrypted_data.encode("utf-8")
+            else:
+                return decrypted_data
+
         if password[0] == ord('.'):
             password = password[2:]
 

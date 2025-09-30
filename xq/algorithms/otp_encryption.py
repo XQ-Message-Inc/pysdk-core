@@ -1,5 +1,5 @@
 import warnings
-from typing import TextIO, BinaryIO
+from typing import TextIO, BinaryIO, Union
 from io import StringIO, BytesIO, TextIOWrapper, BufferedReader
 from pathlib import PosixPath
 from xq.algorithms import Encryption
@@ -82,6 +82,196 @@ class OTPEncryption(Encryption):
             return xor_simd_neon_python(text, password)
         else:
             return
+    
+    def encrypt_file_streaming(
+        self, 
+        file: Union[BinaryIO, BufferedReader, BytesIO], 
+        password: Union[str, bytes],
+        header: bytes
+    ):
+        """
+        Stream encrypt a file using OTP (XOR) encryption.
+        Reads file in chunks to avoid loading entire file into memory.
+        
+        :param file: File object to encrypt
+        :param password: Encryption password
+        :param header: File header to prepend
+        :return: Encrypted file as bytes
+        """
+        CHUNK_SIZE = 1024 * 1024  # 1MB chunks
+        
+        if isinstance(password, str):
+            password = password.encode('utf-8')
+        
+        encrypted_chunks = [header]
+        key_offset = 0
+        
+        # Ensure we have a file-like object we can read from
+        if isinstance(file, (str, PosixPath)):
+            with open(file, 'rb') as f:
+                return self._stream_encrypt_file_handle(f, password, encrypted_chunks, key_offset, CHUNK_SIZE)
+        elif hasattr(file, 'read'):
+            return self._stream_encrypt_file_handle(file, password, encrypted_chunks, key_offset, CHUNK_SIZE)
+        else:
+            # If it's bytes, convert to BytesIO
+            if isinstance(file, bytes):
+                file = BytesIO(file)
+                return self._stream_encrypt_file_handle(file, password, encrypted_chunks, key_offset, CHUNK_SIZE)
+            else:
+                raise TypeError(f"Unsupported file type: {type(file)}")
+    
+    def _stream_encrypt_file_handle(
+        self, 
+        file_handle, 
+        password: bytes, 
+        encrypted_chunks: list, 
+        key_offset: int,
+        chunk_size: int
+    ):
+        """
+        Internal method to handle the actual streaming encryption.
+        
+        :param file_handle: File handle to read from
+        :param password: Encryption password (bytes)
+        :param encrypted_chunks: List to accumulate encrypted chunks
+        :param key_offset: Current offset in the password key
+        :param chunk_size: Size of chunks to read
+        :return: Final encrypted bytes
+        """
+        while True:
+            chunk = file_handle.read(chunk_size)
+            if not chunk:
+                break
+            
+            encrypted_chunk = self.encrypt_chunk(chunk, password, key_offset)
+            encrypted_chunks.append(encrypted_chunk)
+            
+            key_offset = (key_offset + len(chunk)) % len(password)
+        
+        return b''.join(encrypted_chunks)
+        
+    def encrypt_chunk(
+        self, 
+        chunk: bytes, 
+        password: bytes, 
+        key_offset: int
+    ) -> bytes:
+        """
+        Encrypt a single chunk using XOR with password at given offset.
+        
+        :param chunk: Data chunk to encrypt
+        :param password: Encryption password
+        :param key_offset: Current offset in the password key
+        :return: Encrypted chunk as bytes
+        """
+        payload_bytes = bytes(chunk)
+        encrypted = bytearray(len(payload_bytes))
+        
+        # Create a cyclic key buffer for this chunk
+        key_buffer = bytearray(len(payload_bytes))
+        for idx in range(len(payload_bytes)):
+            key_idx = (key_offset + idx) % len(password)
+            key_buffer[idx] = password[key_idx]
+        
+        # Use SIMD if available, otherwise fall back to pure Python XOR
+        if xor_simd_neon_python is not None:
+            return xor_simd_neon_python(payload_bytes, bytes(key_buffer))
+        else:
+            # Pure Python XOR fallback
+            for idx in range(len(payload_bytes)):
+                encrypted[idx] = payload_bytes[idx] ^ key_buffer[idx]
+            return bytes(encrypted)
+    
+    def decrypt_file_streaming(
+        self, 
+        file: Union[BinaryIO, BufferedReader, BytesIO], 
+        password: Union[str, bytes]
+    ):
+        """
+        Stream decrypt a file using OTP (XOR) encryption.
+        Reads file in chunks to avoid loading entire file into memory.
+        
+        :param file: File object to decrypt (must have header)
+        :param password: Decryption password
+        :return: Decrypted file as bytes
+        """
+        CHUNK_SIZE = 1024 * 1024  # 1MB chunks
+        
+        if isinstance(password, str):
+            password = password.encode('utf-8')
+        
+        if isinstance(file, (bytes, bytearray)):
+            file = BytesIO(file)
+        
+        # Handle password prefix (remove '.' prefix if present)
+        if password[0] == ord('.'):
+            password = password[2:]
+        
+        # Read and parse header first
+        initial_read = file.read(4096)
+        if len(initial_read) < 52:  # Minimum header size
+            raise ValueError("File too small to contain valid header")
+        
+        header = self.get_file_header(initial_read, 1)
+        header_length = header["length"]
+        
+        remaining_initial = initial_read[header_length:]
+        
+        decrypted_chunks = []
+        key_offset = 0
+        
+        # Decrypt the remaining initial data first
+        if remaining_initial:
+            decrypted_chunk = self.decrypt_chunk(remaining_initial, password, key_offset)
+            decrypted_chunks.append(decrypted_chunk)
+            key_offset = (key_offset + len(remaining_initial)) % len(password)
+        
+        # Continue reading and decrypting in chunks
+        while True:
+            chunk = file.read(CHUNK_SIZE)
+            if not chunk:
+                break
+            
+            decrypted_chunk = self.decrypt_chunk(chunk, password, key_offset)
+            decrypted_chunks.append(decrypted_chunk)
+            
+            key_offset = (key_offset + len(chunk)) % len(password)
+        
+        # Combine all chunks into final result
+        return b''.join(decrypted_chunks)
+    
+    def decrypt_chunk(
+        self, 
+        chunk: bytes, 
+        password: bytes, 
+        key_offset: int
+    ):
+        """
+        Decrypt a single chunk using XOR with password at given offset.
+        Since XOR is symmetric, this is identical to encrypt_chunk.
+        
+        :param chunk: Data chunk to decrypt
+        :param password: Decryption password
+        :param key_offset: Current offset in the password key
+        :return: Decrypted chunk as bytes
+        """
+        payload_bytes = bytes(chunk)
+        decrypted = bytearray(len(payload_bytes))
+        
+        # Create a cyclic key buffer for this chunk
+        key_buffer = bytearray(len(payload_bytes))
+        for idx in range(len(payload_bytes)):
+            key_idx = (key_offset + idx) % len(password)
+            key_buffer[idx] = password[key_idx]
+        
+        # Use SIMD if available, otherwise fall back to pure Python XOR
+        if xor_simd_neon_python is not None:
+            return xor_simd_neon_python(payload_bytes, bytes(key_buffer))
+        else:
+            # Pure Python XOR fallback (XOR is symmetric)
+            for idx in range(len(payload_bytes)):
+                decrypted[idx] = payload_bytes[idx] ^ key_buffer[idx]
+            return bytes(decrypted)
 
     def decrypt(self, text: bytes, password: bytes = None) -> bytes:
         """decryption method for decrypting a string or file
