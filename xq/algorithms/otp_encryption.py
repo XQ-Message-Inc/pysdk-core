@@ -1,3 +1,4 @@
+import os
 import warnings
 from typing import TextIO, BinaryIO, Union
 from io import StringIO, BytesIO, TextIOWrapper, BufferedReader
@@ -84,10 +85,12 @@ class OTPEncryption(Encryption):
             return
     
     def encrypt_file_streaming(
-        self, 
-        file: Union[BinaryIO, BufferedReader, BytesIO], 
+        self,
+        file: Union[BinaryIO, BufferedReader, BytesIO, bytes, bytearray, str, os.PathLike],
         password: Union[str, bytes],
-        header: bytes
+        header: bytes,
+        out_file: Union[BinaryIO, None] = None,
+        chunk_size: int = 1024 * 1024,
     ):
         """
         Stream encrypt a file using OTP (XOR) encryption.
@@ -98,27 +101,49 @@ class OTPEncryption(Encryption):
         :param header: File header to prepend
         :return: Encrypted file as bytes
         """
-        CHUNK_SIZE = 1024 * 1024  # 1MB chunks
-        
         if isinstance(password, str):
-            password = password.encode('utf-8')
-        
-        encrypted_chunks = [header]
-        key_offset = 0
-        
-        # Ensure we have a file-like object we can read from
-        if isinstance(file, (str, PosixPath)):
-            with open(file, 'rb') as f:
-                return self._stream_encrypt_file_handle(f, password, encrypted_chunks, key_offset, CHUNK_SIZE)
-        elif hasattr(file, 'read'):
-            return self._stream_encrypt_file_handle(file, password, encrypted_chunks, key_offset, CHUNK_SIZE)
+            password = password.encode("utf-8")
+        key_len = len(password) or 1  
+
+        must_close = False
+        if hasattr(file, "read"):
+            fh = file
+        elif isinstance(file, (str, os.PathLike)):
+            fh = open(os.fspath(file), "rb")
+            must_close = True
+        elif isinstance(file, (bytes, bytearray)):
+            fh = BytesIO(bytes(file))
         else:
-            # If it's bytes, convert to BytesIO
-            if isinstance(file, bytes):
-                file = BytesIO(file)
-                return self._stream_encrypt_file_handle(file, password, encrypted_chunks, key_offset, CHUNK_SIZE)
-            else:
-                raise TypeError(f"Unsupported file type: {type(file)}")
+            fh = BytesIO(bytes(file))
+
+        try:
+            chunks = [] if out_file is None else None
+            def write(buf: bytes):
+                if out_file is None:
+                    chunks.append(buf)
+                else:
+                    out_file.write(buf)
+
+            write(header)
+
+            key_off = 0
+            while True:
+                chunk = fh.read(chunk_size)
+                if not chunk:
+                    break
+                if hasattr(self, "encrypt_chunk"):
+                    enc_chunk = self.encrypt_chunk(chunk, password, key_off)
+                else:
+                    enc_chunk = self.encrypt(chunk, password)
+                write(enc_chunk)
+                key_off = (key_off + len(chunk)) % key_len
+
+            if out_file is not None:
+                return None
+            return b"".join(chunks)
+        finally:
+            if must_close:
+                fh.close()
     
     def _stream_encrypt_file_handle(
         self, 

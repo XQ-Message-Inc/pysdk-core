@@ -43,8 +43,8 @@ class AESEncryption(Encryption):
         key = PBKDF2(password, salt, dkLen=key_length, count=iterations, hmac_hash_module=SHA256)
         return key
 
-    def encrypt(self, data: str, password: str=None, header=None):
-        """Encrypts the provided data using AES-GCM"""
+    def encrypt(self, data: str | bytes | object, password: str=None, header=None, chunk_size: int = 1024 * 1024, out_file=None):
+        """Encrypts the provided data using AES-GCM (scheme 1) or AES-CTR (scheme 2)."""
         if password is None:
             password = self.key
         
@@ -73,55 +73,81 @@ class AESEncryption(Encryption):
         else:
             cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
         
-        if isinstance(data, str):
-            data = data.encode()
+        is_stream = hasattr(data, 'read')
+        if not is_stream:
+            if isinstance(data, str):
+                data = data.encode()
+            
+        if self.scheme == 2 and out_file is not None:
+            # CTR Streaming: write header once, then chunked encryption
+            out_file.write(header)
+            if is_stream:
+                while True:
+                    chunk = data.read(chunk_size)
+                    if not chunk:
+                        break
+                    out_file.write(cipher.encrypt(chunk))
+            else:
+                mv = memoryview(data)
+                for off in range(0, len(mv), chunk_size):
+                    out_file.write(cipher.encrypt(mv[off:off + chunk_size]))
+            return None
         
         combined = bytearray()
+        combined.extend(header)
 
+        # Non-streaming (in-memory) encryption
         if self.scheme == 2:
-            ciphertext = cipher.encrypt(data)
-            # Return the combined result: Header + Ciphertext
-            combined.extend(header)
-            combined.extend(ciphertext)
+            # CTR: chunked encryption
+            mv = memoryview(data)
+            for off in range(0, len(mv), chunk_size):
+                combined.extend(cipher.encrypt(mv[off:off + chunk_size]))
+            return combined
         else:
-            ciphertext, tag = cipher.encrypt_and_digest(data)
-            # Return the combined result: Header + Ciphertext + Tag
-            combined.extend(header)      
-            combined.extend(ciphertext)   
-            combined.extend(tag)          
+            # GCM: single-shot
+            ciphertext, tag = cipher.encrypt_and_digest(data) 
+            combined.extend(ciphertext)
+            combined.extend(tag)
+            return combined
 
-        return combined
-
-    def decrypt(self, data: bytes, password: str = None, salt_size=16, iv_size=12):
+    def decrypt(self, data: bytes | object, password: str = None, salt_size=16, iv_size=12, chunk_size: int = 1024 * 1024, out_file=None):
+        """Decrypts the provided data using AES-GCM (scheme 1) or AES-CTR (scheme 2)."""
         if password is None:
             password = self.key
         
         if isinstance(password, str):
             password = password.encode()
         
+        is_stream = hasattr(data, 'read')
         if self.scheme == 2:
             iv_size = 16
 
         salted_marker = b'Salted__'
-        start_pos = data.find(salted_marker)
-        if start_pos == -1:
-            raise ValueError("Invalid data format")
-        
-        salt_start = start_pos + len(salted_marker)
-    
-        salt = data[salt_start:salt_start + salt_size]
 
-        iv_start = salt_start + salt_size
-        iv = data[iv_start:iv_start + iv_size]
-
-        ciphertext_start = iv_start + iv_size
-
-        if self.scheme == 2:
-            ciphertext = data[ciphertext_start:]
+        if is_stream:
+            if data.read(8) != salted_marker:
+                raise ValueError("Invalid data format (no Salted__)")
+            salt = data.read(salt_size)
+            iv = data.read(iv_size)
         else:
-            ciphertext_end = -16
-            ciphertext = data[ciphertext_start:ciphertext_end]
-            tag = data[ciphertext_end:]
+            if data[:8] != salted_marker:
+                raise ValueError("Invalid data format (no Salted__)")
+            
+            salt_start = len(salted_marker)
+        
+            salt = data[salt_start:salt_start + salt_size]
+
+            iv_start = salt_start + salt_size
+            iv = data[iv_start:iv_start + iv_size]
+
+            ciphertext_start = iv_start + iv_size
+
+            if self.scheme == 2:
+                ciphertext = data[ciphertext_start:]
+            else:
+                ciphertext_end = -16
+                ciphertext = data[ciphertext_start:ciphertext_end]
+                tag = data[ciphertext_end:]
 
         # Derive the key using PBKDF2 and the extracted salt
         if self.scheme == 2:
@@ -130,12 +156,48 @@ class AESEncryption(Encryption):
             key = self.derive_key(salt , password)
 
         if self.scheme == 2:
+            # CTR: chunked decryption
             counter_value = int.from_bytes(iv[:8], byteorder='big') << 64
             counter = Counter.new(128, initial_value=counter_value)
             cipher = AES.new(key, AES.MODE_CTR, counter=counter)
-            plaintext = cipher.decrypt(ciphertext)
-        else:
-            cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
-            plaintext = cipher.decrypt_and_verify(ciphertext, tag)
 
-        return plaintext.decode("utf-8")
+            if out_file is not None:
+                if is_stream:
+                    while True:
+                        chunk = data.read(chunk_size)
+                        if not chunk:
+                            break
+                        out_file.write(cipher.decrypt(chunk))
+                else:
+                    mv = memoryview(ciphertext)
+                    for off in range(0, len(mv), chunk_size):
+                        out_file.write(cipher.decrypt(mv[off:off + chunk_size]))
+                return None
+            else:
+                out = bytearray()
+                if is_stream:
+                    chunks = []
+                    while True:
+                        chunk = data.read(chunk_size)
+                        if not chunk:
+                            break
+                        chunks.append(cipher.decrypt(chunk))
+                    return b"".join(chunks).decode("utf-8")
+                else:
+                    mv = memoryview(ciphertext)
+                    for off in range(0, len(mv), chunk_size):
+                        out.extend(cipher.decrypt(mv[off:off + chunk_size]))
+                    return bytes(out).decode("utf-8")
+    
+        # GCM: single-shot decryption
+        cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
+        if is_stream:
+            body = data.read()
+            if len(body) < 16:
+                raise ValueError("Truncated input")
+            ct_body, tag = body[:-16], body[-16:]
+        else:
+            ct_body, tag = ciphertext, tag
+        pt = cipher.decrypt(ct_body)
+        cipher.verify(tag)
+        return pt.decode("utf-8")
