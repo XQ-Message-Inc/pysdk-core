@@ -7,8 +7,6 @@ from xq.config import API_KEY, DASHBOARD_API_KEY, XQ_LOCATOR_KEY
 from xq.algorithms import Encryption, Algorithms
 from xq.exceptions import XQException
 from xq.api import XQAPI  
-from typing import Dict
-
 
 try:
     from xq.algorithms.xor import expand_key_python
@@ -238,16 +236,21 @@ class XQ:
         """
 
         if isinstance(encryptedText, (str, os.PathLike)):
-            full_source = os.fspath(encryptedText) 
-            with open(full_source, "rb") as _fh:
-                locator, _, _ = self.parse_file_for_decrypt(_fh)  
+            full_source = os.fspath(encryptedText)
+            with open(full_source, "rb") as fh:
+                locator, _, _ = self.parse_file_for_decrypt(fh)
         elif hasattr(encryptedText, "read"):
-            buf = encryptedText.read()
-            from io import BytesIO
-            full_source = buf                                 
-            locator, _, _ = self.parse_file_for_decrypt(BytesIO(buf))
+            fh = encryptedText
+            try:
+                locator, _, _ = self.parse_file_for_decrypt(fh)
+            finally:
+                try:
+                    fh.seek(0)
+                except Exception:
+                    pass
+            full_source = fh 
         else:
-            full_source = encryptedText                    
+            full_source = encryptedText
             locator, _, _ = self.parse_file_for_decrypt(full_source)
 
         if key is None:
@@ -329,54 +332,104 @@ class XQ:
             pt = pt.encode("utf-8")
         return bytes(pt)
     
-    def parse_file_for_decrypt(self, input_data) -> Dict[str, bytes]:
+    def parse_file_for_decrypt(self, input_data):
         """
-        Returns (locator:str, name_encrypted:bytes, content_encrypted:bytes).
-        Reads bytes from a handle or bytes-like. Header layout:
-        [0:4]  token_size+version (LE uint32), token_size=43
-        [4:47] locator (43 bytes, utf-8)
-        [..]   name_size (LE uint32)
-        [..]   name_encrypted (name_size bytes)
-        [..]   scheme (1 byte if version>0)
-        body   starts here (Salted__)
+        Parse the XQ outer header and return:
+        (locator:str, name_encrypted:bytes, content_source)
+
+        - If `input_data` is file-like: reads only the header, then rewinds the handle
+        to position 0 and returns the same handle as `content_source`.
+        - If `input_data` is bytes/bytearray: parses in-place and returns the original
+        bytes as `content_source`.
+
+        Header layout:
+        [0:4]   token_size+version (LE uint32), token_size=43
+        [4:47]  locator (43 bytes, utf-8)
+        [..]    name_size (LE uint32)
+        [..]    name_encrypted (name_size bytes)
+        [..]    scheme (1 byte if version>0)
+        body    starts after header
         """
-        if hasattr(input_data, 'read'):
-            file_data_bytes = input_data.read()
-        elif isinstance(input_data, (bytes, bytearray)):
-            file_data_bytes = bytes(input_data)
-        else:
-            raise TypeError("Input must be a file-like object or bytes")
 
-        token_size = 43
-        view = memoryview(file_data_bytes)
-        off = 0
+        TOKEN_SIZE = 43
 
-        v = struct.unpack_from('<I', view, off)[0]
-        off += 4
-        version = v - token_size
-        if version not in (0, 1):
-            raise ValueError(f"Incompatible header version: {version}")
+        def _read_exact(fh, n: int) -> bytes:
+            b = fh.read(n)
+            if len(b) != n:
+                raise ValueError("Truncated header")
+            return b
 
-        locator = view[off:off + token_size].tobytes().decode('utf-8')
-        off += token_size
+        # File-like input: read only header
+        if hasattr(input_data, "read"):
+            fh = input_data
+            try:
+                fh.seek(0)
+            except Exception:
+                pass
 
-        if off + 4 > len(view):
-            raise ValueError("Truncated header (filename size)")
-        file_name_size = struct.unpack_from('<I', view, off)[0]
-        off += 4
-        if file_name_size < 0 or file_name_size > 2000:
-            raise ValueError("Unable to parse file, check that the file is valid and not damaged")
+            v = struct.unpack('<I', _read_exact(fh, 4))[0]
+            version = v - TOKEN_SIZE
+            if version not in (0, 1):
+                raise ValueError(f"Incompatible header version: {version}")
 
-        if off + file_name_size > len(view):
-            raise ValueError("Truncated header (filename)")
-        name_encrypted = view[off:off + file_name_size].tobytes()
-        off += file_name_size
+            locator = _read_exact(fh, TOKEN_SIZE).decode('utf-8')
 
-        if version > 0:
-            if off + 1 > len(view):
-                raise ValueError("Truncated header (scheme)")
-            # scheme = view[off]  # not returned, but could be used if desired
-            off += 1
+            name_size = struct.unpack('<I', _read_exact(fh, 4))[0]
+            if name_size < 0 or name_size > 2000:
+                raise ValueError("Invalid filename size")
 
-        content_encrypted = file_data_bytes 
-        return locator, name_encrypted, content_encrypted
+            name_encrypted = _read_exact(fh, name_size)
+
+            if version > 0:
+                # consume scheme byte so the handle ends at the start of the body
+                _ = _read_exact(fh, 1)
+
+            # Rewind so downstream (decryptor) can re-parse and/or stream
+            try:
+                fh.seek(0)
+            except Exception:
+                pass
+
+            return locator, name_encrypted, fh
+
+        # Bytes / bytearray input
+        if isinstance(input_data, (bytes, bytearray, memoryview)):
+            buf = bytes(input_data) if not isinstance(input_data, bytes) else input_data
+            view = memoryview(buf)
+            off = 0
+
+            if off + 4 > len(view):
+                raise ValueError("Truncated header")
+            v = struct.unpack_from('<I', view, off)[0]
+            off += 4
+            version = v - TOKEN_SIZE
+            if version not in (0, 1):
+                raise ValueError(f"Incompatible header version: {version}")
+
+            if off + TOKEN_SIZE > len(view):
+                raise ValueError("Truncated locator")
+            locator = view[off:off + TOKEN_SIZE].tobytes().decode('utf-8')
+            off += TOKEN_SIZE
+
+            if off + 4 > len(view):
+                raise ValueError("Truncated header (filename size)")
+            name_size = struct.unpack_from('<I', view, off)[0]
+            off += 4
+            if name_size < 0 or name_size > 2000:
+                raise ValueError("Invalid filename size")
+
+            if off + name_size > len(view):
+                raise ValueError("Truncated header (filename)")
+            name_encrypted = view[off:off + name_size].tobytes()
+            off += name_size
+
+            if version > 0:
+                if off + 1 > len(view):
+                    raise ValueError("Truncated header (scheme)")
+                # scheme_byte = view[off]  # available if you choose to return it
+                off += 1
+
+            # Return the original bytes as the "content source"
+            return locator, name_encrypted, buf
+
+        raise TypeError("Input must be a file-like object or bytes-like buffer")

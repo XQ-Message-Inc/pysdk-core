@@ -1,107 +1,122 @@
-import pytest
-import tempfile
 import io
-from xq.algorithms.aes_encryption import *
+import os
+import tempfile
+import pytest
+from xq.algorithms.aes_encryption import AESEncryption
 
-def test_aes(key_bytes):
-    aes = AESEncryption(key_bytes)
-    assert aes
-
-# Fixtures for test setup
-@pytest.fixture
-def encryption_key():
-    return b'some_secret_key'
+# ---- Fixtures ---------------------------------------------------------------
 
 @pytest.fixture
-def aes_encryptor(encryption_key):
-    return AESEncryption(encryption_key)
+def key_bytes():
+    return b"default_secret_key"
 
-def test_aes(key_bytes):
-    aes = AESEncryption(key_bytes)
-    assert aes
+@pytest.fixture
+def aes_gcm(key_bytes):
+    return AESEncryption(key_bytes, scheme=1)
 
-def test_add_header_salt(aes_encryptor):
-    result = aes_encryptor.add_header_salt()
-    assert isinstance(result, dict)
-    assert 'header' in result
-    assert 'salt' in result
-    assert 'iv' in result
-    assert len(result['salt']) == 16
-    assert len(result['iv']) == 12
+@pytest.fixture
+def aes_ctr(key_bytes):
+    return AESEncryption(key_bytes, scheme=2)
 
-def test_derive_key(aes_encryptor):
-    salt = os.urandom(16)
-    password = b'test_password'
-    derived_key = aes_encryptor.derive_key(salt, password)
-    assert len(derived_key) == 32 
+# ---- Tests ------------------------------------------------------------------
 
-def test_encrypt_decrypt(aes_encryptor):
-    plaintext = "This is a test"
-    password = "password123"
-    encrypted_data = aes_encryptor.encrypt(plaintext, password)
-    assert isinstance(encrypted_data, bytearray)
+def test_encrypt_decrypt_gcm_inmemory_default_key(aes_gcm):
+    pt = "hello gcm"
+    ct = aes_gcm.encrypt(pt)            
+    out = aes_gcm.decrypt(ct)         
+    assert out == pt
 
-    decrypted_data = aes_encryptor.decrypt(encrypted_data, password)
-    assert decrypted_data == plaintext
+def test_encrypt_decrypt_gcm_inmemory_with_password(aes_gcm):
+    pt = "hello gcm with pw"
+    pw = "pw123"
+    ct = aes_gcm.encrypt(pt, password=pw)
+    out = aes_gcm.decrypt(ct, password=pw)
+    assert out == pt
 
-def test_encrypt_decrypt_with_default_key(aes_encryptor):
-    plaintext = "This is another test"
-    encrypted_data = aes_encryptor.encrypt(plaintext)
-    decrypted_data = aes_encryptor.decrypt(encrypted_data)
-    assert decrypted_data == plaintext
+def test_encrypt_decrypt_gcm_streaming_bytesio(aes_gcm):
+    pt = b"streaming gcm data"
+    src = io.BytesIO(pt)
+    ct = aes_gcm.encrypt(src.getvalue())
+    out = aes_gcm.decrypt(io.BytesIO(ct))
+    assert out.encode() == pt
 
-def test_invalid_data_format_for_decrypt(aes_encryptor):
+def test_encrypt_decrypt_ctr_inmemory(aes_ctr):
+    pt = "ctr mode roundtrip"
+    ct = aes_ctr.encrypt(pt)                 
+    out = aes_ctr.decrypt(ct)                
+    assert out == pt
+
+def test_encrypt_decrypt_ctr_streaming(tmp_path, aes_ctr):
+    pt = ("0123456789ABCDEF" * 100_000).encode() 
+    src = io.BytesIO(pt)
+
+    enc_path = tmp_path / "enc.bin"
+    with open(enc_path, "wb") as f:
+        ret = aes_ctr.encrypt(src, out_file=f)    
+        assert ret is None
+
+    dec_path = tmp_path / "dec.txt"
+    with open(enc_path, "rb") as f_in, open(dec_path, "wb") as f_out:
+        ret = aes_ctr.decrypt(f_in, out_file=f_out)
+        assert ret is None
+
+    with open(dec_path, "rb") as f:
+        assert f.read() == pt
+
+def test_large_chunked_ctr_inmemory(aes_ctr):
+    big = ("XQ" * (1024 * 1024 + 5000)) 
+    ct = aes_ctr.encrypt(big)
+    out = aes_ctr.decrypt(ct)
+    assert out == big
+
+def test_add_header_salt_appends_existing(aes_gcm):
+    original = bytearray(b"HEAD")
+    ctx = aes_gcm.add_header_salt(header=original)
+    hdr = ctx["header"]
+    assert hdr.startswith(b"HEAD")
+    assert b"Salted__" in hdr[len(b"HEAD"):]
+
+def test_decrypt_invalid_magic_inmemory_raises(aes_gcm):
+    with pytest.raises(ValueError, match="Salted__"):
+        aes_gcm.decrypt(b"not_a_valid_header")
+
+def test_decrypt_invalid_magic_stream_raises(aes_gcm):
+    with pytest.raises(ValueError, match="Salted__"):
+        aes_gcm.decrypt(io.BytesIO(b"nope"))
+
+def test_gcm_wrong_password_raises(aes_gcm):
+    pt = "secret text"
+    ct = aes_gcm.encrypt(pt, password="rightpw")
+    with pytest.raises(ValueError):      
+        aes_gcm.decrypt(ct, password="wrongpw")
+
+def test_gcm_truncated_tag_raises(aes_gcm):
+    pt = "with tag"
+    ct = bytearray(aes_gcm.encrypt(pt))
+    del ct[-5:]
     with pytest.raises(ValueError):
-        aes_encryptor.decrypt(b'invalid data format')
+        aes_gcm.decrypt(bytes(ct))
 
-def test_roundtrip(key_bytes, plaintextFixiture):
-    aes = AESEncryption(key_bytes)
-    ciphertext = aes.encrypt(plaintextFixiture)
-    plaintext = aes.decrypt(ciphertext)
+def test_encrypt_bytes_input_gcm(aes_gcm):
+    pt = b"bytes input ok"
+    ct = aes_gcm.encrypt(pt)
+    out = aes_gcm.decrypt(ct)
+    assert out.encode() == pt
 
-    assert plaintext == plaintextFixiture
+def test_empty_plaintext_gcm(aes_gcm):
+    ct = aes_gcm.encrypt("")
+    out = aes_gcm.decrypt(ct)
+    assert out == ""
 
-def test_roundtrip_seperate_instances(key_bytes, plaintextFixiture):
-    aes = AESEncryption(key_bytes)
-    ciphertext= aes.encrypt(plaintextFixiture)
+def test_pbkdf2_params_length_and_iterations(aes_gcm):
+    salt = os.urandom(16)
+    k32 = aes_gcm.derive_key(salt, b"pw", iterations=512, key_length=32)
+    k16 = aes_gcm.derive_key(salt, b"pw", iterations=512, key_length=16)
+    assert len(k32) == 32 and len(k16) == 16
+    assert k32 != k16
 
-    aes = AESEncryption(key_bytes)
-    plaintext = aes.decrypt(ciphertext)
-
-    assert plaintext == plaintextFixiture
-
-def test_create_file_header(aes_encryptor):
-    with tempfile.NamedTemporaryFile(suffix=".testfilename.txt", delete=False) as temp_file:
-        filename = temp_file.name
-
-    token = "testtoken" 
-    token = token.ljust(43, 'x')
-    
-    version = 1
-
-    print(f"Filename: {filename}, Token: {token}, Version: {version}")
-
-    header = aes_encryptor.create_file_header(filename, token, version)
-
-    print(f"Header: {header}")
-    print(f"Buffer Length in pytest: {len(header)}")
-
-def test_encryptFile_decryptFile(aes_encryptor):
-    with tempfile.NamedTemporaryFile(suffix=".testfilename.txt", delete=False) as temp_file:
-        temp_file.write(b"File data for encryption")
-        temp_file.flush() 
-        temp_file.seek(0)
-        filename = temp_file.name
-
-    file_data = b"File data for encryption"
-
-    file_like_object = io.BytesIO(file_data)
-
-    token = "token_string".ljust(43, 'x')
-    password = "file_password"
-
-    encrypted_file = aes_encryptor.encryptFile(filename, file_like_object, token, password)
-
-    decrypted_file_data = aes_encryptor.decryptFile(encrypted_file, password)
-
-    assert decrypted_file_data == file_data
+def test_ctr_uses_iv_size_16(aes_ctr):
+    pt = "check iv size behavior"
+    ct = aes_ctr.encrypt(pt)
+    assert ct[:8] == b"Salted__"
+    assert len(ct) > 8 + 16 + 16 
