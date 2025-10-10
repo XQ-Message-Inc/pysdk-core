@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>xq package &mdash; xq-sdk  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -84,16 +82,18 @@
            <div itemprop="articleBody">
              
   <section id="xq-package">
-<h1>xq package<a class="headerlink" href="#xq-package" title="Permalink to this heading"></a></h1>
+<h1>xq package<a class="headerlink" href="#xq-package" title="Link to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="xq.algorithms.html">xq.algorithms package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="xq.algorithms.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="xq.algorithms.html#module-xq.algorithms.aes_encryption">xq.algorithms.aes_encryption module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.aes_encryption.AESEncryption"><code class="docutils literal notranslate"><span class="pre">AESEncryption</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.aes_encryption.AESEncryption.add_header_salt"><code class="docutils literal notranslate"><span class="pre">AESEncryption.add_header_salt()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.aes_encryption.AESEncryption.decrypt"><code class="docutils literal notranslate"><span class="pre">AESEncryption.decrypt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.aes_encryption.AESEncryption.derive_key"><code class="docutils literal notranslate"><span class="pre">AESEncryption.derive_key()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.aes_encryption.AESEncryption.encrypt"><code class="docutils literal notranslate"><span class="pre">AESEncryption.encrypt()</span></code></a></li>
 </ul>
 </li>
@@ -101,6 +101,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="xq.algorithms.html#module-xq.algorithms.encryption">xq.algorithms.encryption module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.encryption.Encryption"><code class="docutils literal notranslate"><span class="pre">Encryption</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.encryption.Encryption.create_file_header"><code class="docutils literal notranslate"><span class="pre">Encryption.create_file_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.encryption.Encryption.decryptFile"><code class="docutils literal notranslate"><span class="pre">Encryption.decryptFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.encryption.Encryption.encryptFile"><code class="docutils literal notranslate"><span class="pre">Encryption.encryptFile()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.encryption.Encryption.key"><code class="docutils literal notranslate"><span class="pre">Encryption.key</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.encryption.Encryption.shuffle"><code class="docutils literal notranslate"><span class="pre">Encryption.shuffle()</span></code></a></li>
 </ul>
@@ -110,7 +113,11 @@
 <li class="toctree-l2"><a class="reference internal" href="xq.algorithms.html#module-xq.algorithms.otp_encryption">xq.algorithms.otp_encryption module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.otp_encryption.OTPEncryption"><code class="docutils literal notranslate"><span class="pre">OTPEncryption</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.otp_encryption.OTPEncryption.decrypt"><code class="docutils literal notranslate"><span class="pre">OTPEncryption.decrypt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.otp_encryption.OTPEncryption.decrypt_chunk"><code class="docutils literal notranslate"><span class="pre">OTPEncryption.decrypt_chunk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.otp_encryption.OTPEncryption.decrypt_file_streaming"><code class="docutils literal notranslate"><span class="pre">OTPEncryption.decrypt_file_streaming()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.otp_encryption.OTPEncryption.encrypt"><code class="docutils literal notranslate"><span class="pre">OTPEncryption.encrypt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.otp_encryption.OTPEncryption.encrypt_chunk"><code class="docutils literal notranslate"><span class="pre">OTPEncryption.encrypt_chunk()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xq.algorithms.html#xq.algorithms.otp_encryption.OTPEncryption.encrypt_file_streaming"><code class="docutils literal notranslate"><span class="pre">OTPEncryption.encrypt_file_streaming()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -144,12 +151,15 @@
 <li class="toctree-l3"><a class="reference internal" href="xq.api.html#xq.api.XQAPI"><code class="docutils literal notranslate"><span class="pre">XQAPI</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.add_contact"><code class="docutils literal notranslate"><span class="pre">XQAPI.add_contact()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.add_packet"><code class="docutils literal notranslate"><span class="pre">XQAPI.add_packet()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.announce_device"><code class="docutils literal notranslate"><span class="pre">XQAPI.announce_device()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.api_delete"><code class="docutils literal notranslate"><span class="pre">XQAPI.api_delete()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.api_get"><code class="docutils literal notranslate"><span class="pre">XQAPI.api_get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.api_patch"><code class="docutils literal notranslate"><span class="pre">XQAPI.api_patch()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.api_post"><code class="docutils literal notranslate"><span class="pre">XQAPI.api_post()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.api_put"><code class="docutils literal notranslate"><span class="pre">XQAPI.api_put()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.authorize_alias"><code class="docutils literal notranslate"><span class="pre">XQAPI.authorize_alias()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.authorize_device"><code class="docutils literal notranslate"><span class="pre">XQAPI.authorize_device()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.authorize_device_cert"><code class="docutils literal notranslate"><span class="pre">XQAPI.authorize_device_cert()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.authorize_user"><code class="docutils literal notranslate"><span class="pre">XQAPI.authorize_user()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.code_validate"><code class="docutils literal notranslate"><span class="pre">XQAPI.code_validate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.create_and_store_packet"><code class="docutils literal notranslate"><span class="pre">XQAPI.create_and_store_packet()</span></code></a></li>
@@ -200,40 +210,33 @@
 </div>
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
 <section id="module-xq.config">
-<span id="xq-config-module"></span><h2>xq.config module<a class="headerlink" href="#module-xq.config" title="Permalink to this heading"></a></h2>
+<span id="xq-config-module"></span><h2>xq.config module<a class="headerlink" href="#module-xq.config" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="xq.config.configure_env">
+<span class="sig-prename descclassname"><span class="pre">xq.config.</span></span><span class="sig-name descname"><span class="pre">configure_env</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dotenv_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.config.configure_env" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-xq">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xq" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xq" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="xq.XQ">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.</span></span><span class="sig-name descname"><span class="pre">XQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dashboard_api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.</span></span><span class="sig-name descname"><span class="pre">XQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dashboard_api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locator_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.XQ.decrypt_file">
-<span class="sig-name descname"><span class="pre">decrypt_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encryptedText:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span> <span class="pre">=</span> <span class="pre">'OTP'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce:</span> <span class="pre">bytearray</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">StringIO</span></span></span><a class="headerlink" href="#xq.XQ.decrypt_file" title="Permalink to this definition"></a></dt>
-<dd><p>decrypt a given bytes string back into a FileLike object</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>encryptedText</strong> (<em>bytes</em>) – encrypted file contents</p></li>
-<li><p><strong>key</strong> (<em>bytes</em>) – encryption key</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>FileLike StringIO handle</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>StringIO</p>
-</dd>
-</dl>
+<span class="sig-name descname"><span class="pre">decrypt_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encryptedText</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytearray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">BinaryIO</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">BinaryIO</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1048576</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#xq.XQ.decrypt_file" title="Link to this definition"></a></dt>
+<dd><p>Decrypt a given file/path/bytes.
+- algorithm: None → infer from key prefix (.B/.1/.2)
+- out_file: path/handle → write there; else return bytes.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.XQ.decrypt_message">
-<span class="sig-name descname"><span class="pre">decrypt_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encryptedText:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span> <span class="pre">=</span> <span class="pre">'OTP'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce:</span> <span class="pre">bytearray</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.decrypt_message" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">decrypt_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encryptedText:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'GCM':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'CTR':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span> <span class="pre">=</span> <span class="pre">'OTP'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.decrypt_message" title="Link to this definition"></a></dt>
 <dd><p>decrypt a previoulsy encrypted string</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -255,48 +258,59 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.XQ.encrypt_file">
-<span class="sig-name descname"><span class="pre">encrypt_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileObj:</span> <span class="pre">~typing.TextIO</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span> <span class="pre">=</span> <span class="pre">'OTP'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span></span></span><a class="headerlink" href="#xq.XQ.encrypt_file" title="Permalink to this definition"></a></dt>
-<dd><p>encrypt the contents of a given file object</p>
+<span class="sig-name descname"><span class="pre">encrypt_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileObj:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">~typing.BinaryIO</span> <span class="pre">|</span> <span class="pre">bytes</span> <span class="pre">|</span> <span class="pre">bytearray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">bytes</span> <span class="pre">|</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'GCM':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'CTR':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span> <span class="pre">=</span> <span class="pre">'OTP'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients:</span> <span class="pre">~typing.List[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_hours:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_file:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">~os.PathLike</span> <span class="pre">|</span> <span class="pre">~typing.BinaryIO</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1048576</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytearray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#xq.XQ.encrypt_file" title="Link to this definition"></a></dt>
+<dd><p>Encrypt the contents of a given file/path/bytes.</p>
+<p>Behavior:
+- GCM/OTP: returns bytes (outer header + body). <cite>out_file</cite> is ignored.
+- CTR:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>If <cite>out_file</cite> is provided: streams to <cite>out_file</cite>, returns None.</p></li>
+<li><p>If <cite>out_file</cite> is None: returns bytes (in-memory).</p></li>
+</ul>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fileObj</strong> (<em>TextIO</em>) – FileLike object to encrypt</p></li>
-<li><p><strong>key</strong> (<em>bytes</em>) – encryption key to use, NOTE: may be expanded</p></li>
+<li><p><strong>fileObj</strong> – path (str), file-like object, or bytes/bytearray</p></li>
+<li><p><strong>key</strong> – encryption key (bytes or str)</p></li>
+<li><p><strong>algorithm</strong> – “OTP”, “GCM”, or “CTR”</p></li>
+<li><p><strong>recipients</strong> – who can retrieve the key packet</p></li>
+<li><p><strong>expires_hours</strong> – packet expiry</p></li>
+<li><p><strong>out_file</strong> – optional writable binary file-like to stream CTR output into</p></li>
+<li><p><strong>chunk_size</strong> – chunk size for CTR streaming</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>encrypted text, encryption key</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple</p>
+<dd class="field-even"><p>encrypted payload or None (when CTR+out_file)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.XQ.encrypt_message">
-<span class="sig-name descname"><span class="pre">encrypt_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span> <span class="pre">=</span> <span class="pre">'OTP'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.encrypt_message" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">encrypt_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'GCM':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'CTR':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span> <span class="pre">=</span> <span class="pre">'OTP'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients:</span> <span class="pre">~typing.List[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.encrypt_message" title="Link to this definition"></a></dt>
 <dd><p>encrypt a string</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> (<em>str</em>) – string to encrypt</p></li>
 <li><p><strong>key</strong> (<em>bytes</em><em>, </em><em>defaults to None</em>) – encryption key to use to encrypted text</p></li>
-<li><p><strong>algorithm</strong> (<em>Algorithms</em><em>, </em><em>defaults to AES</em>) – the encryption algorithm to use</p></li>
+<li><p><strong>algorithm</strong> (<em>Algorithms</em><em>, </em><em>defaults to OTP</em>) – the encryption algorithm to use</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>ciphertext, nonce, tag from encryption</p>
+<dd class="field-even"><p>ciphertext</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple(bytes)</p>
+<dd class="field-odd"><p>bytes</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.XQ.expand_key">
-<span class="sig-name descname"><span class="pre">expand_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#xq.XQ.expand_key" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">expand_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#xq.XQ.expand_key" title="Link to this definition"></a></dt>
 <dd><p>expand a key to the size of the text to be encrypted</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -316,7 +330,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.XQ.generate_key_from_entropy">
-<span class="sig-name descname"><span class="pre">generate_key_from_entropy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.generate_key_from_entropy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">generate_key_from_entropy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.generate_key_from_entropy" title="Link to this definition"></a></dt>
 <dd><p>helper method for automatically requesting entropy and shuffling key</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -329,43 +343,23 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="xq.XQ.magic_decrypt">
-<span class="sig-name descname"><span class="pre">magic_decrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">magic_bundle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.magic_decrypt" title="Permalink to this definition"></a></dt>
-<dd><p>easy button decryption: decrypt a magic encrypted with it’s magic bundle</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>magic_bundle</strong> (<em>tuple</em>) – magic bundle created by magic_encryption</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>decrypted item</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="xq.XQ.magic_encrypt">
-<span class="sig-name descname"><span class="pre">magic_encrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thing_to_encrypt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.magic_encrypt" title="Permalink to this definition"></a></dt>
-<dd><p>easy button encryption: encrypt something with an entropy generated encryption key, and store the key in XQ</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>thing_to_encrypt</strong> (<em>any</em>) – something to encrypt (i.e. text, file path string, etc)</p></li>
-<li><p><strong>recipients</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – list of recipient emails</p></li>
+<dt class="sig sig-object py" id="xq.XQ.parse_file_for_decrypt">
+<span class="sig-name descname"><span class="pre">parse_file_for_decrypt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.parse_file_for_decrypt" title="Link to this definition"></a></dt>
+<dd><p>Parse the XQ outer header and return:
+(locator:str, name_encrypted:bytes, content_source)</p>
+<ul class="simple">
+<li><p>If <cite>input_data</cite> is file-like: reads only the header, then rewinds the handle</p></li>
 </ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – _description_</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>magic bundle, used for decryption</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>tuple</p>
-</dd>
-</dl>
+<p>to position 0 and returns the same handle as <cite>content_source</cite>.
+- If <cite>input_data</cite> is bytes/bytearray: parses in-place and returns the original
+bytes as <cite>content_source</cite>.</p>
+<p>Header layout:
+[0:4]   token_size+version (LE uint32), token_size=43
+[4:47]  locator (43 bytes, utf-8)
+[..]    name_size (LE uint32)
+[..]    name_encrypted (name_size bytes)
+[..]    scheme (1 byte if version&gt;0)
+body    starts after header</p>
 </dd></dl>
 
 </dd></dl>

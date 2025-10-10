@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>xq.api package &mdash; xq-sdk  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -85,9 +83,9 @@
            <div itemprop="articleBody">
              
   <section id="xq-api-package">
-<h1>xq.api package<a class="headerlink" href="#xq-api-package" title="Permalink to this heading"></a></h1>
+<h1>xq.api package<a class="headerlink" href="#xq-api-package" title="Link to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="xq.api.manage.html">xq.api.manage package</a><ul>
@@ -110,7 +108,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="xq.api.subscription.html#module-xq.api.subscription.user_management">xq.api.subscription.user_management module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="xq.api.subscription.html#xq.api.subscription.user_management.authorize_alias"><code class="docutils literal notranslate"><span class="pre">authorize_alias()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xq.api.subscription.html#xq.api.subscription.user_management.authorize_device"><code class="docutils literal notranslate"><span class="pre">authorize_device()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xq.api.subscription.html#xq.api.subscription.user_management.authorize_device_cert"><code class="docutils literal notranslate"><span class="pre">authorize_device_cert()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="xq.api.subscription.html#xq.api.subscription.user_management.authorize_user"><code class="docutils literal notranslate"><span class="pre">authorize_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xq.api.subscription.html#xq.api.subscription.user_management.load_file_content"><code class="docutils literal notranslate"><span class="pre">load_file_content()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="xq.api.subscription.html#module-xq.api.subscription">Module contents</a></li>
@@ -134,19 +135,19 @@
 </div>
 </section>
 <section id="module-xq.api">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xq.api" title="Permalink to this heading"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-xq.api" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="xq.api.XQAPI">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.api.</span></span><span class="sig-name descname"><span class="pre">XQAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dashboard_api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_base_uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xqmsg.net/v2/'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.api.</span></span><span class="sig-name descname"><span class="pre">XQAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dashboard_api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locator_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_base_uri</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xqmsg.net/v2/'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.add_contact">
-<span class="sig-name descname"><span class="pre">add_contact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">firstName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notifications</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.add_contact" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_contact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">firstName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notifications</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.add_contact" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.add_packet">
-<span class="sig-name descname"><span class="pre">add_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encrypted_key_packet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.add_packet" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encrypted_key_packet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.add_packet" title="Link to this definition"></a></dt>
 <dd><p>upload an encrypted key packet to XQ
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDE4NTY2NDE-add-a-new-key-packet">https://xq.stoplight.io/docs/xqmsg/b3A6NDE4NTY2NDE-add-a-new-key-packet</a></p>
 <dl class="field-list simple">
@@ -169,8 +170,31 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.announce_device">
+<span class="sig-name descname"><span class="pre">announce_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">afirst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alast</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aphone</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.announce_device" title="Link to this definition"></a></dt>
+<dd><p>static method for announcing the trusted device to the dashboard, registering
+the device as a team member.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>(</strong><strong>optional</strong><strong>)</strong> (<em>aphone</em>) – The name of the device</p></li>
+<li><p><strong>(</strong><strong>optional</strong><strong>)</strong> – The last name of the device</p></li>
+<li><p><strong>(</strong><strong>optional</strong><strong>)</strong> – The phone number of the device</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>api response status code</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.api_delete">
-<span class="sig-name descname"><span class="pre">api_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_delete" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">api_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_delete" title="Link to this definition"></a></dt>
 <dd><p>static method for interacting with XQ API DELETE endpoints</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -190,7 +214,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.api_get">
-<span class="sig-name descname"><span class="pre">api_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_get" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">api_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_get" title="Link to this definition"></a></dt>
 <dd><p>static method for interacting with the XQ API GET endpoints</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -212,7 +236,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.api_patch">
-<span class="sig-name descname"><span class="pre">api_patch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_patch" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">api_patch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_patch" title="Link to this definition"></a></dt>
 <dd><p>static method for interacting with XQ API PATCH endpoints</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -234,7 +258,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.api_post">
-<span class="sig-name descname"><span class="pre">api_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_post" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">api_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_post" title="Link to this definition"></a></dt>
 <dd><p>static method for interacting with XQ API POST endpoints</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -256,7 +280,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.api_put">
-<span class="sig-name descname"><span class="pre">api_put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_put" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">api_put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serviceEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdomain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.api_put" title="Link to this definition"></a></dt>
 <dd><p>static method for interacting with XQ API PUT endpoints</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -278,7 +302,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.authorize_alias">
-<span class="sig-name descname"><span class="pre">authorize_alias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.authorize_alias" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">authorize_alias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.authorize_alias" title="Link to this definition"></a></dt>
 <dd><p>request an access token for the given user information
 <a class="reference external" href="https://subscription.xqmsg.net/v2/authorizealias">https://subscription.xqmsg.net/v2/authorizealias</a></p>
 <dl class="field-list simple">
@@ -300,8 +324,59 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.authorize_device">
+<span class="sig-name descname"><span class="pre">authorize_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">business_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.authorize_device" title="Link to this definition"></a></dt>
+<dd><p>request pre-auth token for a given email address, this token will need to be exchanged for an access token
+<a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDE-request-access-for-a-user">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDE-request-access-for-a-user</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>user_email</strong> (<em>str</em>) – device name requesting access token</p></li>
+<li><p><strong>newsletter</strong> (<em>bool</em><em>, </em><em>optional</em>) – subscribe to newsletter, defaults to False</p></li>
+<li><p><strong>notifications</strong> (<em>int</em><em>, </em><em>optional</em>) – notification level: 0 = No Notifications, 1 = Receive Usage Reports, 2 = Receive Tutorials, 3 = Receive Both, defaults to 0</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pre-aut token, which can be exchanged for an access token</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.authorize_device_cert">
+<span class="sig-name descname"><span class="pre">authorize_device_cert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cert_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cert_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport_key_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">private_key_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Device'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">announce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.authorize_device_cert" title="Link to this definition"></a></dt>
+<dd><p>Authorize a device using an XQ certificate and transport key, returning an access token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQ API client instance</p></li>
+<li><p><strong>cert_id</strong> (<em>int</em>) – Certificate identifier issued for the device/tenant</p></li>
+<li><p><strong>cert_file_path</strong> (<em>str</em>) – Path to the client certificate (client.crt)</p></li>
+<li><p><strong>transport_key_file_path</strong> (<em>str</em>) – Path to the transport key used to encrypt the request payload (transport.key)</p></li>
+<li><p><strong>private_key_file_path</strong> (<em>str</em>) – Path to the device private key (client.key) used to decrypt the returned token</p></li>
+<li><p><strong>device_name</strong> (<em>str</em>) – Human-readable device name (max 48 characters), defaults to Device</p></li>
+<li><p><strong>announce</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, announce the device to the dashboard after authorization, defaults to True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Access token for subsequent authenticated requests</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – If files are missing/empty, the server time cannot be fetched, encryption/decryption fails, or the authorization request is rejected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.authorize_user">
-<span class="sig-name descname"><span class="pre">authorize_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newsletter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notifications</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.authorize_user" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">authorize_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newsletter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notifications</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.authorize_user" title="Link to this definition"></a></dt>
 <dd><p>request pre-auth token for a given email address, this token will need to be exchanged for an access token
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDE-request-access-for-a-user">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDE-request-access-for-a-user</a></p>
 <dl class="field-list simple">
@@ -326,7 +401,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.code_validate">
-<span class="sig-name descname"><span class="pre">code_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.code_validate" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">code_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.code_validate" title="Link to this definition"></a></dt>
 <dd><p>validate the provided 2FA pin
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MjQ1MjM-validate-access-request-with-a-pin">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MjQ1MjM-validate-access-request-with-a-pin</a></p>
 <dl class="field-list simple">
@@ -350,7 +425,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.create_and_store_packet">
-<span class="sig-name descname"><span class="pre">create_and_store_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.create_and_store_packet" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_and_store_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'msg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.create_and_store_packet" title="Link to this definition"></a></dt>
 <dd><p>creates an encrypted packet from a secret key
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/1f9bc1713a7cd-create-and-save-a-new-key-packet">https://xq.stoplight.io/docs/xqmsg/1f9bc1713a7cd-create-and-save-a-new-key-packet</a></p>
 <dl class="field-list simple">
@@ -376,7 +451,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.create_and_store_packets">
-<span class="sig-name descname"><span class="pre">create_and_store_packets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.create_and_store_packets" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_and_store_packets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.create_and_store_packets" title="Link to this definition"></a></dt>
 <dd><p>creates an encrypted packet from a secret key
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/1f9bc1713a7cd-create-and-save-a-new-key-packet">https://xq.stoplight.io/docs/xqmsg/1f9bc1713a7cd-create-and-save-a-new-key-packet</a></p>
 <dl class="field-list simple">
@@ -402,7 +477,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.create_packet">
-<span class="sig-name descname"><span class="pre">create_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.create_packet" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_hours</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.create_packet" title="Link to this definition"></a></dt>
 <dd><p>creates an encrypted packet from a secret key
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDQ5MTY-create-a-new-key-packet">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDQ5MTY-create-a-new-key-packet</a></p>
 <dl class="field-list simple">
@@ -428,7 +503,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.create_usergroup">
-<span class="sig-name descname"><span class="pre">create_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.create_usergroup" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.create_usergroup" title="Link to this definition"></a></dt>
 <dd><p>create a usergroup</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -452,7 +527,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.dashboard_login">
-<span class="sig-name descname"><span class="pre">dashboard_login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.dashboard_login" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dashboard_login</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.dashboard_login" title="Link to this definition"></a></dt>
 <dd><p>log a given user into their dashboard account
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDM-login-to-the-dashboard">https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDM-login-to-the-dashboard</a></p>
 <dl class="field-list simple">
@@ -479,7 +554,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.dashboard_signup">
-<span class="sig-name descname"><span class="pre">dashboard_signup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emailOptIn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.dashboard_signup" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">dashboard_signup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emailOptIn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.dashboard_signup" title="Link to this definition"></a></dt>
 <dd><p>register a new user for XQ Dashboard access
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDI-self-sign-up">https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDYwMDI-self-sign-up</a></p>
 <dl class="field-list simple">
@@ -496,7 +571,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.delete_usergroup">
-<span class="sig-name descname"><span class="pre">delete_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.delete_usergroup" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">delete_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.delete_usergroup" title="Link to this definition"></a></dt>
 <dd><p>delete a usergroup by id
 WARNING: DELETE not supported by API</p>
 <dl class="field-list simple">
@@ -520,7 +595,7 @@ WARNING: DELETE not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.exchange_key">
-<span class="sig-name descname"><span class="pre">exchange_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">business_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.exchange_key" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">exchange_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">business_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.exchange_key" title="Link to this definition"></a></dt>
 <dd><p>exchange pre-auth token for an access token, and update headers accordingly
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5Mzc1NjA-exchange-for-access-token">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5Mzc1NjA-exchange-for-access-token</a></p>
 <dl class="field-list simple">
@@ -541,7 +616,7 @@ WARNING: DELETE not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.get_communication_by_locator_token">
-<span class="sig-name descname"><span class="pre">get_communication_by_locator_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_communication_by_locator_token" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_communication_by_locator_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_communication_by_locator_token" title="Link to this definition"></a></dt>
 <dd><p>Get a single communication by its locator token.
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/005edb8a9ec2b-get-communication-by-its-locator-token">https://xq.stoplight.io/docs/xqmsg/005edb8a9ec2b-get-communication-by-its-locator-token</a></p>
 <dl class="field-list simple">
@@ -562,7 +637,7 @@ WARNING: DELETE not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.get_entropy">
-<span class="sig-name descname"><span class="pre">get_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entropy_bits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_entropy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entropy_bits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_entropy" title="Link to this definition"></a></dt>
 <dd><p>Generate quantum entropy from XQ with the provided number of entropy bits, returns as decoded string
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDY-quantum-generator">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDY-quantum-generator</a></p>
 <dl class="field-list simple">
@@ -586,7 +661,7 @@ WARNING: DELETE not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.get_packet">
-<span class="sig-name descname"><span class="pre">get_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_packet" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_packet" title="Link to this definition"></a></dt>
 <dd><p>fetch key with provided locator token
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODE-retrieve-a-key-with-its-token">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODE-retrieve-a-key-with-its-token</a></p>
 <dl class="field-list simple">
@@ -610,7 +685,7 @@ WARNING: DELETE not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.get_packets">
-<span class="sig-name descname"><span class="pre">get_packets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_packets" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_packets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_packets" title="Link to this definition"></a></dt>
 <dd><p>fetch keys with provided locator tokens
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODE-retrieve-a-key-with-its-token">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODE-retrieve-a-key-with-its-token</a></p>
 <dl class="field-list simple">
@@ -634,7 +709,7 @@ WARNING: DELETE not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.get_usergroup">
-<span class="sig-name descname"><span class="pre">get_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_usergroup" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_usergroup" title="Link to this definition"></a></dt>
 <dd><p>get a usergroup by id</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -658,7 +733,7 @@ WARNING: DELETE not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.grant_users">
-<span class="sig-name descname"><span class="pre">grant_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias_access</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.grant_users" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">grant_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias_access</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.grant_users" title="Link to this definition"></a></dt>
 <dd><p>grant a list of recipients access to a given token
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDMzMTkyOTY-grant-a-user-access-to-a-key">https://xq.stoplight.io/docs/xqmsg/b3A6NDMzMTkyOTY-grant-a-user-access-to-a-key</a></p>
 <dl class="field-list simple">
@@ -684,28 +759,18 @@ WARNING: DELETE not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.login_verify">
-<span class="sig-name descname"><span class="pre">login_verify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.login_verify" title="Permalink to this definition"></a></dt>
-<dd><p>verify a user’s login and exchange fake auth_token for a real auth_token</p>
-<p>WARNING: this is not documented anyway.  was found by reverse engineering the magic link auth flow</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – unable to verify login</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>validated</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>boolean</p>
-</dd>
-</dl>
+<span class="sig-name descname"><span class="pre">login_verify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.login_verify" title="Link to this definition"></a></dt>
+<dd><p>verify a user’s login and exchange fake auth_token for a real auth_token
+:param api: XQAPI instance
+:type api: XQAPI
+:raises XQException: unable to verify login
+:return: validated
+:rtype: boolean</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.revoke_packet">
-<span class="sig-name descname"><span class="pre">revoke_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.revoke_packet" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">revoke_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.revoke_packet" title="Link to this definition"></a></dt>
 <dd><p>revoke a key packet with the provided locator token
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODI-revoke-access-to-a-key">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODI-revoke-access-to-a-key</a></p>
 <dl class="field-list simple">
@@ -729,7 +794,7 @@ WARNING: DELETE not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.revoke_users">
-<span class="sig-name descname"><span class="pre">revoke_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias_access</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.revoke_users" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">revoke_users</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias_access</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.revoke_users" title="Link to this definition"></a></dt>
 <dd><p>revoke a list of recipents from accessing a given token
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODU-revoke-user-access">https://xq.stoplight.io/docs/xqmsg/b3A6NDA5NDY4ODU-revoke-user-access</a></p>
 <dl class="field-list simple">
@@ -755,7 +820,7 @@ WARNING: DELETE not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.send_login_link">
-<span class="sig-name descname"><span class="pre">send_login_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.send_login_link" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">send_login_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.send_login_link" title="Link to this definition"></a></dt>
 <dd><p>send login magic link to a users email for Dashboard authentication
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/5cde236a164ba-send-login-magic-link-to-a-user">https://xq.stoplight.io/docs/xqmsg/5cde236a164ba-send-login-magic-link-to-a-user</a></p>
 <dl class="field-list simple">
@@ -780,7 +845,7 @@ WARNING: DELETE not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.update_usergroup">
-<span class="sig-name descname"><span class="pre">update_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.update_usergroup" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.update_usergroup" title="Link to this definition"></a></dt>
 <dd><p>update a usergroup by id
 WARNING: PATCH and PUT not supported by API</p>
 <dl class="field-list simple">
@@ -806,7 +871,7 @@ WARNING: PATCH and PUT not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.validate_access_token">
-<span class="sig-name descname"><span class="pre">validate_access_token</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.validate_access_token" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">validate_access_token</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.validate_access_token" title="Link to this definition"></a></dt>
 <dd><p>validate that the set access_token is valid for the dashboard
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/f260b4a8eb1ea-validate-an-access-token">https://xq.stoplight.io/docs/xqmsg/f260b4a8eb1ea-validate-an-access-token</a></p>
 <dl class="field-list simple">
@@ -827,7 +892,7 @@ WARNING: PATCH and PUT not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.validate_api_key">
-<span class="sig-name descname"><span class="pre">validate_api_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.validate_api_key" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">validate_api_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.validate_api_key" title="Link to this definition"></a></dt>
 <dd><p>static method for validating provided API keys
 <a class="reference external" href="https://xq.stoplight.io/docs/xqmsg/b3A6NDExNDU1MDg-check-if-valid-api-key">https://xq.stoplight.io/docs/xqmsg/b3A6NDExNDU1MDg-check-if-valid-api-key</a></p>
 <dl class="field-list simple">
