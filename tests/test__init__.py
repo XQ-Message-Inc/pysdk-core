@@ -1,112 +1,242 @@
-import pytest
-from unittest.mock import MagicMock, patch
+import io
 import os
+import base64
+import pytest
 
-from xq import *
-from xq.api import XQAPI
-from xq.exceptions import SDKConfigurationException
-from xq import config
+from xq import XQ
+import xq 
+from xq.exceptions import XQException
 
+# ---------------------- Dummy reversible algorithm ---------------------------
+
+class DummyAlgo:
+    """Minimal reversible algo with the interface XQ expects."""
+
+    def __init__(self, key: bytes, scheme: int | str = 1):
+        self.key = key if isinstance(key, (bytes, bytearray)) else str(key).encode()
+        self.scheme = scheme
+
+    @staticmethod
+    def _xor(b: bytes) -> bytes:
+        b = bytes(b)
+        return bytes(ch ^ 0x5A for ch in b)  
+    
+    def encrypt(self, text):
+        if hasattr(text, "read"):
+            text = text.read()
+        if isinstance(text, str):
+            text = text.encode()
+        return self._xor(text)
+
+    def decrypt(self, data):
+        if hasattr(data, "read"):
+            data = data.read()
+        return self._xor(data)
+
+    def encryptFile(self, filename, data, token, password, scheme, out_file=None, chunk_size=1024*1024):
+        token_43 = (token if isinstance(token, str) else token.decode()).ljust(43, "x")[:43].encode()
+        name_bytes = (filename or "file").encode()
+        version = 1
+        header = bytearray(4 + 43 + 4 + len(name_bytes) + 1)
+        header[0:4] = (43 + version).to_bytes(4, "little")
+        header[4:4+43] = token_43
+        off = 4 + 43
+        header[off:off+4] = len(name_bytes).to_bytes(4, "little")
+        off += 4
+        header[off:off+len(name_bytes)] = name_bytes
+        off += len(name_bytes)
+        header[off:off+1] = (scheme if isinstance(scheme, int) else ord(scheme)).to_bytes(1, "little")
+
+        if hasattr(data, "read"):
+            body = data.read()
+        elif isinstance(data, str):
+            body = data.encode()
+        else:
+            body = bytes(data)
+
+        enc_body = self._xor(body)
+
+        if scheme == 2 and out_file is not None:
+            out_file.write(header)
+            view = memoryview(enc_body)
+            for i in range(0, len(view), chunk_size):
+                out_file.write(view[i:i+chunk_size])
+            return None
+
+        return bytes(header) + enc_body
+
+    def decryptFile(self, blob, password, out_file=None, chunk_size=1024*1024):
+        if hasattr(blob, "read"):
+            data = blob.read()
+        else:
+            data = bytes(blob)
+
+        v = int.from_bytes(data[0:4], "little") 
+        token_size = 43
+        version = v - token_size
+        assert version in (0, 1)
+        off = 4 + token_size
+        name_len = int.from_bytes(data[off:off+4], "little")
+        off += 4 + name_len
+        if version > 0:
+            off += 1 
+        body = data[off:]
+
+        pt = self._xor(body)
+        if out_file is not None:
+            out_file.write(pt)
+            return None
+        return pt
+
+
+# ------------------------------ Autouse patches ------------------------------
+
+@pytest.fixture(autouse=True)
+def patch_xqapi_constructor(monkeypatch):
+    """Replace the XQAPI class that XQ() instantiates with a no-op dummy."""
+    class DummyAPI:
+        def __init__(self, api_key, dashboard_api_key, locator_key):
+            self.api_key = api_key
+            self.dashboard_api_key = dashboard_api_key
+            self.locator_key = locator_key
+
+        def create_and_store_packet(self, recipients, key, type, subject, expires_hours):
+            return "L" * 43
+
+        def get_packet(self, locator):
+            return b".1dummykey"
+
+        def get_entropy(self, entropy_bits=128):
+            return base64.b64encode(b"A" * 16).decode()
+
+    monkeypatch.setattr(xq, "XQAPI", DummyAPI, raising=True)
+    yield
+
+@pytest.fixture(autouse=True)
+def patch_algorithms(monkeypatch):
+    """
+    Replace Algorithms mapping so 'OTP', 'GCM', 'CTR' all use DummyAlgo.
+    Patch BOTH the module where it's defined and the name imported into xq.
+    """
+    dummy_map = {"OTP": DummyAlgo, "GCM": DummyAlgo, "CTR": DummyAlgo}
+    monkeypatch.setattr(xq.algorithms, "Algorithms", dummy_map, raising=True)
+    monkeypatch.setattr(xq, "Algorithms", dummy_map, raising=True)
+    yield
+
+# ------------------------------ SDK fixture ----------------------------------
 
 @pytest.fixture
-def key_verify_failure():
-    return (401, "{'status': 'Failed to locate API key'}")
+def xqsdk():
+    return XQ(api_key="k", dashboard_api_key="d", locator_key="l")
 
 
-@pytest.fixture
-def key_verify_success():
-    return (
-        200,
-        "{'scopes': ['authorize', 'combine', 'exchange', 'packet', 'edit:settings', 'read:settings', 'read:subscriber', 'edit:subscriber', 'read:image', 'key', 'read:apikey', 'revoke', 'devapp', 'settings', 'delegate', 'subscriber'], 'status': 'OK'}",
-    )
+# ------------------------------- Tests ---------------------------------------
 
+def test_init_no_validation_runs():
+    x = XQ(api_key="a", dashboard_api_key="b", locator_key="c")
+    assert hasattr(x, "api")
 
-@patch.object(XQAPI, "api_get")
-def test_xq_environ(mock_api_call, key_verify_success):
-    mock_api_call.return_value = key_verify_success
-    os.environ["XQ_API_KEY"] = "mockapikey"
-    os.environ["XQ_DASHBOARD_API_KEY"] = "mockdashboardkey"
-    assert XQ(api_key="mockapikey", dashboard_api_key="mockdashboardkey")
+def test_generate_key_from_entropy_length(xqsdk):
+    key = xqsdk.generate_key_from_entropy()
+    assert isinstance(key, (bytes, bytearray))
+    assert len(key) == 16   
 
+def test_expand_key_fallback_returns_key_when_shorter(xqsdk):
+    data = b"abc"
+    key = b"abcdef"
+    assert xqsdk.expand_key(data, key) == key
 
-@patch.object(XQAPI, "api_get")
-def test_xq_input(mock_api_call, key_verify_success):
-    mock_api_call.return_value = key_verify_success
-    assert XQ(api_key="mockapikey", dashboard_api_key="mockdashboardkey")
+def test_encrypt_decrypt_message(xqsdk):
+    ct = xqsdk.encrypt_message("hello", key=b"k", algorithm="GCM")
+    pt = xqsdk.decrypt_message(ct, key=b"k", algorithm="GCM")
+    assert pt == b"hello"
 
+def test_encrypt_decrypt_message_with_str_key(xqsdk):
+    ct = xqsdk.encrypt_message("hello", key="k", algorithm="GCM")
+    pt = xqsdk.decrypt_message(ct, key="k", algorithm="GCM")
+    assert pt == b"hello"
 
-@patch.object(XQAPI, "api_get")
-def test_valid_api_key(mock_api_call, key_verify_success):
-    mock_api_call.return_value = key_verify_success
-    XQ(api_key="mockapikey", dashboard_api_key="mockdashboardkey")
+def test_parse_file_for_decrypt_bytes_path(xqsdk):
+    payload = b"pfd-bytes"
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM")
+    locator, name_enc, content = xqsdk.parse_file_for_decrypt(blob)  
+    assert isinstance(locator, str) and len(locator) == 43
+    assert isinstance(name_enc, (bytes, bytearray))
+    assert isinstance(content, (bytes, bytearray))
 
+def test_encrypt_file_gcm_inmemory_and_decrypt(xqsdk):
+    payload = b"file-bytes"
+    out = xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM")
+    pt = xqsdk.decrypt_file(out, key=b".1k", algorithm=None)
+    assert pt == payload
 
-@patch.object(XQAPI, "api_get")
-def test_invalid_api_key(mock_api_call, key_verify_failure):
-    mock_api_call.return_value = key_verify_failure
-    with pytest.raises(SDKConfigurationException):
-        XQ(api_key="mockapikey", dashboard_api_key="mockdashboardkey")
+def test_encrypt_file_with_path_input_and_outfile_non_ctr(xqsdk, tmp_path):
+    src = tmp_path / "src.bin"
+    src.write_bytes(b"PAYLOAD")
+    out_path = tmp_path / "wrapped.bin"
 
+    written = xqsdk.encrypt_file(str(src), key=b"k", algorithm="GCM", out_file=str(out_path))
+    assert written == str(out_path)
+    assert out_path.exists() and out_path.stat().st_size > 0
 
-# TODO: not passing when keys are set
-# @patch.object(XQAPI, "api_get")
-# def test_missing_api_key(mock_api_call, key_verify_success):
-#     mock_api_call.return_value = key_verify_success
-#     with pytest.raises(SDKConfigurationException):
-#         XQ()
+    blob = out_path.read_bytes()
+    pt = xqsdk.decrypt_file(blob, key=b".1k", algorithm=None)
+    assert pt == b"PAYLOAD"
 
+def test_encrypt_file_ctr_inmemory_returns_bytes(xqsdk):
+    payload = b"ctr-bytes" * 100
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="CTR")
+    assert isinstance(blob, (bytes, bytearray))
+    pt = xqsdk.decrypt_file(blob, key=b".2k", algorithm=None)
+    assert pt == payload
 
-def test_encrypt_message(mock_xq):
-    assert mock_xq.encrypt_message(
-        text="sometexttoencrypt",
-        key=b"thisisabytestext",
-        algorithm="AES",
-    )
+def test_decrypt_file_outfile_handle_non_ctr(xqsdk, tmp_path):
+    payload = b"abcXYZ"
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM")
+    out_handle_path = tmp_path / "pt.bin"
+    with open(out_handle_path, "wb") as fh:
+        ret = xqsdk.decrypt_file(blob, key=b".1k", algorithm=None, out_file=fh)
+        assert ret is None
+    assert out_handle_path.read_bytes() == payload
 
+def test_decrypt_file_from_bytes_source(xqsdk):
+    payload = b"bytes-src"
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="OTP") 
+    pt = xqsdk.decrypt_file(blob, key=b".Bk", algorithm=None)      
+    assert pt == payload
 
-def test_encrypt_message_stingkey(mock_xq):
-    assert mock_xq.encrypt_message(
-        text="sometexttoencrypt", key="thisisabytestext", algorithm="AES"
-    )
+def test_decrypt_file_raises_when_no_prefix_and_no_algorithm(xqsdk):
+    payload = b"no-prefix"
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM")
+    with pytest.raises(XQException, match="Unable to determine algorithm"):
+        xqsdk.decrypt_file(blob, key=b"k", algorithm=None)
 
+def test_encrypt_file_ctr_streams_to_handle_and_decrypt(xqsdk, tmp_path):
+    payload = b"file-streaming-payload" * 1000
 
-def test_generate_key_from_entropy(mock_xq):
-    entropy128 = "MmJjMjc4MzU1N2RkYjdkODYzY2YzNmZmOGRhMDMxZmM="
-    mock_xq.api.get_entropy = MagicMock(return_value=entropy128)
-    key = mock_xq.generate_key_from_entropy()
+    enc_path = tmp_path / "enc.bin"
+    out_path = xqsdk.encrypt_file(payload, key=b"k", algorithm="CTR", out_file=enc_path)
+    assert os.path.exists(out_path)
 
-    assert len(key) == len(base64.b64decode(entropy128))
-    assert len(key) in [16, 24, 32]
+    dec_path = tmp_path / "dec.bin"
+    out = xqsdk.decrypt_file(enc_path, key=b".2k", algorithm=None, out_file=dec_path)
+    assert out == str(dec_path)
+    assert dec_path.read_bytes() == payload
 
-def test_expand_key(mock_xq):
-    entropy128 = "MmJjMjc4MzU1N2RkYjdkODYzY2YzNmZmOGRhMDMxZmM="
-    message = b"thisisareallylongtesttoensurethatthekeygetsexpanded thisisareallylongtesttoensurethatthekeygetsexpanded"
-    mock_xq.api.get_entropy = MagicMock(return_value=entropy128)
-    key = mock_xq.generate_key_from_entropy()
-    expandedKey = mock_xq.expand_key(message, key)
+def test_decrypt_infers_prefixes(xqsdk):
+    payload = b"abc123"
 
-    len(key) <= len(expandedKey)
+    # OTP (.B)
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="OTP")
+    pt = xqsdk.decrypt_file(blob, key=b".Bk", algorithm=None)
+    assert pt == payload
 
-def test_decrypt_message(mock_xq):
-    mock_xq.decrypt_message(
-        b"mockencryption",
-        key=b"thisisabytestext",
-        algorithm="OTP"
-    )
+    # GCM (.1)
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM")
+    pt = xqsdk.decrypt_file(blob, key=b".1k", algorithm=None)
+    assert pt == payload
 
-def test_decrypt_message_stringkey(mock_xq):
-    mock_xq.decrypt_message(
-        b"mockencryption",
-        key=b"thisisabytestext",
-        algorithm="OTP"
-    )
-
-# def test_file_encryption(mock_xq, tmp_path):
-#     text = b"text to encrypt"
-#     fh = tmp_path / "filetoencrypt"
-#     fh.write_bytes(text)
-
-#     encryptedText = mock_xq.encrypt_file(fh, key="thisisabytestext")
-#     decrypted_file = mock_xq.decrypt_file(encryptedText, key="thisisabytestext")
-
-#     assert decrypted_file.getvalue() == text
+    # CTR (.2)
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="CTR")
+    pt = xqsdk.decrypt_file(blob, key=b".2k", algorithm=None)
+    assert pt == payload

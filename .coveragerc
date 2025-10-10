@@ -1,9 +1,15 @@
 [run]
-  omit =
-   *_version.py
-   test*
+omit =
+    *_version.py
+    test*
+    tests/*
+    */tests/*
+    conftest.py
 
 [report]
-  omit =
-   *_version.py
-   test*
+omit =
+    *_version.py
+    test*
+    tests/*
+    */tests/*
+    conftest.py

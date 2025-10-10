@@ -37,16 +37,7 @@ with open(tmp_file_path, "w") as fh_write:
     fh_write.write("A test file that will get encrypted with XQ")
 
 # encrypt file
-with open(tmp_file_path, "r+b") as file:
-    encryptedText = xq.encrypt_file(file, KEY, algorithm="OTP", recipients=[email])
-    file.seek(0)
-    file.write(encryptedText)
-    file.truncate()
+test = xq.encrypt_file(tmp_file_path, KEY, algorithm="OTP", recipients=[email], out_file=tmp_file_path + ".xqf")
 
-# Rename the file to add the .xqf extension
-new_file_path = tmp_file_path + ".xqf"
-os.rename(tmp_file_path, new_file_path)
-
-with open(new_file_path, "rb") as file:
-    decrypted_file = xq.decrypt_file(file, algorithm="OTP")
-    print("\nDecrypted File Contents:", decrypted_file.decode())
+# decrypt file
+test_out = xq.decrypt_file(tmp_file_path + ".xqf", out_file=tmp_file_path)
