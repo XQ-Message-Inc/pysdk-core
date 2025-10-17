@@ -58,7 +58,7 @@ def exchange_key(api, business_id: str = None):
     :rtype: bool
     """
     status_code, auth_token = api.api_get(
-        f"exchange?b={business_id}", subdomain=API_SUBDOMAIN
+        f"exchange?b={business_id}&selector=false", subdomain=API_SUBDOMAIN
     )
 
     if status_code == 200:
