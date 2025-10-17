@@ -47,7 +47,7 @@ def code_validate(api, pin: int):
         raise XQException(message="The provided pin is incorrect")
 
 
-def exchange_key(api, business_id: str = None):
+def exchange_key(api, business_id: str = None, selector: bool = False):
     """exchange pre-auth token for an access token, and update headers accordingly
     https://xq.stoplight.io/docs/xqmsg/b3A6NDA5Mzc1NjA-exchange-for-access-token
 
@@ -58,7 +58,7 @@ def exchange_key(api, business_id: str = None):
     :rtype: bool
     """
     status_code, auth_token = api.api_get(
-        f"exchange?b={business_id}&selector=false", subdomain=API_SUBDOMAIN
+        f"exchange?b={business_id}&selector={selector}", subdomain=API_SUBDOMAIN
     )
 
     if status_code == 200:
