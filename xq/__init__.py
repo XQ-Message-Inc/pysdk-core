@@ -40,17 +40,18 @@ class XQ:
         """
 
         # get XQ entropy
-        entropy = self.api.get_entropy(entropy_bits=128)
+        entropy = self.api.get_entropy(length=64, type="hex8")
 
-        # decode base64 to string
-        decodedEntropyBytes = base64.b64decode(entropy)
+        #convert array to string
+        entropyString = "".join(entropy)
+
 
         # shuffle key
-        enc = Encryption(decodedEntropyBytes.decode())
+        enc = Encryption(entropyString)
         generatedKey = enc.shuffle().encode()
 
         # ensure shuffeled key did add or loss information
-        assert len(decodedEntropyBytes) == len(generatedKey)
+        assert len(entropyString) == len(generatedKey)
 
         return generatedKey
     
@@ -166,9 +167,9 @@ class XQ:
         locator_token = self.api.create_and_store_packet(
             recipients=recipients,
             key=key_prefix + key,
-            type="file",
+            type="File",
             subject=filename_for_header,
-            expires_hours=expires_hours,
+            expires_period=expires_hours,
         )
 
         encryptionAlgorithm = (
