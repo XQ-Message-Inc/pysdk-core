@@ -136,7 +136,7 @@ def login_verify(api):
     """
     api.headers.update(
         {"api-key": DASHBOARD_API_KEY}
-    )  # dashboard api token needs to be set in the header
+    )  
 
     status_code, res = api.api_get(
         "login/verify?request=default", subdomain=API_SUBDOMAIN
@@ -145,7 +145,7 @@ def login_verify(api):
     if status_code == 200:
         api.headers.update(
             {"authorization": f"Bearer {res}"}
-        )  # update auth header with Dashboard token
+        ) 
         return True
     else:
         raise XQException(message=f"Unable to verify login: {res}")
@@ -163,7 +163,7 @@ def validate_access_token(api):
     """
     api.headers.update(
         {"api-key": DASHBOARD_API_KEY}
-    )  # dashboard api token needs to be set in the header
+    )  
 
     status_code, res = api.api_get("session", subdomain=API_SUBDOMAIN)
 
