@@ -34,7 +34,7 @@ else:
     teamId = xq.api.create_team("New team")
 
 #switch to team
-xq.api.switch("1")
+xq.api.switch(teamId)
 
 # create key packet
 MYSUPERSECRETKEY = b"itissixteenbytes"

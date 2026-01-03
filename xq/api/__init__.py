@@ -14,6 +14,7 @@ class XQAPI:
         exchange_key,
         create_and_store_packet,
         create_and_store_packets,
+        create_and_store_packets_batch,
         create_certificate,
         delete_certificate,
         login_certificate

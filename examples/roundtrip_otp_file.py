@@ -34,7 +34,7 @@ if teams:
 else:
     teamId = xq.api.create_team("New team")
 
-xq.api.switch(str(teamId))
+xq.api.switch(teamId)
 
 # create key packet from qunatum entropy
 KEY = xq.generate_key_from_entropy()

@@ -32,7 +32,7 @@ uuid = uuid.uuid4()
 uuid_string = str(uuid)
 teamId = xq.api.create_team(f"{uuid_string} team", f"{uuid_string}_team")
 
-access_token = xq.api.switch(str(teamId))
+access_token = xq.api.switch(teamId)
 
 
 # get user authentication token
