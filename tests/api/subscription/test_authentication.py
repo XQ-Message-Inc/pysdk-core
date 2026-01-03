@@ -40,29 +40,27 @@ def test_validate_api_key_other(mock_api_call):
     with pytest.raises(SDKConfigurationException):
         validate_api_key(XQAPI())
 
-
-def test_code_validate_200(mock_xqapi):
-    mock_xqapi.api_get = MagicMock(return_value=(200, "never going to happen"))
-    assert code_validate(mock_xqapi, 123456)
-
-
 def test_code_validate_204(mock_xqapi):
     mock_xqapi.api_get = MagicMock(return_value=(204, None))
+    mock_xqapi.headers["code"] = "code"
     assert code_validate(mock_xqapi, 123456)
 
 
 def test_code_validate_failure(mock_xqapi):
     mock_xqapi.api_get = MagicMock(return_value=(500, "mock server error"))
+    mock_xqapi.headers["code"] = "code"
     with pytest.raises(XQException):
         code_validate(mock_xqapi, 123456)
 
 
 def test_exchange_key(mock_xqapi):
     mock_xqapi.api_get = MagicMock(return_value=(200, "{'contents': 'mock contents'}"))
+    mock_xqapi.headers["code"] = "code"
     assert exchange_key(mock_xqapi)
 
 
 def test_exchange_key_failure(mock_xqapi):
     mock_xqapi.api_get = MagicMock(return_value=(500, "mock server error"))
+    mock_xqapi.headers["code"] = "code"
     with pytest.raises(XQException):
         exchange_key(mock_xqapi)

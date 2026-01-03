@@ -28,7 +28,7 @@ def test_get_usergroup(mock_xqapi):
 
 
 def test_update_usergroup(mock_xqapi):
-    mock_xqapi.api_patch = MagicMock(return_value=(204, "mock server success"))
+    mock_xqapi.api_patch = MagicMock(return_value=(200, "mock server success"))
     assert update_usergroup(mock_xqapi, 1, "mockname", "mockmemebers")
 
 

@@ -66,6 +66,7 @@ There are detailed usage examples available in the [examples folder](https://git
 - [BYOK w/ 2FA](examples/roundtrip_with_2fa.py)
 - [XQ Generated Entropy Key](examples/roundtrip_with_entropy_key.py)
 - [File Encryption](examples/roundtrip_otp_file.py)
+- [Key Roundtrip](examples/packet.py)
 - [Message Encryption Roundtrip w/ Machine Authentication](examples/roundtrip_with_machine.py)
 - [File Encryption Roundtrip w/ Machine Authentication](examples/roundtrip_with_machine.py)
 - [Dashboard (Beta)](examples/dashboard.py)
