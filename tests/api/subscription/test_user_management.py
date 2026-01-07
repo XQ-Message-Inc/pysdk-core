@@ -1,8 +1,10 @@
 import pytest
+import xq.api.subscription.user_management as um
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5
 from unittest.mock import MagicMock, patch, mock_open
 
 from xq.api.subscription.user_management import *
-
 
 def test_authorize_user_200(mock_xqapi):
     mock_xqapi.api_post = MagicMock(return_value=(200, "mock server success"))
@@ -154,3 +156,24 @@ def test_load_file_content_general_error():
         with pytest.raises(XQException) as exc_info:
             load_file_content("restricted_file.txt")
         assert "Failed to read file" in str(exc_info.value)
+
+
+def test_normalize_transport_key_success():
+    assert um._normalize_transport_key("  abc123  ") == "abc123"
+
+
+def test_normalize_transport_key_empty_raises():
+    with pytest.raises(XQException, match="No transport key"):
+        um._normalize_transport_key("   ")
+
+def test_rsa_decrypt_with_crypto_pem_roundtrip():
+    key = RSA.generate(2048)
+    private_pem = key.export_key().decode("utf-8")
+    public = key.publickey()
+    cipher = PKCS1_v1_5.new(public)
+
+    plaintext = b"super secret"
+    ct = cipher.encrypt(plaintext)
+
+    pt = um._rsa_decrypt_with_crypto(private_pem, ct)
+    assert pt == plaintext
