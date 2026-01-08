@@ -164,6 +164,7 @@
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.code_validate"><code class="docutils literal notranslate"><span class="pre">XQAPI.code_validate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.create_and_store_packet"><code class="docutils literal notranslate"><span class="pre">XQAPI.create_and_store_packet()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.create_and_store_packets"><code class="docutils literal notranslate"><span class="pre">XQAPI.create_and_store_packets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.create_and_store_packets_batch"><code class="docutils literal notranslate"><span class="pre">XQAPI.create_and_store_packets_batch()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.create_packet"><code class="docutils literal notranslate"><span class="pre">XQAPI.create_packet()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.create_usergroup"><code class="docutils literal notranslate"><span class="pre">XQAPI.create_usergroup()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="xq.api.html#xq.api.XQAPI.dashboard_login"><code class="docutils literal notranslate"><span class="pre">XQAPI.dashboard_login()</span></code></a></li>
@@ -226,6 +227,46 @@
 <dt class="sig sig-object py" id="xq.XQ">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">xq.</span></span><span class="sig-name descname"><span class="pre">XQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dashboard_api_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locator_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="xq.XQ.ALGORITHM_CONFIG">
+<span class="sig-name descname"><span class="pre">ALGORITHM_CONFIG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'CTR':</span> <span class="pre">{'prefix':</span> <span class="pre">b'.2',</span> <span class="pre">'scheme':</span> <span class="pre">2},</span> <span class="pre">'GCM':</span> <span class="pre">{'prefix':</span> <span class="pre">b'.1',</span> <span class="pre">'scheme':</span> <span class="pre">1},</span> <span class="pre">'OTP':</span> <span class="pre">{'prefix':</span> <span class="pre">b'.B',</span> <span class="pre">'scheme':</span> <span class="pre">66}}</span></em><a class="headerlink" href="#xq.XQ.ALGORITHM_CONFIG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="xq.XQ.PREFIX_TO_ALGORITHM">
+<span class="sig-name descname"><span class="pre">PREFIX_TO_ALGORITHM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{b'1':</span> <span class="pre">'GCM',</span> <span class="pre">b'2':</span> <span class="pre">'CTR',</span> <span class="pre">b'B':</span> <span class="pre">'OTP'}</span></em><a class="headerlink" href="#xq.XQ.PREFIX_TO_ALGORITHM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="xq.XQ.SCHEME_TO_ALGORITHM">
+<span class="sig-name descname"><span class="pre">SCHEME_TO_ALGORITHM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{1:</span> <span class="pre">'GCM',</span> <span class="pre">2:</span> <span class="pre">'CTR',</span> <span class="pre">66:</span> <span class="pre">'OTP'}</span></em><a class="headerlink" href="#xq.XQ.SCHEME_TO_ALGORITHM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="xq.XQ.TOKEN_SIZE">
+<span class="sig-name descname"><span class="pre">TOKEN_SIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">43</span></em><a class="headerlink" href="#xq.XQ.TOKEN_SIZE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.XQ.decrypt_auto">
+<span class="sig-name descname"><span class="pre">decrypt_auto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encrypted_message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#xq.XQ.decrypt_auto" title="Link to this definition"></a></dt>
+<dd><p>decrypt a message encrypted with encrypt_auto by parsing the header and retrieving or using provided key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encrypted_message</strong> (<em>bytes</em>) – formatted message from encrypt_auto</p></li>
+<li><p><strong>key</strong> (<em>bytes</em><em>, </em><em>optional</em>) – encryption key to use (with or without prefix), if None will retrieve from packet, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>decrypted plaintext message</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.XQ.decrypt_file">
 <span class="sig-name descname"><span class="pre">decrypt_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encryptedText</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bytearray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">BinaryIO</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">PathLike</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">BinaryIO</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1048576</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#xq.XQ.decrypt_file" title="Link to this definition"></a></dt>
@@ -237,7 +278,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.XQ.decrypt_message">
 <span class="sig-name descname"><span class="pre">decrypt_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encryptedText:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'GCM':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'CTR':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span> <span class="pre">=</span> <span class="pre">'OTP'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.decrypt_message" title="Link to this definition"></a></dt>
-<dd><p>decrypt a previoulsy encrypted string</p>
+<dd><p>decrypt a previously encrypted string</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -252,6 +293,32 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.XQ.encrypt_auto">
+<span class="sig-name descname"><span class="pre">encrypt_auto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'GCM':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'CTR':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span> <span class="pre">=</span> <span class="pre">'OTP'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients:</span> <span class="pre">~typing.List[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'message'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_hours:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">bytes</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locator_token:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#xq.XQ.encrypt_auto" title="Link to this definition"></a></dt>
+<dd><p>encrypt a string with auto-generated or provided key and store the key packet</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – string to encrypt</p></li>
+<li><p><strong>algorithm</strong> (<em>Algorithms</em><em>, </em><em>optional</em>) – the encryption algorithm to use, defaults to OTP</p></li>
+<li><p><strong>recipients</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – list of recipients who can retrieve the key, defaults to None</p></li>
+<li><p><strong>subject</strong> (<em>str</em><em>, </em><em>optional</em>) – subject/description for the encrypted message, defaults to “message”</p></li>
+<li><p><strong>expires_hours</strong> (<em>int</em><em>, </em><em>optional</em>) – hours until key packet expires, defaults to 24</p></li>
+<li><p><strong>version</strong> (<em>int</em><em>, </em><em>optional</em>) – message format version, defaults to 1</p></li>
+<li><p><strong>key</strong> (<em>bytes</em><em>, </em><em>optional</em>) – encryption key to use (without prefix), if None will auto-generate, defaults to None</p></li>
+<li><p><strong>locator_token</strong> (<em>str</em><em>, </em><em>optional</em>) – pre-existing locator token, if None will create and store packet, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>formatted message: (token_size+version) + locator_token + scheme + ciphertext</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytes</p>
 </dd>
 </dl>
 </dd></dl>
@@ -330,7 +397,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.XQ.generate_key_from_entropy">
-<span class="sig-name descname"><span class="pre">generate_key_from_entropy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.XQ.generate_key_from_entropy" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">generate_key_from_entropy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#xq.XQ.generate_key_from_entropy" title="Link to this definition"></a></dt>
 <dd><p>helper method for automatically requesting entropy and shuffling key</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -338,6 +405,57 @@
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.XQ.generate_multiple_keys_and_store_packets">
+<span class="sig-name descname"><span class="pre">generate_multiple_keys_and_store_packets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">count:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'GCM':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'CTR':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span> <span class="pre">=</span> <span class="pre">'OTP'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients:</span> <span class="pre">~typing.List[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'message'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires_hours:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">packet_type:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'msg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_size_bits:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">128</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#xq.XQ.generate_multiple_keys_and_store_packets" title="Link to this definition"></a></dt>
+<dd><p>generate multiple encryption keys from entropy and store them as packets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>count</strong> (<em>int</em>) – number of keys to generate</p></li>
+<li><p><strong>algorithm</strong> (<em>Algorithms</em><em>, </em><em>optional</em>) – the encryption algorithm to use, defaults to OTP</p></li>
+<li><p><strong>recipients</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – list of recipients who can retrieve the keys, defaults to None</p></li>
+<li><p><strong>subject</strong> (<em>str</em><em>, </em><em>optional</em>) – subject/description for the key packets, defaults to “message”</p></li>
+<li><p><strong>expires_hours</strong> (<em>int</em><em>, </em><em>optional</em>) – hours until key packets expire, defaults to 24</p></li>
+<li><p><strong>packet_type</strong> (<em>int</em><em> | </em><em>str</em><em>, </em><em>optional</em>) – packet type, defaults to “msg”</p></li>
+<li><p><strong>meta</strong> (<em>str</em><em>, </em><em>optional</em>) – additional metadata for the packets, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of dicts containing key and locator_token pairs</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.XQ.generate_multiple_keys_and_store_packets_database">
+<span class="sig-name descname"><span class="pre">generate_multiple_keys_and_store_packets_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">count:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm:</span> <span class="pre">{'OTP':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.otp_encryption.OTPEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'AES':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'GCM':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'CTR':</span> <span class="pre">&lt;class</span> <span class="pre">'xq.algorithms.aes_encryption.AESEncryption'&gt;}</span> <span class="pre">=</span> <span class="pre">'OTP'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipients:</span> <span class="pre">~typing.List[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_list:</span> <span class="pre">list</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expires:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'days'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'database'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_size_bits:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">128</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#xq.XQ.generate_multiple_keys_and_store_packets_database" title="Link to this definition"></a></dt>
+<dd><p>generate multiple encryption keys from entropy and store them as batch packets with metadata</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>count</strong> (<em>int</em>) – number of keys to generate</p></li>
+<li><p><strong>algorithm</strong> (<em>Algorithms</em><em>, </em><em>optional</em>) – the encryption algorithm to use, defaults to OTP</p></li>
+<li><p><strong>recipients</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – list of recipients who can retrieve the keys, defaults to None</p></li>
+<li><p><strong>metadata_list</strong> (<em>list</em><em>, </em><em>optional</em>) – list of metadata dicts with title and labels for each key, defaults to None</p></li>
+<li><p><strong>expires</strong> (<em>int</em><em>, </em><em>optional</em>) – expiration time (applies to all entries), defaults to 1</p></li>
+<li><p><strong>unit</strong> (<em>str</em><em>, </em><em>optional</em>) – time unit for expiration (applies to all entries), defaults to “days”</p></li>
+<li><p><strong>type</strong> (<em>str</em><em>, </em><em>optional</em>) – packet type (applies to all entries), defaults to “database”</p></li>
+<li><p><strong>key_size_bits</strong> (<em>int</em><em>, </em><em>optional</em>) – size of each key in bits, defaults to 128</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of dicts containing key and locator_token pairs</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[dict]</p>
 </dd>
 </dl>
 </dd></dl>

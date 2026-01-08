@@ -92,6 +92,7 @@
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  | <a href="#X"><strong>X</strong></a>
@@ -111,6 +112,8 @@
 </li>
       </ul></li>
       <li><a href="xq.algorithms.html#xq.algorithms.aes_encryption.AESEncryption">AESEncryption (class in xq.algorithms.aes_encryption)</a>
+</li>
+      <li><a href="xq.html#xq.XQ.ALGORITHM_CONFIG">ALGORITHM_CONFIG (xq.XQ attribute)</a>
 </li>
       <li><a href="xq.api.html#xq.api.XQAPI.announce_device">announce_device() (xq.api.XQAPI method)</a>
 </li>
@@ -170,12 +173,18 @@
         <li><a href="xq.api.html#xq.api.XQAPI.create_and_store_packet">(xq.api.XQAPI method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xq.api.subscription.html#xq.api.subscription.key_management.create_and_store_packets">create_and_store_packets() (in module xq.api.subscription.key_management)</a>
 
       <ul>
         <li><a href="xq.api.html#xq.api.XQAPI.create_and_store_packets">(xq.api.XQAPI method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="xq.api.subscription.html#xq.api.subscription.key_management.create_and_store_packets_batch">create_and_store_packets_batch() (in module xq.api.subscription.key_management)</a>
+
+      <ul>
+        <li><a href="xq.api.html#xq.api.XQAPI.create_and_store_packets_batch">(xq.api.XQAPI method)</a>
 </li>
       </ul></li>
       <li><a href="xq.algorithms.html#xq.algorithms.encryption.Encryption.create_file_header">create_file_header() (xq.algorithms.encryption.Encryption method)</a>
@@ -204,6 +213,8 @@
         <li><a href="xq.algorithms.html#xq.algorithms.otp_encryption.OTPEncryption.decrypt">(xq.algorithms.otp_encryption.OTPEncryption method)</a>
 </li>
       </ul></li>
+      <li><a href="xq.html#xq.XQ.decrypt_auto">decrypt_auto() (xq.XQ method)</a>
+</li>
       <li><a href="xq.algorithms.html#xq.algorithms.otp_encryption.OTPEncryption.decrypt_chunk">decrypt_chunk() (xq.algorithms.otp_encryption.OTPEncryption method)</a>
 </li>
   </ul></td>
@@ -232,6 +243,8 @@
         <li><a href="xq.algorithms.html#xq.algorithms.otp_encryption.OTPEncryption.encrypt">(xq.algorithms.otp_encryption.OTPEncryption method)</a>
 </li>
       </ul></li>
+      <li><a href="xq.html#xq.XQ.encrypt_auto">encrypt_auto() (xq.XQ method)</a>
+</li>
       <li><a href="xq.algorithms.html#xq.algorithms.otp_encryption.OTPEncryption.encrypt_chunk">encrypt_chunk() (xq.algorithms.otp_encryption.OTPEncryption method)</a>
 </li>
       <li><a href="xq.html#xq.XQ.encrypt_file">encrypt_file() (xq.XQ method)</a>
@@ -261,6 +274,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="xq.html#xq.XQ.generate_key_from_entropy">generate_key_from_entropy() (xq.XQ method)</a>
+</li>
+      <li><a href="xq.html#xq.XQ.generate_multiple_keys_and_store_packets">generate_multiple_keys_and_store_packets() (xq.XQ method)</a>
+</li>
+      <li><a href="xq.html#xq.XQ.generate_multiple_keys_and_store_packets_database">generate_multiple_keys_and_store_packets_database() (xq.XQ method)</a>
 </li>
       <li><a href="xq.api.html#xq.api.XQAPI.get_communication_by_locator_token">get_communication_by_locator_token() (xq.api.XQAPI method)</a>
 </li>
@@ -372,6 +389,10 @@
       <li><a href="xq.html#xq.XQ.parse_file_for_decrypt">parse_file_for_decrypt() (xq.XQ method)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="xq.html#xq.XQ.PREFIX_TO_ALGORITHM">PREFIX_TO_ALGORITHM (xq.XQ attribute)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="R">R</h2>
@@ -397,15 +418,25 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="xq.exceptions.html#xq.exceptions.configuration.SDKConfigurationException">SDKConfigurationException</a>
+      <li><a href="xq.html#xq.XQ.SCHEME_TO_ALGORITHM">SCHEME_TO_ALGORITHM (xq.XQ attribute)</a>
 </li>
-      <li><a href="xq.exceptions.html#xq.exceptions.encryption.SDKEncryptionException">SDKEncryptionException</a>
+      <li><a href="xq.exceptions.html#xq.exceptions.configuration.SDKConfigurationException">SDKConfigurationException</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="xq.exceptions.html#xq.exceptions.encryption.SDKEncryptionException">SDKEncryptionException</a>
+</li>
       <li><a href="xq.api.html#xq.api.XQAPI.send_login_link">send_login_link() (xq.api.XQAPI method)</a>
 </li>
       <li><a href="xq.algorithms.html#xq.algorithms.encryption.Encryption.shuffle">shuffle() (xq.algorithms.encryption.Encryption method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="xq.html#xq.XQ.TOKEN_SIZE">TOKEN_SIZE (xq.XQ attribute)</a>
 </li>
   </ul></td>
 </tr></table>
