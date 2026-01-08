@@ -53,12 +53,21 @@ def exchange_key(api, business_id: str = None, selector: bool = False):
 
     :param api: XQAPI instance
     :type api: XQAPI
+    :param business_id: optional business ID to associate with the exchange
+    :type business_id: str, optional
+    :param selector: selector flag for the exchange, defaults to False
+    :type selector: bool, optional
     :raises XQException: key exchange failure
     :return: success? boolean
     :rtype: bool
     """
+    params = {
+        "selector": selector,
+        **({} if business_id is None else {"b": business_id}),
+    }
+    
     status_code, auth_token = api.api_get(
-        f"exchange?b={business_id}&selector={selector}", subdomain=API_SUBDOMAIN
+        "exchange", params=params, subdomain=API_SUBDOMAIN
     )
 
     if status_code == 200:

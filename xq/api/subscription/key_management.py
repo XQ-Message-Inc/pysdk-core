@@ -83,7 +83,7 @@ def create_and_store_packets(
     recipients: list,
     expires_hours: int = 24,
     keys: list = None,
-    type: int = 5,
+    type: int|str = 5,
     subject: str = None,
     meta: str = None
 ):
@@ -116,3 +116,58 @@ def create_and_store_packets(
         return res
     else:
         raise XQException(message=f"Packet creation failed: {res}")
+
+
+def create_and_store_packets_batch(
+    api,
+    keys: list,
+    recipients: list,
+    metadata_list: list = None,
+    expires: int = 1,
+    unit: str = "days",
+    type: str = "database"
+):
+    """batch insert key packets in bulk for database types
+    https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDQ5MTY-create-a-new-key-packet
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param keys: list of secret keys to encrypt
+    :type keys: list
+    :param recipients: list of emails to grant access to (applies to all entries)
+    :type recipients: list
+    :param metadata_list: list of metadata dicts with title and labels for each key, defaults to None
+    :type metadata_list: list, optional
+    :param expires: expiration time (applies to all entries), defaults to 1
+    :type expires: int, optional
+    :param unit: time unit for expiration (applies to all entries), defaults to "days"
+    :type unit: str, optional
+    :param type: packet type (applies to all entries), defaults to "database"
+    :type type: str, optional
+    :raises XQException: failed batch packet creation
+    :return: api response with created packets
+    :rtype: dict
+    """
+    if metadata_list and len(metadata_list) != len(keys):
+        raise XQException(message=f"metadata_list length ({len(metadata_list)}) must match keys length ({len(keys)})")
+    
+    entries = []
+    for i, key in enumerate(keys):
+        entry = {
+            "type": type,
+            "meta": metadata_list[i] if metadata_list else {},
+            "key": key.decode("utf-8") if isinstance(key, bytes) else key,
+            "recipients": recipients,
+            "expires": expires,
+            "unit": unit
+        }
+        entries.append(entry)
+    
+    payload = {"entries": entries}
+    
+    status_code, res = api.api_post("packet/batch", json=payload, subdomain=API_SUBDOMAIN)
+
+    if status_code == 200:
+        return res
+    else:
+        raise XQException(message=f"Batch packet creation failed: {res}")

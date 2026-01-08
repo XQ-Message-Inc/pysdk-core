@@ -14,6 +14,7 @@ class XQAPI:
         create_packet,
         create_and_store_packet,
         create_and_store_packets,
+        create_and_store_packets_batch,
         authorize_alias,
         authorize_device,
         authorize_device_cert

@@ -10,8 +10,8 @@ import json
 def authorize_user(
     api,
     user_email: str,
-    firstName: str,
-    lastName: str,
+    firstName: str = "",
+    lastName: str = "",
     newsletter=False,
     notifications=0,
 ):
@@ -22,26 +22,28 @@ def authorize_user(
     :type api: XQAPI
     :param user_email: email address of user requesting access token
     :type user_email: str
-    :param firstName: first name of user
-    :type firstName: str
-    :param lastName: last name of user
-    :type lastName: str
+    :param firstName: first name of user, defaults to ""
+    :type firstName: str, optional
+    :param lastName: last name of user, defaults to ""
+    :type lastName: str, optional
     :param newsletter: subscribe to newsletter, defaults to False
     :type newsletter: bool, optional
     :param notifications: notification level: 0 = No Notifications, 1 = Receive Usage Reports, 2 = Receive Tutorials, 3 = Receive Both, defaults to 0
     :type notifications: int, optional
-    :return: pre-aut token, which can be exchanged for an access token
+    :return: pre-auth token, which can be exchanged for an access token
     :rtype: str
     """
+    payload = {
+        "user": user_email,
+        "newsletter": newsletter,
+        "notifications": notifications,
+        **({} if not firstName else {"firstName": firstName}),
+        **({} if not lastName else {"lastName": lastName}),
+    }
+    
     status_code, auth_token = api.api_post(
         "authorize",
-        json={
-            "user": user_email,
-            "firstName": firstName,
-            "lastName": lastName,
-            "newsletter": newsletter,
-            "notifications": notifications,
-        },
+        json=payload,
         subdomain=API_SUBDOMAIN,
     )
 
@@ -220,7 +222,7 @@ or the authorization request is rejected
                 raise XQException("Failed to get server time")
             
             ts = int(time_response)
-
+            
             payload = {
                 "crt": cert_data,
                 "device": device_name,
@@ -263,7 +265,7 @@ or the authorization request is rejected
                     raise XQException(message="Failed to read access token")
 
                 encrypted_token = base64.b64decode(encrypted_token_b64)
-               
+
                 try:
                     token_bytes = _rsa_decrypt_with_crypto(private_key_content, encrypted_token)
                 except Exception as e:

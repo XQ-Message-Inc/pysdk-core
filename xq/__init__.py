@@ -17,6 +17,27 @@ __version__ = get_versions()["version"]
 del get_versions
 
 class XQ:
+    # Class-level constants for encryption algorithms
+    TOKEN_SIZE = 43
+    
+    ALGORITHM_CONFIG = {
+        "OTP": {"prefix": b".B", "scheme": ord('B')},
+        "GCM": {"prefix": b".1", "scheme": 1},
+        "CTR": {"prefix": b".2", "scheme": 2}
+    }
+    
+    PREFIX_TO_ALGORITHM = {
+        b'B': "OTP",
+        b'1': "GCM", 
+        b'2': "CTR"
+    }
+    
+    SCHEME_TO_ALGORITHM = {
+        ord('B'): "OTP",
+        1: "GCM",
+        2: "CTR"
+    }
+    
     def __init__(self, api_key=API_KEY, dashboard_api_key=DASHBOARD_API_KEY, locator_key=XQ_LOCATOR_KEY):
         """initializes the XQ SDK with API keys, in priority order:
             1. params
@@ -32,14 +53,14 @@ class XQ:
         """
         self.api = XQAPI(api_key, dashboard_api_key, locator_key)  # bind api functions as methods
 
-    def generate_key_from_entropy(self):
+    def generate_key_from_entropy(self) -> bytes:
         """helper method for automatically requesting entropy and shuffling key
 
         :return: generated encryption key from entropy
         :rtype: bytes
         """
 
-        # get XQ entropy
+        # get XQ entropy (Add a fallback in case of error)
         entropy = self.api.get_entropy(entropy_bits=128)
 
         # decode base64 to string
@@ -53,6 +74,185 @@ class XQ:
         assert len(decodedEntropyBytes) == len(generatedKey)
 
         return generatedKey
+    
+    def generate_multiple_keys_and_store_packets(
+        self,
+        count: int = 1,
+        algorithm: Algorithms = "OTP",
+        recipients: List[str] = None,
+        subject: str = "message",
+        expires_hours: int = 24,
+        packet_type: Union[int, str] = "msg",
+        meta: str = None,
+        key_size_bits: int = 128
+    ) -> List[dict]:
+        """generate multiple encryption keys from entropy and store them as packets
+        
+        :param count: number of keys to generate
+        :type count: int
+        :param algorithm: the encryption algorithm to use, defaults to OTP
+        :type algorithm: Algorithms, optional
+        :param recipients: list of recipients who can retrieve the keys, defaults to None
+        :type recipients: List[str], optional
+        :param subject: subject/description for the key packets, defaults to "message"
+        :type subject: str, optional
+        :param expires_hours: hours until key packets expire, defaults to 24
+        :type expires_hours: int, optional
+        :param packet_type: packet type, defaults to "msg"
+        :type packet_type: int | str, optional
+        :param meta: additional metadata for the packets, defaults to None
+        :type meta: str, optional
+        :return: list of dicts containing key and locator_token pairs
+        :rtype: List[dict]
+        """
+        if count < 1:
+            raise XQException("Count must be at least 1")
+        
+        config = self.ALGORITHM_CONFIG.get(algorithm)
+        if not config:
+            raise XQException(f"Unknown algorithm: {algorithm}")
+        
+        key_prefix = config["prefix"]
+        
+        # Request entropy in batches if needed
+        keys = []
+        remaining_keys = count
+        
+        while remaining_keys > 0:
+            # Calculate entropy for this batch (max 8192 bits)
+            keys_in_batch = min(remaining_keys, 8192 // key_size_bits)
+            entropy_bits = keys_in_batch * key_size_bits
+            
+            # Get quantum entropy for this batch
+            entropy = self.api.get_entropy(entropy_bits=entropy_bits)
+            decoded_entropy = base64.b64decode(entropy)
+            
+            # Shuffle the entire entropy pool once
+            enc = Encryption(decoded_entropy.decode())
+            shuffled_entropy = enc.shuffle().encode()
+            
+            # Split shuffled entropy into chunks to create individual keys
+            chunk_size = key_size_bits // 8 
+            
+            for i in range(keys_in_batch):
+                # Extract chunk for this key from shuffled entropy
+                start_idx = i * chunk_size
+                end_idx = start_idx + chunk_size
+                key_chunk = shuffled_entropy[start_idx:end_idx]
+                keys.append(key_prefix + key_chunk)
+            
+            remaining_keys -= keys_in_batch
+        
+        # Store all packets at once
+        response = self.api.create_and_store_packets(
+            recipients=recipients,
+            keys=keys,
+            type=packet_type,
+            subject=subject,
+            expires_hours=expires_hours,
+            meta=meta
+        )
+        
+        if not isinstance(response, dict):
+            raise XQException(f"Expected dict response but got {response.__class__.__name__}")
+        
+        tokens = response.get('tokens', [])
+        
+        if len(tokens) != len(keys):
+            raise XQException(f"Expected {len(keys)} tokens but got {len(tokens)}")
+        
+        return tokens
+    
+    def generate_multiple_keys_and_store_packets_database(
+        self,
+        count: int = 1,
+        algorithm: Algorithms = "OTP",
+        recipients: List[str] = None,
+        metadata_list: list = None,
+        expires: int = 1,
+        unit: str = "days",
+        type: str = "database",
+        key_size_bits: int = 128
+    ) -> List[dict]:
+        """generate multiple encryption keys from entropy and store them as batch packets with metadata
+        
+        :param count: number of keys to generate
+        :type count: int
+        :param algorithm: the encryption algorithm to use, defaults to OTP
+        :type algorithm: Algorithms, optional
+        :param recipients: list of recipients who can retrieve the keys, defaults to None
+        :type recipients: List[str], optional
+        :param metadata_list: list of metadata dicts with title and labels for each key, defaults to None
+        :type metadata_list: list, optional
+        :param expires: expiration time (applies to all entries), defaults to 1
+        :type expires: int, optional
+        :param unit: time unit for expiration (applies to all entries), defaults to "days"
+        :type unit: str, optional
+        :param type: packet type (applies to all entries), defaults to "database"
+        :type type: str, optional
+        :param key_size_bits: size of each key in bits, defaults to 128
+        :type key_size_bits: int, optional
+        :return: list of dicts containing key and locator_token pairs
+        :rtype: List[dict]
+        """
+        if count < 1:
+            raise XQException("Count must be at least 1")
+        
+        if metadata_list and len(metadata_list) != count:
+            raise XQException(f"metadata_list length ({len(metadata_list)}) must match count ({count})")
+        
+        config = self.ALGORITHM_CONFIG.get(algorithm)
+        if not config:
+            raise XQException(f"Unknown algorithm: {algorithm}")
+        
+        key_prefix = config["prefix"]
+        
+        # Request entropy in batches if needed
+        keys = []
+        remaining_keys = count
+        
+        while remaining_keys > 0:
+            # Calculate entropy for this batch (max 8192 bits)
+            keys_in_batch = min(remaining_keys, 8192 // key_size_bits)
+            entropy_bits = keys_in_batch * key_size_bits
+            
+            # Get quantum entropy for this batch
+            entropy = self.api.get_entropy(entropy_bits=entropy_bits)
+            decoded_entropy = base64.b64decode(entropy)
+            
+            enc = Encryption(decoded_entropy.decode())
+            shuffled_entropy = enc.shuffle().encode()
+            
+            chunk_size = key_size_bits // 8 
+            
+            for i in range(keys_in_batch):
+                # Extract chunk for this key from shuffled entropy
+                start_idx = i * chunk_size
+                end_idx = start_idx + chunk_size
+                key_chunk = shuffled_entropy[start_idx:end_idx]
+                keys.append(key_prefix + key_chunk)
+            
+            remaining_keys -= keys_in_batch
+        
+        # Store all packets at once using batch endpoint
+        response = self.api.create_and_store_packets_batch(
+            keys=keys,
+            recipients=recipients,
+            metadata_list=metadata_list,
+            expires=expires,
+            unit=unit,
+            type=type
+        )
+        
+        if not isinstance(response, dict):
+            raise XQException(f"Expected dict response but got {response.__class__.__name__}")
+        
+        tokens = response.get('tokens', [])
+        
+        if len(tokens) != len(keys):
+            raise XQException(f"Expected {len(keys)} tokens but got {len(tokens)}")
+        
+        return tokens
     
     def expand_key(self, data: bytes, key: bytes) -> bytes:
         """expand a key to the size of the text to be encrypted
@@ -77,6 +277,33 @@ class XQ:
             return expand_key_python(data, key)
         else:
             return key
+        
+    def _parse_key_and_scheme(self, key_with_prefix: bytes, scheme_byte: int):
+        """parse key prefix to determine algorithm, fallback to scheme byte if no prefix
+        
+        :param key_with_prefix: key data potentially with prefix
+        :type key_with_prefix: bytes
+        :param scheme_byte: scheme byte from message header (fallback if no prefix)
+        :type scheme_byte: int
+        :return: tuple of (algorithm_name, raw_key)
+        :rtype: tuple[str, bytes]
+        """
+        # Check for prefix format (authoritative source)
+        if len(key_with_prefix) >= 2 and key_with_prefix[:1] == b'.':
+            prefix_char = key_with_prefix[1:2]
+            
+            algorithm = self.PREFIX_TO_ALGORITHM.get(prefix_char)
+            if not algorithm:
+                raise XQException(f"Unknown key prefix: .{chr(prefix_char[0])}")
+            
+            return algorithm, key_with_prefix[2:]
+        
+        # No prefix - use scheme byte as fallback
+        algorithm = self.SCHEME_TO_ALGORITHM.get(scheme_byte)
+        if not algorithm:
+            raise XQException(f"Unknown scheme byte: {scheme_byte}")
+        
+        return algorithm, key_with_prefix
 
     def encrypt_message(self, text: str, key: bytes, algorithm: Algorithms = "OTP", recipients: List[str] = None):
         """encrypt a string
@@ -96,14 +323,14 @@ class XQ:
             key = key.encode()
 
         return encryptionAlgorithm.encrypt(text)
-
+    
     def decrypt_message(
         self,
         encryptedText: bytes,
         key: bytes,
         algorithm: Algorithms = "OTP"
     ):
-        """decrypt a previoulsy encrypted string
+        """decrypt a previously encrypted string
 
         :param encryptedText: encrypted text to decrypt
         :type encryptedText: bytes
@@ -122,6 +349,142 @@ class XQ:
         encryptionAlgorithm = Algorithms[algorithm](key)
         plaintext = encryptionAlgorithm.decrypt(encryptedText)
         return plaintext
+
+    def encrypt_auto(
+        self, 
+        text: str, 
+        algorithm: Algorithms = "OTP", 
+        recipients: List[str] = None,
+        subject: str = "message",
+        expires_hours: int = 24,
+        version: int = 1,
+        key: bytes = None,
+        locator_token: str = None
+    ) -> bytes:
+        """encrypt a string with auto-generated or provided key and store the key packet
+        
+        :param text: string to encrypt
+        :type text: str
+        :param algorithm: the encryption algorithm to use, defaults to OTP
+        :type algorithm: Algorithms, optional
+        :param recipients: list of recipients who can retrieve the key, defaults to None
+        :type recipients: List[str], optional
+        :param subject: subject/description for the encrypted message, defaults to "message"
+        :type subject: str, optional
+        :param expires_hours: hours until key packet expires, defaults to 24
+        :type expires_hours: int, optional
+        :param version: message format version, defaults to 1
+        :type version: int, optional
+        :param key: encryption key to use (without prefix), if None will auto-generate, defaults to None
+        :type key: bytes, optional
+        :param locator_token: pre-existing locator token, if None will create and store packet, defaults to None
+        :type locator_token: str, optional
+        :return: formatted message: (token_size+version) + locator_token + scheme + ciphertext
+        :rtype: bytes
+        """
+
+        # Use provided key or generate new one
+        if key is None:
+            # No key provided - use specified algorithm
+            config = self.ALGORITHM_CONFIG.get(algorithm)
+            if not config:
+                raise XQException(f"Unknown algorithm: {algorithm}")
+            
+            key_prefix = config["prefix"]
+            scheme_byte = config["scheme"]
+            key = self.generate_key_from_entropy()
+        else:
+            # Key provided - convert to bytes and check for prefix
+            if isinstance(key, str):
+                key = key.encode()
+            
+            # Detect algorithm from key prefix if present
+            if len(key) >= 2 and key[:1] == b'.':
+                prefix_char = key[1:2]
+                detected_algorithm = self.PREFIX_TO_ALGORITHM.get(prefix_char)
+                
+                if detected_algorithm:
+                    algorithm = detected_algorithm
+                    key = key[2:] 
+                else:
+                    raise XQException(f"Unknown key prefix: .{chr(prefix_char[0])}")
+            
+            # Get config for the algorithm (either from prefix or parameter)
+            config = self.ALGORITHM_CONFIG.get(algorithm)
+            if not config:
+                raise XQException(f"Unknown algorithm: {algorithm}")
+            
+            key_prefix = config["prefix"]
+            scheme_byte = config["scheme"]
+        
+        encryptionAlgorithm = Algorithms[algorithm](key)
+
+        # Use provided locator token or create new one
+        if locator_token is None:
+            locator_token = self.api.create_and_store_packet(
+                recipients=recipients,
+                key=key_prefix + key,
+                type="msg",
+                subject=subject,
+                expires_hours=expires_hours,
+            )
+
+        locator_bytes = locator_token.encode('utf-8')
+        if len(locator_bytes) != self.TOKEN_SIZE:
+            raise XQException(f"Locator token must be {self.TOKEN_SIZE} bytes, got {len(locator_bytes)}")
+        
+        ciphertext = encryptionAlgorithm.encrypt(text)
+        
+        return struct.pack(
+            f'<I{self.TOKEN_SIZE}sB',
+            self.TOKEN_SIZE + version,
+            locator_bytes,
+            scheme_byte
+        ) + ciphertext
+
+    def decrypt_auto(self, encrypted_message: bytes, key: bytes = None) -> bytes:
+        """decrypt a message encrypted with encrypt_auto by parsing the header and retrieving or using provided key
+        
+        :param encrypted_message: formatted message from encrypt_auto
+        :type encrypted_message: bytes
+        :param key: encryption key to use (with or without prefix), if None will retrieve from packet, defaults to None
+        :type key: bytes, optional
+        :return: decrypted plaintext message
+        :rtype: bytes
+        """
+        view = memoryview(encrypted_message)
+        
+        min_length = 4 + self.TOKEN_SIZE + 1 
+        if len(view) < min_length:
+            raise XQException(f"Message too short: {len(view)} bytes, need at least {min_length}")
+        
+        # Unpack header in one operation
+        header_format = f'<I{self.TOKEN_SIZE}sB'
+        header_size = struct.calcsize(header_format)
+        token_size_with_version, locator_bytes, scheme_byte = struct.unpack_from(header_format, view)
+        
+        version = token_size_with_version - self.TOKEN_SIZE
+        if version not in (0, 1):
+            raise XQException(f"Incompatible message version: {version}")
+        
+        # Extract locator token and ciphertext
+        locator_token = locator_bytes.decode('utf-8')
+        ciphertext = view[header_size:].tobytes()
+        
+        # Use provided key or retrieve from packet
+        if key is None:
+            key_with_prefix = self.api.get_packet(locator_token)
+            if isinstance(key_with_prefix, str):
+                key_with_prefix = key_with_prefix.encode()
+            algorithm, key = self._parse_key_and_scheme(key_with_prefix, scheme_byte)
+        else:
+            # Key provided - check if it has prefix or use scheme byte
+            if isinstance(key, str):
+                key = key.encode()
+            algorithm, key = self._parse_key_and_scheme(key, scheme_byte)
+        
+        encryptionAlgorithm = Algorithms[algorithm](key)
+        return encryptionAlgorithm.decrypt(ciphertext)
 
     def encrypt_file(
         self, fileObj: Union[str, BinaryIO, bytes, bytearray], key: Union[bytes, str], algorithm: Algorithms = "OTP", recipients: List[str] = None, expires_hours: int = 24, out_file: Union[str, os.PathLike, BinaryIO, None] = None, chunk_size: int = 1024 * 1024
@@ -156,12 +519,13 @@ class XQ:
 
         filename_for_header = _basename_from(fileObj) or "file"
 
-        if algorithm == "OTP":
-            key_prefix = b".B"
-            scheme = 'B'
-        else:
-            scheme = 2 if algorithm == "CTR" else 1
-            key_prefix = b".2" if scheme == 2 else b".1"
+        # Get algorithm configuration
+        config = self.ALGORITHM_CONFIG.get(algorithm)
+        if not config:
+            raise XQException(f"Unknown algorithm: {algorithm}")
+        
+        key_prefix = config["prefix"]
+        scheme = config["scheme"]
 
         locator_token = self.api.create_and_store_packet(
             recipients=recipients,
