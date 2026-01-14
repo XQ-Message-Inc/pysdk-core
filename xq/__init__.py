@@ -223,7 +223,8 @@ class XQ:
             enc = Encryption(decoded_entropy.decode())
             shuffled_entropy = enc.shuffle().encode()
             
-            chunk_size = key_size_bits // 8 
+            # Calculate chunk size in hex characters
+            chunk_size = (key_size_bits // 8) * 2
             
             for i in range(keys_in_batch):
                 # Extract chunk for this key from shuffled entropy
