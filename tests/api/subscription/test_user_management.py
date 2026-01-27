@@ -177,3 +177,79 @@ def test_rsa_decrypt_with_crypto_pem_roundtrip():
 
     pt = um._rsa_decrypt_with_crypto(private_pem, ct)
     assert pt == plaintext
+
+
+def test_exchange_for_subscription_token_success(mock_xqapi):
+    mock_subscription_token = "xyz123"
+    mock_xqapi.api_get = MagicMock(return_value=(200, mock_subscription_token))
+    mock_xqapi.set_api_auth_token = MagicMock()
+    original_auth = "Bearer dashboard_token"
+    mock_xqapi.headers = {"authorization": original_auth}
+    
+    result = exchange_for_subscription_token(mock_xqapi)
+    
+    assert result == mock_subscription_token
+    mock_xqapi.set_api_auth_token.assert_called_once_with(mock_subscription_token)
+    mock_xqapi.api_get.assert_called_once_with(
+        "exchange",
+        subdomain="subscription",
+        params={"request": "dashboard"}
+    )
+
+    assert mock_xqapi.headers["authorization"] == original_auth
+
+
+def test_exchange_for_subscription_token_error_401(mock_xqapi):
+    mock_xqapi.api_get = MagicMock(return_value=(401, "Unauthorized"))
+    mock_xqapi.headers = {"authorization": "Bearer invalid_dashboard_token"}
+    
+    with pytest.raises(XQException) as exc_info:
+        exchange_for_subscription_token(mock_xqapi)
+    assert "Failed to exchange token: 401" in str(exc_info.value)
+
+
+def test_exchange_for_subscription_token_error_403(mock_xqapi):
+    mock_xqapi.api_get = MagicMock(return_value=(403, "Forbidden"))
+    mock_xqapi.headers = {"authorization": "Bearer dashboard_token"}
+    
+    with pytest.raises(XQException) as exc_info:
+        exchange_for_subscription_token(mock_xqapi)
+    assert "Failed to exchange token: 403" in str(exc_info.value)
+
+
+def test_exchange_for_subscription_token_error_500(mock_xqapi):
+    mock_xqapi.api_get = MagicMock(return_value=(500, "Internal Server Error"))
+    mock_xqapi.headers = {"authorization": "Bearer dashboard_token"}
+    
+    with pytest.raises(XQException) as exc_info:
+        exchange_for_subscription_token(mock_xqapi)
+    assert "Failed to exchange token: 500" in str(exc_info.value)
+
+
+def test_exchange_for_subscription_token_preserves_original_auth(mock_xqapi):
+    original_auth = "Bearer original_dashboard_token"
+    mock_xqapi.api_get = MagicMock(return_value=(500, "Server error"))
+    mock_xqapi.headers = {"authorization": original_auth}
+    
+    try:
+        exchange_for_subscription_token(mock_xqapi)
+    except XQException:
+        pass
+    
+    assert mock_xqapi.headers["authorization"] == original_auth
+
+
+def test_exchange_for_subscription_token_no_original_auth(mock_xqapi):
+    """Test exchange when there's no original authorization header"""
+    mock_subscription_token = "new_subscription_token"
+    mock_xqapi.api_get = MagicMock(return_value=(200, mock_subscription_token))
+    mock_xqapi.set_api_auth_token = MagicMock()
+    mock_xqapi.headers = {}  # No authorization header
+    
+    result = exchange_for_subscription_token(mock_xqapi)
+    
+    assert result == mock_subscription_token
+    # Verify token was set via the method
+    mock_xqapi.set_api_auth_token.assert_called_once_with(mock_subscription_token)
+
+    assert mock_xqapi.headers["authorization"] == f"Bearer {mock_subscription_token}"

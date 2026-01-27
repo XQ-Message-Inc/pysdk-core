@@ -245,7 +245,7 @@ def exchange_for_dashboard_token(api):
 
         if status_code == 200:
             api.set_dashboard_auth_token(res)
-            return True
+            return res
         else:
             raise XQException(message=f"Error exchanging for Dashboard token: {res}")
     
