@@ -132,7 +132,7 @@ class XQ:
             shuffled_entropy = enc.shuffle().encode()
             
             # Split shuffled entropy into chunks to create individual keys
-            chunk_size = key_size_bits // 8 
+            chunk_size = (key_size_bits // 8) * 2
             
             for i in range(keys_in_batch):
                 # Extract chunk for this key from shuffled entropy
@@ -368,7 +368,7 @@ class XQ:
         :type text: str
         :param algorithm: the encryption algorithm to use, defaults to OTP
         :type algorithm: Algorithms, optional
-        :param recipients: list of recipients who can retrieve the key, defaults to None
+        :param recipients: list of recipients who can retrieve the key, defaults to ["team@group.local"]
         :type recipients: List[str], optional
         :param subject: subject/description for the encrypted message, defaults to "message"
         :type subject: str, optional
@@ -383,6 +383,9 @@ class XQ:
         :return: formatted message: (token_size+version) + locator_token + scheme + ciphertext
         :rtype: bytes
         """
+        
+        if recipients is None:
+            recipients = ["team@group.local"]
 
         # Use provided key or generate new one
         if key is None:
@@ -446,13 +449,17 @@ class XQ:
     def decrypt_auto(self, encrypted_message: bytes, key: bytes = None) -> bytes:
         """decrypt a message encrypted with encrypt_auto by parsing the header and retrieving or using provided key
         
-        :param encrypted_message: formatted message from encrypt_auto
-        :type encrypted_message: bytes
+        :param encrypted_message: formatted message from encrypt_auto (raw bytes or base64 string)
+        :type encrypted_message: bytes or str
         :param key: encryption key to use (with or without prefix), if None will retrieve from packet, defaults to None
         :type key: bytes, optional
         :return: decrypted plaintext message
         :rtype: bytes
         """
+        # Auto-detect and decode base64 if input is a string
+        if isinstance(encrypted_message, str):
+            encrypted_message = base64.b64decode(encrypted_message)
+        
         view = memoryview(encrypted_message)
         
         min_length = 4 + self.TOKEN_SIZE + 1 
