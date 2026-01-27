@@ -11,6 +11,7 @@ class XQAPI:
         authorize_user,
         code_validate,
         exchange_key,
+        exchange_for_subscription_token,
         create_packet,
         create_and_store_packet,
         create_and_store_packets,
@@ -43,7 +44,9 @@ class XQAPI:
         add_labels_to_locator_token,
         announce_device,
         exchange_for_dashboard_token,
-        get_business_info
+        get_businesses,
+        get_business_info,
+        switch_business
     )
 
     def __init__(

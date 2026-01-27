@@ -151,7 +151,6 @@ def exchange_for_subscription_token(api):
     :return: subscription token
     :rtype: str
     """
-    # Temporarily override the authorization header with the dashboard token
     original_auth = api.headers.get("authorization")
     
     try:
@@ -168,6 +167,8 @@ def exchange_for_subscription_token(api):
         )
         
         if status_code == 200:
+            api.set_api_auth_token(subscription_token)
+            api.headers.update({"authorization": f"Bearer {subscription_token}"})
             return subscription_token
         else:
             raise XQException(f"Failed to exchange token: {status_code}")

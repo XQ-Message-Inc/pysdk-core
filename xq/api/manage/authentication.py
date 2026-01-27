@@ -255,6 +255,22 @@ def exchange_for_dashboard_token(api):
         else:
             api.headers.pop("authorization", None)
 
+def get_businesses(api):
+    """get list of businesses the user is apart of from the dashboard
+    https://dashboard.xqmsg.net/v2/businesses
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :raises XQException: error retrieving businesses
+    :return: list of businesses
+    :rtype: list
+    """
+    status_code, res = api.api_get("businesses", subdomain=API_SUBDOMAIN)
+
+    if status_code == 200:
+        return res
+    else:
+        raise XQException(message=f"Error retrieving businesses: {res}")
 
 def get_business_info(api):
     """get business information from the dashboard
@@ -272,3 +288,23 @@ def get_business_info(api):
         return res
     else:
         raise XQException(message=f"Error retrieving business information: {res}")
+
+def switch_business(api, business_id: str):
+    """switch to a different business context in the dashboard
+    https://dashboard.xqmsg.net/v2/business/switch/{businessId}
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param business_id: business ID to switch to
+    :type business_id: str
+    :raises XQException: error switching business context
+    :return: success
+    :rtype: bool
+    """
+    status_code, res = api.api_get(f"business/{business_id}/auth", subdomain=API_SUBDOMAIN)
+
+    if status_code == 200:
+        api.set_dashboard_auth_token(res)
+        return True
+    else:
+        raise XQException(message=f"Error switching business context: {res}")
