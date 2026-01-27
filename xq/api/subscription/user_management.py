@@ -4,6 +4,7 @@ from xq.algorithms.aes_encryption import AESEncryption
 from xq.exceptions import XQException
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5
+from xq.config import API_KEY
 import base64
 import json
 
@@ -51,6 +52,7 @@ def authorize_user(
     api.headers.update({"authorization": f"Bearer {auth_token}"})
 
     if status_code == 200:
+        api.set_api_auth_token(auth_token)
         return auth_token
     else:
         return False
@@ -81,6 +83,7 @@ def authorize_alias(api, user_email: str, firstName: str, lastName: str):
     api.headers.update({"authorization": f"Bearer {auth_token}"})
 
     if str(status_code).startswith("20"):
+        api.set_api_auth_token(auth_token)
         return auth_token
     else:
         return False
@@ -129,6 +132,7 @@ def authorize_device(
 
         # update auth header to use new bearer token
         api.headers.update({"authorization": f"Bearer {data.get('access_token')}"})
+        api.set_api_auth_token(data.get('access_token'))
 
         # Announce the device to register it in the dashboard.
         status_code= announce_device(api, afirst=device)
@@ -136,6 +140,44 @@ def authorize_device(
         return data.get('access_token')
     else:
         return False
+    
+def exchange_for_subscription_token(api):
+    """Exchange a dashboard token for a subscription token
+    
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param dashboard_token: dashboard token to exchange
+    :type dashboard_token: str
+    :return: subscription token
+    :rtype: str
+    """
+    # Temporarily override the authorization header with the dashboard token
+    original_auth = api.headers.get("authorization")
+    
+    try:
+        # Set the bearer token for this request
+        api.headers.update({
+            "authorization": f"Bearer {original_auth}",
+            "api-key": API_KEY
+        })
+        
+        status_code, subscription_token = api.api_get(
+            "exchange",
+            subdomain=API_SUBDOMAIN,
+            params={"request": "dashboard"}
+        )
+        
+        if status_code == 200:
+            return subscription_token
+        else:
+            raise XQException(f"Failed to exchange token: {status_code}")
+
+    finally:
+        # Restore the original authorization header
+        if original_auth:
+            api.headers["authorization"] = original_auth
+        # Restore Content-Type to default
+        api.headers["Content-Type"] = "application/json"
 
 def load_file_content(file_path: str) -> str:
     """Load content from a file"""
@@ -273,6 +315,7 @@ or the authorization request is rejected
 
                 access_token = token_bytes.decode("utf-8")
                 api.headers.update({"authorization": f"Bearer {access_token}"})
+                api.set_api_auth_token(access_token)
 
                 if announce:
                     status_code = announce_device(api, afirst=device_name)

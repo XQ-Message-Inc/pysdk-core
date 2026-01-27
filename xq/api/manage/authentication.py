@@ -216,3 +216,59 @@ def announce_device(api, afirst: str = "", alast: str = "", aphone: str = ""):
         raise XQException(
             message=f"Failed to verify API key, status: {status_code}, body: {body!r}"
         )
+
+def exchange_for_dashboard_token(api):
+    """exchange current access token for dashboard token
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param subscription_token: subscription token to exchange
+    :type subscription_token: str
+    :raises XQException: error exchanging for dashboard token
+    :return: dashboard token
+    :rtype: str
+    """
+    # Temporarily override the authorization header with the subscription token
+    original_auth = api.headers.get("authorization")
+    
+    try:
+        api.headers.update({
+            "authorization": original_auth,
+            "api-key": DASHBOARD_API_KEY
+        })
+        
+        status_code, res = api.api_get(
+            "login/verify",
+            subdomain=API_SUBDOMAIN,
+            params={"request": "sub"}
+        )
+
+        if status_code == 200:
+            api.set_dashboard_auth_token(res)
+            return True
+        else:
+            raise XQException(message=f"Error exchanging for Dashboard token: {res}")
+    
+    finally:
+        if original_auth:
+            api.headers["authorization"] = original_auth
+        else:
+            api.headers.pop("authorization", None)
+
+
+def get_business_info(api):
+    """get business information from the dashboard
+    https://dashboard.xqmsg.net/v2/business
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :raises XQException: error retrieving business information
+    :return: business information
+    :rtype: dict
+    """
+    status_code, res = api.api_get("business", subdomain=API_SUBDOMAIN)
+
+    if status_code == 200:
+        return res
+    else:
+        raise XQException(message=f"Error retrieving business information: {res}")

@@ -40,7 +40,10 @@ class XQAPI:
         validate_access_token,
         login_verify,
         get_communication_by_locator_token,
-        announce_device
+        add_labels_to_locator_token,
+        announce_device,
+        exchange_for_dashboard_token,
+        get_business_info
     )
 
     def __init__(
@@ -56,6 +59,11 @@ class XQAPI:
         self.locator_key = locator_key
         self.api_base_uri = api_base_uri
         self.session = requests.Session()
+        
+        # Separate authorization tokens for each service
+        self.api_auth_token = None
+        self.dashboard_auth_token = None
+        
         self.headers = {
             "authorization": "Bearer xyz123",
             "Content-Type": "application/json",
@@ -81,6 +89,8 @@ class XQAPI:
         :return: requests obj
         :rtype: requests response
         """
+        self._ensure_api_key_for_subdomain(subdomain)
+        
         r = self.session.get(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             params=params,
@@ -108,6 +118,8 @@ class XQAPI:
         :return: status code, response
         :rtype: tuple(int, string)
         """
+        self._ensure_api_key_for_subdomain(subdomain)
+
         r = self.session.post(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             json=json,
@@ -137,6 +149,8 @@ class XQAPI:
         :return: status code, response
         :rtype: tuple(int, string)
         """
+        self._ensure_api_key_for_subdomain(subdomain)
+
         r = self.session.put(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             json=json,
@@ -161,6 +175,8 @@ class XQAPI:
         :return: status code, response
         :rtype: tuple(int, string)
         """
+        self._ensure_api_key_for_subdomain(subdomain)
+
         r = self.session.delete(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             headers=self.headers,
@@ -187,6 +203,8 @@ class XQAPI:
         :return: status code, response
         :rtype: tuple(int, string)
         """
+        self._ensure_api_key_for_subdomain(subdomain)
+
         r = self.session.patch(
             f"https://{subdomain}.{self.api_base_uri}{serviceEndpoint}",
             data=data,
@@ -200,3 +218,40 @@ class XQAPI:
             res = r.text
 
         return r.status_code, res
+
+    def set_api_auth_token(self, token: str):
+        """Set the authorization token for the regular API service.
+        
+        :param token: Bearer token for API authorization
+        :type token: string
+        """
+        self.api_auth_token = token
+    
+    def set_dashboard_auth_token(self, token: str):
+        """Set the authorization token for the dashboard service.
+        
+        :param token: Bearer token for dashboard authorization
+        :type token: string
+        """
+        self.dashboard_auth_token = token
+
+    def _ensure_api_key_for_subdomain(self, subdomain: str):
+        """Set the appropriate `api-key` and `authorization` headers depending on the subdomain.
+
+        If the subdomain contains 'dashboard' use `DASHBOARD_API_KEY` and dashboard auth token,
+        otherwise use the standard `self.api_key` and API auth token.
+        """
+        try:
+            if subdomain and "dashboard" in subdomain:
+                self.headers["api-key"] = DASHBOARD_API_KEY
+                # Use dashboard auth token if available
+                if self.dashboard_auth_token:
+                    self.headers["authorization"] = f"Bearer {self.dashboard_auth_token}"
+            else:
+                self.headers["api-key"] = self.api_key
+                # Use API auth token if available
+                if self.api_auth_token:
+                    self.headers["authorization"] = f"Bearer {self.api_auth_token}"
+        except Exception:
+            # fallback to existing api_key if something unexpected occurs
+            self.headers["api-key"] = self.api_key
