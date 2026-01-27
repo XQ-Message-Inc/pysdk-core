@@ -139,7 +139,7 @@ def test_exchange_for_dashboard_token_success(mock_xqapi):
     
     result = exchange_for_dashboard_token(mock_xqapi)
     
-    assert result is True
+    assert result == "mock_dashboard_token_123"
     mock_xqapi.set_dashboard_auth_token.assert_called_once_with("mock_dashboard_token_123")
     mock_xqapi.api_get.assert_called_once_with(
         "login/verify",
