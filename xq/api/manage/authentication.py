@@ -305,6 +305,6 @@ def switch_business(api, business_id: str):
 
     if status_code == 200:
         api.set_dashboard_auth_token(res)
-        return True
+        return res
     else:
         raise XQException(message=f"Error switching business context: {res}")
