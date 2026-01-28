@@ -95,18 +95,17 @@ class DummyAlgo:
 def patch_xqapi_constructor(monkeypatch):
     """Replace the XQAPI class that XQ() instantiates with a no-op dummy."""
     class DummyAPI:
-        def __init__(self, api_key, dashboard_api_key, locator_key):
+        def __init__(self, api_key, locator_key):
             self.api_key = api_key
-            self.dashboard_api_key = dashboard_api_key
             self.locator_key = locator_key
 
-        def create_and_store_packet(self, recipients, key, type, subject, expires_hours):
+        def create_and_store_packet(self, recipients, key, type, subject, expires_period):
             return "L" * 43
 
         def get_packet(self, locator):
             return b".1dummykey"
 
-        def get_entropy(self, entropy_bits=128):
+        def get_entropy(self, length=16, type="uint8"):
             return base64.b64encode(b"A" * 16).decode()
 
     monkeypatch.setattr(xq, "XQAPI", DummyAPI, raising=True)
@@ -127,19 +126,19 @@ def patch_algorithms(monkeypatch):
 
 @pytest.fixture
 def xqsdk():
-    return XQ(api_key="k", dashboard_api_key="d", locator_key="l")
+    return XQ(api_key="k", locator_key="l")
 
 
 # ------------------------------- Tests ---------------------------------------
 
 def test_init_no_validation_runs():
-    x = XQ(api_key="a", dashboard_api_key="b", locator_key="c")
+    x = XQ(api_key="a", locator_key="c")
     assert hasattr(x, "api")
 
 def test_generate_key_from_entropy_length(xqsdk):
     key = xqsdk.generate_key_from_entropy()
     assert isinstance(key, (bytes, bytearray))
-    assert len(key) == 16   
+    assert len(key) == 24
 
 def test_expand_key_fallback_returns_key_when_shorter(xqsdk):
     data = b"abc"

@@ -4,7 +4,7 @@ from xq.api.subscription import API_SUBDOMAIN
 
 def validate_api_key(api):
     """static method for validating provided API keys
-    https://xq.stoplight.io/docs/xqmsg/b3A6NDExNDU1MDg-check-if-valid-api-key
+    https://xqmsg.com/docs/delta/#tag/api-key-management/get/v3/apikey
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -27,7 +27,7 @@ def validate_api_key(api):
 
 def code_validate(api, pin: int):
     """validate the provided 2FA pin
-    https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MjQ1MjM-validate-access-request-with-a-pin
+    https://xqmsg.com/docs/delta/#tag/authentication-management/get/v3/login/verify
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -37,19 +37,12 @@ def code_validate(api, pin: int):
     :return: isvalid? boolean response
     :rtype: bool
     """
-    status_code, res = api.api_get(
-        "codevalidation", params={"pin": pin}, subdomain=API_SUBDOMAIN
-    )
-
-    if str(status_code).startswith("20"):
-        return True
-    else:
-        raise XQException(message="The provided pin is incorrect")
+    return api.login_verify(pin)
 
 
-def exchange_key(api, business_id: str = None):
+def exchange_key(api):
     """exchange pre-auth token for an access token, and update headers accordingly
-    https://xq.stoplight.io/docs/xqmsg/b3A6NDA5Mzc1NjA-exchange-for-access-token
+    https://xqmsg.com/docs/delta/#tag/authentication-management/get/v3/login/exchange
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -57,8 +50,9 @@ def exchange_key(api, business_id: str = None):
     :return: success? boolean
     :rtype: bool
     """
+    params = {"code": api.headers["code"]}
     status_code, auth_token = api.api_get(
-        f"exchange?b={business_id}", subdomain=API_SUBDOMAIN
+        "login/exchange", params=params, subdomain=API_SUBDOMAIN
     )
 
     if status_code == 200:
@@ -66,3 +60,4 @@ def exchange_key(api, business_id: str = None):
         return True
     else:
         raise XQException(message=f"Key Exchange creation failed: {auth_token}")
+
