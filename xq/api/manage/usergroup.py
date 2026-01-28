@@ -11,6 +11,7 @@ from xq.api.manage import API_SUBDOMAIN
 
 def create_usergroup(api, name: str, members: List[str]):
     """create a usergroup
+    https://xqmsg.com/docs/delta/#tag/user-group-management/post/v3/group
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -24,7 +25,7 @@ def create_usergroup(api, name: str, members: List[str]):
     """
     params = {"members": members, "name": name}
 
-    status_code, res = api.api_post("usergroup", json=params, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_post("group", json=params, subdomain=API_SUBDOMAIN)
 
     if status_code == 200:
         return res
@@ -32,8 +33,9 @@ def create_usergroup(api, name: str, members: List[str]):
         raise XQException(message=f"Error creating Dashboard usergroup: {res}")
 
 
-def get_usergroup(api, usergroup_id: int = None, groups: List[str] = None):
+def get_usergroup(api, usergroup_id: int = None):
     """get a usergroup by id
+    https://xqmsg.com/docs/delta/#tag/user-group-management/get/v3/group/{id}
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -45,15 +47,11 @@ def get_usergroup(api, usergroup_id: int = None, groups: List[str] = None):
     :return: usergroup(s)
     :rtype: dict
     """
-    endpoint = "usergroup"
 
     if usergroup_id:
-        endpoint = f"{endpoint}/{usergroup_id}"
-    # elif groups:
-    #     # TODO: what does groups do?
-    #     endpoint = f"{endpoint}/{groups}"
+        endpoint = f"group/{usergroup_id}"
     else:
-        pass  # return all usergroups
+        endpoint = "groups"
 
     status_code, res = api.api_get(endpoint, subdomain=API_SUBDOMAIN)
 
@@ -63,9 +61,9 @@ def get_usergroup(api, usergroup_id: int = None, groups: List[str] = None):
         raise XQException(message=f"Error getting Dashboard usergroup: {res}")
 
 
-def update_usergroup(api, usergroup_id: int, name: str, members: List[str]):
+def update_usergroup(api, usergroup_id: int, name: str = None, members: List[str] = []):
     """update a usergroup by id
-    WARNING: PATCH and PUT not supported by API
+    https://xqmsg.com/docs/delta/#tag/user-group-management/patch/v3/group/{id}
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -79,21 +77,25 @@ def update_usergroup(api, usergroup_id: int, name: str, members: List[str]):
     :return: updated usergroup
     :rtype: object
     """
-    params = {"members": members, "name": name}
+    params = {}
+    if members:
+        params["addMembers"] = members
+    if name:
+        params["name"] = name
 
     status_code, res = api.api_patch(
-        f"usergroup/{usergroup_id}", json=params, subdomain=API_SUBDOMAIN
+        f"group/{usergroup_id}", json=params, subdomain=API_SUBDOMAIN
     )
 
-    if status_code == 204:
+    if status_code == 200:
         return res
     else:
-        raise XQException(message=f"Error updating Dashbaord usergroup: {res}")
+        raise XQException(message=f"Error updating  usergroup: {res}")
 
 
 def delete_usergroup(api, usergroup_id: int):
     """delete a usergroup by id
-    WARNING: DELETE not supported by API
+    https://xqmsg.com/docs/delta/#tag/user-group-management/delete/v3/group/{id}
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -104,10 +106,10 @@ def delete_usergroup(api, usergroup_id: int):
     :rtype: boolean
     """
     status_code, res = api.api_delete(
-        f"usergroup/{usergroup_id}", subdomain=API_SUBDOMAIN
+        f"group/{usergroup_id}", subdomain=API_SUBDOMAIN
     )
 
     if status_code == 204:
         return True
     else:
-        raise XQException(message=f"Error deleting Dashboard usergroup: {res}")
+        raise XQException(message=f"Error deleting group: {res}")

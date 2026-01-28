@@ -1,5 +1,4 @@
 from xq.api.subscription import API_SUBDOMAIN
-from xq.api.manage import announce_device
 from xq.algorithms.aes_encryption import AESEncryption
 from xq.exceptions import XQException
 from Crypto.PublicKey import RSA
@@ -9,131 +8,34 @@ import json
 
 def authorize_user(
     api,
-    user_email: str,
-    firstName: str,
-    lastName: str,
-    newsletter=False,
-    notifications=0,
+    email: str
 ):
-    """request pre-auth token for a given email address, this token will need to be exchanged for an access token
-    https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDE-request-access-for-a-user
+    """request pre-auth token for a given email address an email with a pin.
+    https://xqmsg.com/docs/delta/#tag/authentication-management/post/v3/login/link
 
     :param api: XQAPI instance
     :type api: XQAPI
     :param user_email: email address of user requesting access token
     :type user_email: str
-    :param firstName: first name of user
-    :type firstName: str
-    :param lastName: last name of user
-    :type lastName: str
-    :param newsletter: subscribe to newsletter, defaults to False
-    :type newsletter: bool, optional
-    :param notifications: notification level: 0 = No Notifications, 1 = Receive Usage Reports, 2 = Receive Tutorials, 3 = Receive Both, defaults to 0
-    :type notifications: int, optional
-    :return: pre-aut token, which can be exchanged for an access token
-    :rtype: str
     """
-    status_code, auth_token = api.api_post(
-        "authorize",
-        json={
-            "user": user_email,
-            "firstName": firstName,
-            "lastName": lastName,
-            "newsletter": newsletter,
-            "notifications": notifications,
-        },
-        subdomain=API_SUBDOMAIN,
-    )
-
-    # update auth header to use new bearer token
-    api.headers.update({"authorization": f"Bearer {auth_token}"})
-
-    if status_code == 200:
-        return auth_token
-    else:
-        return False
+    return api.send_login_link(email=email)
 
 
-def authorize_alias(api, user_email: str, firstName: str, lastName: str):
+def authorize_alias(api, email: str):
     """request an access token for the given user information
-    https://subscription.xqmsg.net/v2/authorizealias
+
 
     :param api: XQAPI instance
     :type api: XQAPI
     :param user_email: email address of user requesting access token
     :type user_email: str
-    :param firstName: first name of user
-    :type firstName: str
-    :param lastName: last name of user
-    :type lastName: str
-    :return: access token
-    :rtype: str
+    :return: return if login successful
+    :rtype: boolean
     """
-    status_code, auth_token = api.api_post(
-        "authorizealias",
-        json={"user": user_email, "firstName": firstName, "lastName": lastName},
-        subdomain=API_SUBDOMAIN,
-    )
 
-    # update auth header to use new bearer token
-    api.headers.update({"authorization": f"Bearer {auth_token}"})
+    return api.login_alias(email=email)
 
-    if str(status_code).startswith("20"):
-        return auth_token
-    else:
-        return False
-    
-def authorize_device(
-    api,
-    device: str,
-    business_id: str = None
-):
-    """request pre-auth token for a given email address, this token will need to be exchanged for an access token
-    https://xq.stoplight.io/docs/xqmsg/b3A6NDA5MDAxNDE-request-access-for-a-user
 
-    :param api: XQAPI instance
-    :type api: XQAPI
-    :param user_email: device name requesting access token
-    :type user_email: str
-    :param newsletter: subscribe to newsletter, defaults to False
-    :type newsletter: bool, optional
-    :param notifications: notification level: 0 = No Notifications, 1 = Receive Usage Reports, 2 = Receive Tutorials, 3 = Receive Both, defaults to 0
-    :type notifications: int, optional
-    :return: pre-aut token, which can be exchanged for an access token
-    :rtype: str
-    """
-    if business_id == None :
-        raise XQException(message=f"Please provide a business_id")
-        return False
-    
-    status_code, encrypted_payload = api.api_post(
-        f"authorize/trusted/{business_id}",
-        json={
-            "device": device,
-            "ver": 3,
-            "roaming": True,
-        },
-        subdomain=API_SUBDOMAIN,
-    )
-
-    if status_code == 200:
-        payload = base64.b64decode(encrypted_payload)
-        
-        AES = AESEncryption(api.locator_key.encode())
-
-        decrypted_data = AES.decrypt(payload, api.locator_key.encode())
-        
-        data = json.loads(decrypted_data)
-
-        # update auth header to use new bearer token
-        api.headers.update({"authorization": f"Bearer {data.get('access_token')}"})
-
-        # Announce the device to register it in the dashboard.
-        status_code= announce_device(api, afirst=device)
-
-        return data.get('access_token')
-    else:
-        return False
 
 def load_file_content(file_path: str) -> str:
     """Load content from a file"""
@@ -160,6 +62,7 @@ def _rsa_decrypt_with_crypto(private_key_text: str, ciphertext: bytes) -> bytes:
         der = base64.b64decode(t)
         key = RSA.import_key(der)
 
+    #from Crypto.Cipher import PKCS1_OAEP
     cipher = PKCS1_v1_5.new(key)
     # Second arg is a sentinel returned on failure; we choose None then check for it
     decrypted = cipher.decrypt(ciphertext, None)
@@ -173,110 +76,167 @@ def _normalize_transport_key(raw: str) -> str:
         raise XQException("No transport key has been provided.")
     return raw
 
-def authorize_device_cert(api, cert_id: int, cert_file_path: str, transport_key_file_path: str, private_key_file_path: str, device_name: str = "Device", announce: bool = True):
-    """Authorize a device using an XQ certificate and transport key, returning an access token.
+def create_certificate(api, tag: str, geofence: list[str], enabled: bool):
+    """Create a certificate
+    https://xqmsg.com/docs/delta/#tag/certificate-management/post/v3/certificate
+
+    :param api: XQ API client instance
+    :type api: XQAPI
+    :param tag: The identifying tag of the new certificate.
+    :type tag: str
+    :param geofence: List of IPs or locations to require for this certificate.
+    :type geofence: list[str]
+    :param enabled: Specifies if this certificate is enabled or disabled.
+    :type enabled: boolean
+    :return: certificate created
+    :rtype: dict with keys  transportKey, clientKey, clientCert, id
+    :raises XQException: If the certificate cannot be created
+
+    """
+    payload = {
+        "tag": tag,
+        "geofence": geofence,
+        "enabled": enabled
+    }
+
+    status_code, res = api.api_post(f"certificate", json=payload, subdomain=API_SUBDOMAIN)
+    if status_code == 200:
+        return res;
+    else:
+        raise XQException(message=f"Failed create certificate: {res}")
+
+def delete_certificate(api, id: int):
+    """Delete  a certificate
+    https://xqmsg.com/docs/delta/#tag/certificate-management/delete/v3/certificate/{id}
+    
+    :param api: XQ API client instance
+    :type api: XQAPI
+    :param id: The id of the certificate to be deleted 
+    :type id: int
+    :return: success
+    :rtype: boolean
+    """
+
+    api.headers["X-Certificate-ID"] = str(id)
+    status_code, res = api.api_delete(
+        f"certificate/{id}", subdomain=API_SUBDOMAIN
+    )
+
+    if status_code == 204:
+        return True
+    else:
+            raise XQException(message=f"Error deleting certificate{res}")
+    
+def login_certificate(api,
+                      cert_id: int,
+                      cert_data: str,
+                      transport_key: str,
+                      private_key: str,
+                      device_name: str = "Demo",
+                      firstName: str = "Local",
+                      lastName: str = "Host"):
+    """Login with a certificate .
+    https://xqmsg.com/docs/delta/#tag/authentication-management/post/v3/login/cert
 
     :param api: XQ API client instance
     :type api: XQAPI
     :param cert_id: Certificate identifier issued for the device/tenant
     :type cert_id: int
-    :param cert_file_path: Path to the client certificate (client.crt)
-    :type cert_file_path: str
-    :param transport_key_file_path: Path to the transport key used to encrypt the request payload (transport.key)
-    :type transport_key_file_path: str
-    :param private_key_file_path: Path to the device private key (client.key) used to decrypt the returned token
-    :type private_key_file_path: str
-    :param device_name: Human-readable device name (max 48 characters), defaults to Device
+    :param cert_data: client certificate (client.crt)
+    :type cert_data: str
+    :param transport_key:  Transport key used to encrypt the request payload (transport.key)
+    :type transport_key: str
+    :param private_key: Private key (client.key) used to decrypt the returned token
+    :type private_key: str
+    :param device_name:  Name of device
     :type device_name: str
-    :param announce: If True, announce the device to the dashboard after authorization, defaults to True
-    :type announce: bool, optional
+    :param firstName:  First Name
+    :type firstName: str
+    :param lastName:  Last Name
+    :type lastName: str
     :return: Access token for subsequent authenticated requests
     :rtype: str
-    :raises XQException: If files are missing/empty, the server time cannot be fetched, encryption/decryption fails, \
+    :raises XQException: If  the server time cannot be fetched, encryption/decryption fails, \
 or the authorization request is rejected
     """
     ...
-    if not device_name or len(device_name) > 48:
-        raise XQException(message="Device name must be provided and cannot exceed 48 characters.")
-    try:
-        cert_data = load_file_content(cert_file_path)
-        if not cert_data:
-            raise XQException(message="Certificate file is empty or not found.")
-        
-        transport_key = load_file_content(transport_key_file_path)
-        if not transport_key:
-            raise XQException(message="Transport key file is empty or not found.")
-        
-        private_key_content = load_file_content(private_key_file_path)
-        if not private_key_content:
-            raise XQException(message="Private key file is empty or not found.")
-        
+
+    status_code, time_response = api.api_get(
+        f"time",
+        subdomain=API_SUBDOMAIN,
+    )
+    if status_code != 200:
+        raise XQException("Failed to get server time")
+
+    ts = int(time_response)
+
+    payload = {
+        "crt": cert_data,
+        "device": device_name,
+        "firstName": firstName,
+        "lastName": lastName,
+        "ts": ts,
+    }
+
+    payload_json = json.dumps(payload)
+    transport_key_wire = _normalize_transport_key(transport_key)
+    AES_With_Transport = AESEncryption(transport_key_wire.encode("utf-8"))
+    enc_bytes = AES_With_Transport.encrypt(payload_json.encode("utf-8"))
+    enc_b64 = base64.b64encode(enc_bytes).decode("utf-8")
+
+    api.headers["X-Certificate-ID"] = str(cert_id)
+    status_code, response_content = api.api_post(
+        f"login/cert",
+        data=enc_b64,
+        subdomain=API_SUBDOMAIN,
+    )
+    del api.headers["X-Certificate-ID"]
+    del api.headers["X-Team-ID"]
+    if status_code != 200:
+        raise XQException(message=f"Authorization request failed with status {status_code}: {response_content}")
+    else:
         try:
-            status_code, time_response = api.api_get(
-                f"time",
-                subdomain=API_SUBDOMAIN,
-            )
-            if status_code != 200:
-                raise XQException("Failed to get server time")
-            
-            ts = int(time_response)
+            resp_raw = base64.b64decode(response_content)
+        except Exception as e:
+            raise XQException(message=f"Failed to base64-decode response: {e}")
 
-            payload = {
-                "crt": cert_data,
-                "device": device_name,
-                "ver": 3,
-                "ts": ts,
-            }
-            
-            payload_json = json.dumps(payload)
-            transport_key_wire = _normalize_transport_key(transport_key)
-            AES = AESEncryption(transport_key_wire.encode("utf-8"))
-            enc_bytes = AES.encrypt(payload_json.encode("utf-8"))
-            enc_b64 = base64.b64encode(enc_bytes).decode("utf-8")
+        try:
+            dec_bytes = AES_With_Transport.decrypt(resp_raw)
+        except Exception as e:
+            raise XQException(message=f"Failed to AES-decrypt response: {e}")
 
-            status_code, response_content = api.api_post(
-                f"authorize/certificate/{cert_id}",
-                data=enc_b64,
-                subdomain=API_SUBDOMAIN,
-            )
+        try:
+            dec_json = json.loads(dec_bytes)
+        except Exception as e:
+            raise XQException(message=f"Failed to parse decrypted JSON: {e}")
 
-            if status_code != 200:
-                raise XQException(message=f"Authorization request failed with status {status_code}: {response_content}")
-            else:
-                try:
-                    resp_raw = base64.b64decode(response_content)
-                except Exception as e:
-                    raise XQException(message=f"Failed to base64-decode response: {e}")
+        encrypted_token_b64 = dec_json.get("access_token")
+        if not encrypted_token_b64:
+            raise XQException(message="Failed to read access token")
 
-                try:
-                    dec_bytes = AES.decrypt(resp_raw)
-                except Exception as e:
-                    raise XQException(message=f"Failed to AES-decrypt response: {e}")
+        encrypted_token = base64.b64decode(encrypted_token_b64)
 
-                try:
-                    dec_json = json.loads(dec_bytes)
-                except Exception as e:
-                    raise XQException(message=f"Failed to parse decrypted JSON: {e}")
+        ask_b64 = dec_json.get("ask")
 
-                encrypted_token_b64 = dec_json.get("access_token")
-                if not encrypted_token_b64:
-                    raise XQException(message="Failed to read access token")
+        ask = base64.b64decode(ask_b64)
 
-                encrypted_token = base64.b64decode(encrypted_token_b64)
-               
-                try:
-                    token_bytes = _rsa_decrypt_with_crypto(private_key_content, encrypted_token)
-                except Exception as e:
-                    raise XQException(message=f"Failed to RSA-decrypt access token: {e}")
+        try:
+            decryptedAskBytes = _rsa_decrypt_with_crypto(private_key, ask)
+        except Exception as e:
+            raise XQException(message=f"Failed to RSA-decrypt ask: {e}")
 
-                access_token = token_bytes.decode("utf-8")
-                api.headers.update({"authorization": f"Bearer {access_token}"})
+        try:
+            decryptedAsk = decryptedAskBytes.decode("utf-8")
+            AES_With_Ask_Key = AESEncryption(decryptedAsk.encode("utf-8"))
+            tokenString = AES_With_Ask_Key.decrypt(encrypted_token)
+        except Exception as e:
+            raise XQException(message=f"Failed to RSA-decrypt access token: {e}")
 
-                if announce:
-                    status_code = announce_device(api, afirst=device_name)
-                
-                return access_token
-        except ValueError:
-            return XQException(message="Failed to get time from API.")
-    except XQException as e:
-        raise XQException(message="Failed to load certificate or key files.")
+        token = json.loads(tokenString)
+
+        access_token = token["access_token"]
+
+        api.headers.update({"authorization": f"Bearer {access_token}"})
+
+        return access_token
+
