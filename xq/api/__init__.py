@@ -46,7 +46,8 @@ class XQAPI:
         exchange_for_dashboard_token,
         get_businesses,
         get_business_info,
-        switch_business
+        switch_business,
+        generate_device_certificate
     )
 
     def __init__(

@@ -59,7 +59,7 @@ def test_authorize_device_api_error(mock_xqapi):
     assert result is False
 
 
-@patch('xq.api.subscription.user_management.load_file_content')
+@patch('xq.api.subscription.user_management._load_or_use_content')
 @patch('xq.api.subscription.user_management.announce_device')
 @patch('xq.api.subscription.user_management.AESEncryption')
 @patch('xq.api.subscription.user_management._rsa_decrypt_with_crypto')
@@ -110,7 +110,7 @@ def test_authorize_device_cert_invalid_device_name(mock_xqapi):
     assert "cannot exceed 48 characters" in str(exc_info.value)
 
 
-@patch('xq.api.subscription.user_management.load_file_content')
+@patch('xq.api.subscription.user_management._load_or_use_content')
 def test_authorize_device_cert_file_load_error(mock_load_file, mock_xqapi):
     mock_load_file.side_effect = XQException("File not found")
     
@@ -120,7 +120,7 @@ def test_authorize_device_cert_file_load_error(mock_load_file, mock_xqapi):
         )
 
 
-@patch('xq.api.subscription.user_management.load_file_content')
+@patch('xq.api.subscription.user_management._load_or_use_content')
 @patch('xq.api.subscription.user_management.AESEncryption')
 def test_authorize_device_cert_api_time_error(mock_aes, mock_load_file, mock_xqapi):
     mock_load_file.side_effect = ["mock_cert", "mock_transport_key", "mock_private_key"]
@@ -135,26 +135,31 @@ def test_authorize_device_cert_api_time_error(mock_aes, mock_load_file, mock_xqa
         authorize_device_cert(
             mock_xqapi, 123, "client.crt", "transport.key", "client.key", "test_device"
         )
-    assert "Failed to load certificate or key files" in str(exc_info.value)
+    assert "Failed to get server time" in str(exc_info.value)
 
-def test_load_file_content_success():
+def test_load_or_use_content_with_file():
+    """Test _load_or_use_content loads from file when file exists"""
     mock_content = "file content here"
-    with patch("builtins.open", mock_open(read_data=mock_content)):
-        result = load_file_content("test_file.txt")
+    with patch("builtins.open", mock_open(read_data=mock_content)), \
+         patch("os.path.exists", return_value=True):
+        result = um._load_or_use_content("test_file.txt")
         assert result == mock_content
 
 
-def test_load_file_content_file_not_found():
-    with patch("builtins.open", side_effect=FileNotFoundError):
-        with pytest.raises(XQException) as exc_info:
-            load_file_content("nonexistent_file.txt")
-        assert "File not found" in str(exc_info.value)
+def test_load_or_use_content_with_direct_value():
+    """Test _load_or_use_content uses direct value when file doesn't exist"""
+    direct_value = "direct_content_here"
+    with patch("os.path.exists", return_value=False):
+        result = um._load_or_use_content(direct_value)
+        assert result == direct_value
 
 
-def test_load_file_content_general_error():
-    with patch("builtins.open", side_effect=PermissionError("Permission denied")):
+def test_load_or_use_content_file_read_error():
+    """Test _load_or_use_content raises XQException on file read error"""
+    with patch("os.path.exists", return_value=True), \
+         patch("builtins.open", side_effect=PermissionError("Permission denied")):
         with pytest.raises(XQException) as exc_info:
-            load_file_content("restricted_file.txt")
+            um._load_or_use_content("restricted_file.txt")
         assert "Failed to read file" in str(exc_info.value)
 
 

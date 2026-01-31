@@ -13,10 +13,28 @@ from xq import XQ
 
 xq = XQ()
 
-# Authorize device using certificate
-xq.api.authorize_device_cert(cert_id=1, cert_file_path="/User/example/client.crt", transport_key_file_path="/User/example/transport.key", private_key_file_path="/User/example/client.key", device_name="example_device")
+# get user authentication token
+email = input(f"Please provide the email address that will be used for authentication:")
+
+xq.api.authorize_user(email)
+
+# 2FA
+pin = input(f"Please provide the PIN sent to the email address '{email}':")
+xq.api.code_validate(pin)
+
+# exchange for token
+new_key = xq.api.exchange_key()
 
 # exchange for dashboard token
+xq.api.exchange_for_dashboard_token()
+
+# Generate a device certificate
+device_cert = xq.api.generate_device_certificate(tag="pythonSDKExample")
+
+# Authorize device using certificate you can set output paths or use the returned dict values but you should re-use certificates
+xq.api.authorize_device_cert(cert_id=device_cert["id"], cert_file_path=device_cert["clientCert"], transport_key_file_path=device_cert["transportKey"], private_key_file_path=device_cert["clientKey"], device_name="example_device")
+
+# exchange for dashboard token for the device
 xq.api.exchange_for_dashboard_token()
 
 # add a usergroup
@@ -37,7 +55,7 @@ print("\n\nGOT USERGROUP BY ID:")
 print(requested_usergroup)
 
 # encrypt a value with entire usergroup as recipient
-encrypted_value = xq.encrypt_auto("This is a secret message for the usergroup", algorithm="GCM", recipients=[f"{new_usergroup['id']}@_"])
+encrypted_value = xq.encrypt_auto("This is a secret message for the usergroup", algorithm="GCM", recipients=[f"{new_usergroup['id']}@_"], type=3)
 print("Encrypted value for usergroup:", encrypted_value)
 
 # decrypt a value with a user from the usergroup

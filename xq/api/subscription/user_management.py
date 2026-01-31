@@ -7,6 +7,7 @@ from Crypto.Cipher import PKCS1_v1_5
 from xq.config import API_KEY
 import base64
 import json
+import os
 
 def authorize_user(
     api,
@@ -180,15 +181,25 @@ def exchange_for_subscription_token(api):
         # Restore Content-Type to default
         api.headers["Content-Type"] = "application/json"
 
-def load_file_content(file_path: str) -> str:
-    """Load content from a file"""
-    try:
-        with open(file_path, 'r') as f:
-            return f.read().strip()
-    except FileNotFoundError:
-        raise XQException(f"File not found: {file_path}")
-    except Exception as e:
-        raise XQException(f"Failed to read file {file_path}: {str(e)}")
+def _load_or_use_content(value: str) -> str:
+    """Load content from file path or use the value directly
+    
+    :param value: Either a file path or the actual content
+    :type value: str
+    :return: The content
+    :rtype: str
+    """
+    if not value:
+        raise XQException("Value must be provided.")
+    
+    if os.path.exists(value):
+        try:
+            with open(value, 'r') as f:
+                return f.read().strip()
+        except Exception as e:
+            raise XQException(f"Failed to read file {value}: {str(e)}")
+    
+    return value.strip()
      
 def _rsa_decrypt_with_crypto(private_key_text: str, ciphertext: bytes) -> bytes:
     """
@@ -225,11 +236,11 @@ def authorize_device_cert(api, cert_id: int, cert_file_path: str, transport_key_
     :type api: XQAPI
     :param cert_id: Certificate identifier issued for the device/tenant
     :type cert_id: int
-    :param cert_file_path: Path to the client certificate (client.crt)
+    :param cert_file_path: Path to the client certificate file (client.crt) OR the certificate content directly
     :type cert_file_path: str
-    :param transport_key_file_path: Path to the transport key used to encrypt the request payload (transport.key)
+    :param transport_key_file_path: Path to the transport key file (transport.key) OR the transport key content directly
     :type transport_key_file_path: str
-    :param private_key_file_path: Path to the device private key (client.key) used to decrypt the returned token
+    :param private_key_file_path: Path to the device private key file (client.key) OR the private key content directly
     :type private_key_file_path: str
     :param device_name: Human-readable device name (max 48 characters), defaults to Device
     :type device_name: str
@@ -240,22 +251,21 @@ def authorize_device_cert(api, cert_id: int, cert_file_path: str, transport_key_
     :raises XQException: If files are missing/empty, the server time cannot be fetched, encryption/decryption fails, \
 or the authorization request is rejected
     """
-    ...
     if not device_name or len(device_name) > 48:
         raise XQException(message="Device name must be provided and cannot exceed 48 characters.")
     try:
-        cert_data = load_file_content(cert_file_path)
+        cert_data = _load_or_use_content(cert_file_path)
         if not cert_data:
-            raise XQException(message="Certificate file is empty or not found.")
+            raise XQException(message="Certificate is empty.")
         
-        transport_key = load_file_content(transport_key_file_path)
+        transport_key = _load_or_use_content(transport_key_file_path)
         if not transport_key:
-            raise XQException(message="Transport key file is empty or not found.")
+            raise XQException(message="Transport key is empty.")
         
-        private_key_content = load_file_content(private_key_file_path)
+        private_key_content = _load_or_use_content(private_key_file_path)
         if not private_key_content:
-            raise XQException(message="Private key file is empty or not found.")
-        
+            raise XQException(message="Private key is empty.")
+
         try:
             status_code, time_response = api.api_get(
                 f"time",
@@ -317,12 +327,13 @@ or the authorization request is rejected
                 access_token = token_bytes.decode("utf-8")
                 api.headers.update({"authorization": f"Bearer {access_token}"})
                 api.set_api_auth_token(access_token)
+                api.set_dashboard_auth_token(access_token)
 
                 if announce:
                     status_code = announce_device(api, afirst=device_name)
                 
                 return access_token
         except ValueError:
-            return XQException(message="Failed to get time from API.")
-    except XQException as e:
-        raise XQException(message="Failed to load certificate or key files.")
+            raise XQException(message="Failed to get time from API.")
+    except XQException:
+        raise

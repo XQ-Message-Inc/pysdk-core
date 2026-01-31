@@ -360,7 +360,8 @@ class XQ:
         expires_hours: int = 24,
         version: int = 1,
         key: bytes = None,
-        locator_token: str = None
+        locator_token: str = None,
+        type: str = "msg"
     ) -> bytes:
         """encrypt a string with auto-generated or provided key and store the key packet
         
@@ -380,6 +381,8 @@ class XQ:
         :type key: bytes, optional
         :param locator_token: pre-existing locator token, if None will create and store packet, defaults to None
         :type locator_token: str, optional
+        :param type: packet type for the stored key, defaults to "msg"
+        :type type: str, optional
         :return: formatted message: (token_size+version) + locator_token + scheme + ciphertext
         :rtype: bytes
         """
@@ -428,7 +431,7 @@ class XQ:
             locator_token = self.api.create_and_store_packet(
                 recipients=recipients,
                 key=key_prefix + key,
-                type="msg",
+                type=type,
                 subject=subject,
                 expires_hours=expires_hours,
             )

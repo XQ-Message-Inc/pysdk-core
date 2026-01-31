@@ -1,3 +1,4 @@
+import os
 from xq.exceptions import XQException
 from xq.api.manage import API_SUBDOMAIN
 from xq.config import DASHBOARD_API_KEY, API_KEY
@@ -39,6 +40,76 @@ def dashboard_signup(api, email: str, password: str = None, emailOptIn=True):
         return res
     else:
         raise XQException(message=f"Error registering Dashboard user: {res}")
+    
+
+def generate_device_certificate(
+        api, tag: str, fence: list = None, enabled: bool = True, output_dir: str = None, client_key_path: str = None, client_cert_path: str = None, transport_key_path: str = None
+        ):
+    """generate a device certificate for authentication
+    https://dashboard.xqmsg.net/v2/certificate
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param tag: tag/name for the device certificate
+    :type tag: str
+    :param fence: optional fence/scope for the certificate, defaults to empty list
+    :type fence: list, optional
+    :param enabled: whether the certificate is enabled, defaults to True
+    :type enabled: bool, optional
+    :param output_dir: optional directory to save certificate files (client.key, client.crt, transport.key), defaults to None
+    :type output_dir: str, optional
+    :param client_key_path: optional custom path for client key file, overrides output_dir, defaults to None
+    :type client_key_path: str, optional
+    :param client_cert_path: optional custom path for client certificate file, overrides output_dir, defaults to None
+    :type client_cert_path: str, optional
+    :param transport_key_path: optional custom path for transport key file, overrides output_dir, defaults to None
+    :type transport_key_path: str, optional
+    :raises XQException: error generating device certificate
+    :return: certificate data containing id, transportKey, clientCert, and clientKey
+    :rtype: dict
+    """
+    if fence is None:
+        fence = []
+    
+    payload = {
+        "tag": tag,
+        "fence": fence,
+        "enabled": enabled
+    }
+
+    api.headers.update(
+        {"api-key": DASHBOARD_API_KEY}
+    ) 
+
+    status_code, res = api.api_post("certificate", json=payload, subdomain=API_SUBDOMAIN)
+
+    if status_code == 200:
+        # Write certificate files if paths are provided
+        if output_dir or client_key_path or client_cert_path or transport_key_path:
+            if output_dir:
+                os.makedirs(output_dir, exist_ok=True)
+                if not client_key_path:
+                    client_key_path = os.path.join(output_dir, "client.key")
+                if not client_cert_path:
+                    client_cert_path = os.path.join(output_dir, "client.crt")
+                if not transport_key_path:
+                    transport_key_path = os.path.join(output_dir, "transport.key")
+            
+            if client_key_path and "clientKey" in res:
+                with open(client_key_path, "w") as f:
+                    f.write(res["clientKey"])
+            
+            if client_cert_path and "clientCert" in res:
+                with open(client_cert_path, "w") as f:
+                    f.write(res["clientCert"])
+
+            if transport_key_path and "transportKey" in res:
+                with open(transport_key_path, "w") as f:
+                    f.write(res["transportKey"])
+        
+        return res
+    else:
+        raise XQException(message=f"Error generating device certificate: {res}")
 
 
 def send_login_link(api, email: str, host: str = None):

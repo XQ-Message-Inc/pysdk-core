@@ -73,6 +73,7 @@ def exchange_key(api, business_id: str = None, selector: bool = False):
     if status_code == 200:
         api.headers.update({"authorization": f"Bearer {auth_token}"})
         api.set_api_auth_token(auth_token)
-        return True
+        api.set_dashboard_auth_token(auth_token)
+        return auth_token
     else:
         raise XQException(message=f"Key Exchange creation failed: {auth_token}")
