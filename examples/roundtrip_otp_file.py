@@ -3,7 +3,7 @@
 # Example file encryption lifecycle, using an XQ generated qunatum key
 #
 # Assumptions:
-#     XQ_API_KEY and XQ_DASHBOARD_API_KEY are defined in the ENV or .env file
+#     XQ_API_KEY is defined in the ENV or .env file
 #
 # Prerequisits found @
 #   https://github.com/XQ-Message-Inc/python-sdk
@@ -17,9 +17,7 @@ xq = XQ()
 
 # get user authentication token
 email = input(f"Please provide the email address that will be used for authentication:")
-first_name = input(f"Please provide your first name:")
-last_name = input(f"Please provide your last name:")
-xq.api.authorize_user(email, first_name, last_name)  # returns success boolean
+xq.api.authorize_user(email)  # returns success boolean
 
 # 2FA
 pin = input(f"Please provide the PIN sent to the email address '{email}':")
@@ -27,6 +25,16 @@ xq.api.code_validate(pin)
 
 # exchange for token
 xq.api.exchange_key()
+
+#get the first team or create one
+teams = xq.api.get_teams()
+
+if teams:
+    teamId = teams[0]["id"]
+else:
+    teamId = xq.api.create_team("New team")
+
+xq.api.switch(teamId)
 
 # create key packet from qunatum entropy
 KEY = xq.generate_key_from_entropy()

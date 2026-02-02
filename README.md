@@ -38,7 +38,7 @@ In order to utilize the XQ SDK and interact with XQ servers you will need both t
 
 #### Initializing the SDK
 
-To initialize an XQ SDK instance in your Python application, provide the generated `XQ_API_KEY` (General) and/or `XQ_DASHBOARD_API_KEY` (Dashboard) API keys to the `XQ` class.
+To initialize an XQ SDK instance in your Python application, provide the generated `XQ_API_KEY`  to the `XQ` class.
 
 This can be done via:
 
@@ -50,8 +50,7 @@ This can be done via:
 import xq
 
 xq = XQ(
-  api_key="YOUR_XQ_API_KEY",
-  dashboard_api_key="YOUR_DASHBOARD_API_KEY"
+  api_key="YOUR_XQ_API_KEY"
 )
 ```
 
@@ -66,6 +65,7 @@ There are detailed usage examples available in the [examples folder](https://git
 - [BYOK w/ 2FA](examples/roundtrip_with_2fa.py)
 - [XQ Generated Entropy Key](examples/roundtrip_with_entropy_key.py)
 - [File Encryption](examples/roundtrip_otp_file.py)
+- [Key Roundtrip](examples/packet.py)
 - [Message Encryption Roundtrip w/ Machine Authentication](examples/roundtrip_with_machine.py)
 - [File Encryption Roundtrip w/ Machine Authentication](examples/roundtrip_with_machine.py)
 - [Dashboard (Beta)](examples/dashboard.py)

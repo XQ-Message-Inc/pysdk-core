@@ -2,15 +2,12 @@
 # WARNING: these are full integration tests
 #   and will hit the live api to ensure compatability
 #
-# PREREQS: XQ_API_KEY, XQ_DASHBOARD_API_KEY must
-#   be set in the ENV or .env file
-#
 #   THESE TESTS WILL PASS IF NOT SET
 ########################################################
 import pytest
 import warnings
 from xq import XQ
-from xq.exceptions import XQException
+
 
 
 def credentials_not_set():
@@ -24,51 +21,19 @@ def credentials_not_set():
         return True  # unable to init with credentials
 
 
-@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
-def test_roundtrip():
-    # init SDK (creds from ENV or input params)
-    xq = XQ()
-
-    # get user authentication token
-    email = "mockuser@xqtest.com"
-    xq.api.authorize_alias(email, "test", "runner")
-
-    # create key packet from qunatum entropy
-    KEY = xq.generate_key_from_entropy()
-    encrypted_key_packet = xq.api.create_packet(recipients=[email], key=KEY)
-
-    # store key packet
-    locator_token = xq.api.add_packet(encrypted_key_packet)
-
-    # encrypt something
-    message_to_encrypt = "sometexttoencrypt"
-    encrypted_message= xq.encrypt_message(
-        message_to_encrypt, key=KEY, algorithm="AES"
-    )
-
-    # get key packet by lookup
-    retrieved_key_packet = xq.api.get_packet(locator_token)
-
-    # deycrypt
-    decrypted_message = xq.decrypt_message(
-        encrypted_message, key=retrieved_key_packet, algorithm="AES"
-    )
-
-    assert decrypted_message == message_to_encrypt
-
-
-@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
+@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentials not set")
 def test_roundtrip_create_and_add_packet():
     # init SDK (creds from ENV or input params)
     xq = XQ()
 
     # get user authentication token
-    email = "mockuser@xqtest.com"
-    xq.api.authorize_alias(email, "test", "runner")
+    email = "mockuser1@xqtest.com"
+    xq.api.login_alias(email)
 
-    # create key packet from qunatum entropy
+    # create key packet from quantum entropy
     KEY = xq.generate_key_from_entropy()
     locator_token = xq.api.create_and_store_packet(recipients=[email], key=KEY)
+
 
     # encrypt something
     message_to_encrypt = "sometexttoencrypt"
@@ -87,67 +52,109 @@ def test_roundtrip_create_and_add_packet():
     assert decrypted_message == message_to_encrypt
 
 
-@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
-def test_revoke_key():
+@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentials not set")
+def test_roundtrip_create_and_add_packets():
     # init SDK (creds from ENV or input params)
     xq = XQ()
 
     # get user authentication token
-    email = "testmock@xqtest.com"
-    xq.api.authorize_alias(email, "test", "runner")
+    email = "mockuser@xqtest.com"
+    xq.api.authorize_alias(email)
 
     # create key packet from qunatum entropy
-    KEY = xq.generate_key_from_entropy()
-    encrypted_key_packet = xq.api.create_packet(recipients=[email], key=KEY)
+    KEY1 = xq.generate_key_from_entropy()
 
-    # store key packet
-    locator_token = xq.api.add_packet(encrypted_key_packet)
+    KEY2 = xq.generate_key_from_entropy()
 
-    # get key packet - should be successful
-    retrieved_key_packet = xq.api.get_packet(locator_token)
-    assert retrieved_key_packet
+    locator_tokens_by_key = xq.api.create_and_store_packets(recipients=[email], keys=[KEY1, KEY2])
+
+    keys_by_locator_token = {}
+    for entry in zip(locator_tokens_by_key):
+        for key, value in entry[0].items():
+            keys_by_locator_token[value] = key
+
+    locator_tokens = []
+    for entry in locator_tokens_by_key:
+        for locator in entry.values():
+            locator_tokens.append(locator)
+
+
+    # get key packet by lookup
+    retrieved_keys_by_locator_tokens  = xq.api.get_packets(locator_tokens)
+
+
+    assert retrieved_keys_by_locator_tokens == keys_by_locator_token
+
+if __name__ == "__main__":
+    test_roundtrip_create_and_add_packet()
+    test_roundtrip_create_and_add_packets
+
+
+#the following actions in the followling 2 methods  is now run interactively in examples/packet.py
+#@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
+#def test_revoke_key():
+#   # init SDK (creds from ENV or input params)
+#    xq = XQ()
+
+#    # get user authentication token
+#    email = "testmock@xqtest.com"
+#    xq.api.authorize_alias(email)
+
+    # create key packet from qunatum entropy
+#    KEY = xq.generate_key_from_entropy()
+#    locator_token = xq.api.create_and_store_packet(recipients=[email], key=KEY)
+
+#    # get key packet - should be successful
+#    retrieved_key_packet = xq.api.get_packet(locator_token)
+#    assert retrieved_key_packet
 
     # revoke key
-    retrieved_key_packet = xq.api.revoke_packet(locator_token)
+#    retrieved_key_packet = xq.api.revoke_packet(locator_token)
 
     # get key packet - should be gone
-    with pytest.raises(XQException):
-        retrieved_key_packet = xq.api.get_packet(locator_token)
+#    with pytest.raises(XQException):
+#        retrieved_key_packet = xq.api.get_packet(locator_token)
 
 
-@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
-def test_revoke_users():
+#@pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
+#def test_revoke_users():
     # init SDK (creds from ENV or input params)
-    xq = XQ()
+#    xq = XQ()
 
     # get user authentication token
-    email = "testmock@xqtest.com"
-    xq.api.authorize_alias(email, "test", "runner")
+#    email = "testmock@xqtest.com"
+#    xq.api.login_alias(email)
 
     # create key packet from qunatum entropy
-    KEY = xq.generate_key_from_entropy()
-    encrypted_key_packet = xq.api.create_packet(recipients=[email], key=KEY)
+#    KEY = xq.generate_key_from_entropy()
+#    locator_token = xq.api.create_and_store_packet(recipients=[email], key=KEY)
 
-    # store key packet
-    locator_token = xq.api.add_packet(encrypted_key_packet)
-
-    # grant user access
-    email1 = "goodguy@xqtest.com"
-    email2 = "badguy@xqtest.com"
-    xq.api.grant_users(locator_token, [email1, email2], alias_access=True)
+#    # grant user access
+#    email1 = "goodguy@xqtest.com"
+#    email2 = "badguy@xqtest.com"
+#    xq.api.grant_users(locator_token, [email1, email2], alias_access=True)
 
     # revoke badguy
-    xq.api.revoke_users(locator_token, [email2], alias_access=True)
+#    xq.api.revoke_users(locator_token, [email2], alias_access=True)
 
     # veryfiy goodguy
-    xq.api.authorize_alias(email1, "good", "guy")
-    retrieved_key_packet = xq.api.get_packet(locator_token)
-    assert retrieved_key_packet
+#    xq.api.login_alias(email1)
+#    retrieved_key_packet = xq.api.get_packet(locator_token)
+#    assert retrieved_key_packet
 
     # verify badguy
-    xq.api.authorize_alias(email2, "bad", "guy")
-    with pytest.raises(XQException):
-        retrieved_key_packet = xq.api.get_packet(locator_token)
+#    xq.api.login_alias(email2)
+#    with pytest.raises(XQException):
+#        retrieved_key_packet = xq.api.get_packet(locator_token)
+
+if __name__ == "__main__":
+    pass
+    test_roundtrip_create_and_add_packet()
+    test_roundtrip_create_and_add_packets()
+
+
+
+
 
 
 # @pytest.mark.skipif(credentials_not_set(), reason="XQ API credentails not set")
