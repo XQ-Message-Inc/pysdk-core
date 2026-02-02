@@ -1,74 +1,109 @@
 from xq.exceptions import XQException
 from xq.api.manage import API_SUBDOMAIN
 
-CONTACT_ROLES = {
-    1: "Admin",
+
+ROLES = {
+    1: "Administrator",
     2: "User",
     3: "Vendor",
     4: "Customer",
-    5: "Super User",
-    6: "Device",
+    5: "SystemAdmin",
+    6: "AuthorizedDevice",
+    7: "Guest",
+    8: "Manager",
+    9: "Recipient",
+    10: "AliasUser"
 }
-NOTIFICATIONS = {
-    0: "None",
-    2: "Warnings and Alerts",
-    3: "Alerts Only",
-}  # [sic] docs have no '1'
 
-
-def add_contact(
+def add_team_member(
     api,
     firstName: str,
     lastName: str,
     email: str,
     title: str,
     role: int,
-    notifications: int = 0,
-    overflow: bool = False,
+    phone: str = None,
+    requiresAuth: bool = None,
+    host: str = None,
+    template: str = None,
+    subject: str = None
 ):
-    f"""add external contact as an alias user
-    https://xq.stoplight.io/docs/xqmsg/b3A6NDEyMDU5ODc-add-a-new-business-contact
+    f"""add  team member 
+    https://xqmsg.com/docs/delta/#tag/team-management/post/v3/team/invite
 
     :param api: XQAPI instance
     :type api: XQAPI
-    :param firstName: first name of contact
+    :param firstName: first name of team member
     :type firstName: str
-    :param lastName: last name of contact
+    :param lastName: last name of team member
     :type lastName: str
-    :param email: email address of contact
+    :param email: email address of team member
     :type email: str
-    :param title: business title of contact
+    :param title: business title of team member
     :type title: str
-    :param role: user role to assign contact, {str(CONTACT_ROLES)}
+    :param role: user role to assign team member, {str(ROLES)}
     :type role: int
-    :param notifications: notification for contact, {str(NOTIFICATIONS)},defaults to 0
-    :type notifications: int, optional
-    :param overflow: _description_, defaults to False
-    :type overflow: bool, optional
+    :param phone: phone of team member
+    :type phone: str
+    :param host: the host URL from where this request was triggered
+    :type host: str
+    :param template: the name of template team members  login link configuration template.
+    :type template: str
+    :param subject: An optional subject line for communications related to the invite of the team member
+    :type subject: str
+    :param requiresAuth: does the team member require auth 
+    :type requiresAuth: str
+    :rtype dict with keys  id and code
     """
-    if role not in CONTACT_ROLES:
+    if role not in ROLES.values():
         raise XQException(
-            f'Provided Role "{role}" is not valid.  Available options are: {CONTACT_ROLES}'
-        )
-
-    if notifications not in NOTIFICATIONS:
-        raise XQException(
-            f'Provided Notifications "{notifications}" is not valid.  Available options are: {NOTIFICATIONS}'
+            f'Provided Role "{role}" is not valid.  Available options are: {ROLES}'
         )
 
     payload = {
-        "firstName": firstName,
-        "lastName": lastName,
         "email": email,
-        "title": title,
         "role": role,
-        "notifications": notifications,
-        "overflow": overflow,
     }
+    if firstName:
+        payload["firstName"] = firstName
+    if lastName:
+        payload["lastName"] = lastName
+    if title:
+        payload["title"] = title
+    if phone:
+        payload["phone"] = phone
+    if host:
+        payload["host"] = host
+    if template:
+        payload["template"] = template
+    if subject:
+        payload["subject"] = subject
+    if requiresAuth:
+        payload["requiresAuth"] = requiresAuth
 
-    status_code, res = api.api_post("contact", json=payload, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_post("team/invite", json=payload, subdomain=API_SUBDOMAIN)
 
     if status_code == 200:
         return res
     else:
-        raise XQException(message=f"Error registering Dashboard user: {res}")
+        raise XQException(message=f"Error adding team member  user: {res}")
+
+def delete_team_member(api, id: int):
+    f"""delete a team member 
+    https://xqmsg.com/docs/delta/#tag/team-management/delete/v3/team/member/{id}
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param id: id of team member to be deleted 
+    :type id: int
+    :return: success
+    :rtype: boolean
+    """
+    status_code, res = api.api_delete(
+        f"team/member/{id}", subdomain=API_SUBDOMAIN
+    )
+
+    if status_code == 204:
+        return True
+    else:
+        raise XQException(message=f"Error deleting team member {res}")
