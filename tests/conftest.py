@@ -27,6 +27,10 @@ def mock_xqapi():
         xqapi.headers = {}
         xqapi.api_base_uri = "mockbaseuri"
         xqapi.session = requests.session()
+        xqapi.api_key = "mock_api_key"
+        xqapi.dashboard_api_key = "mock_dashboard_api_key"
+        xqapi.api_auth_token = None
+        xqapi.dashboard_auth_token = None
         # obj.loaddata()  # This will call your mock method
         return xqapi
 

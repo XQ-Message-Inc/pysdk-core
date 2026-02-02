@@ -59,7 +59,7 @@ class Encryption:
         Encrypt a file payload with outer XQ header + inner body.
         - GCM (scheme==1): in-memory unless out_file handling upstream writes.
         - CTR (scheme==2): streams when out_file is provided.
-        - OTP (scheme=='B'): now supported; can stream to out_file too.
+        - OTP (scheme==ord('B') or 66): now supported; can stream to out_file too.
         :param data: file-like or bytes/str
         """
         if isinstance(password, str):
@@ -69,7 +69,7 @@ class Encryption:
         enc_filename = b""
         if filename:
             fn_bytes = filename.encode('utf-8') if isinstance(filename, str) else filename
-            if scheme == 'B':  
+            if scheme == ord('B'): 
                 enc_filename = self.encrypt(fn_bytes, password)
             else:              
                 enc_filename = self.encrypt(fn_bytes, password, header=None)
@@ -77,7 +77,7 @@ class Encryption:
         # Build outer file header
         outer_header = self.create_file_header(enc_filename, token, scheme=scheme)
         
-        if scheme == 'B':
+        if scheme == ord('B'): 
             return self.encrypt_file_streaming(
                 data,
                 password,
