@@ -331,9 +331,9 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>api</strong> (<a class="reference internal" href="xq.api.html#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQ API client instance</p></li>
 <li><p><strong>cert_id</strong> (<em>int</em>) – Certificate identifier issued for the device/tenant</p></li>
-<li><p><strong>cert_file_path</strong> (<em>str</em>) – Path to the client certificate (client.crt)</p></li>
-<li><p><strong>transport_key_file_path</strong> (<em>str</em>) – Path to the transport key used to encrypt the request payload (transport.key)</p></li>
-<li><p><strong>private_key_file_path</strong> (<em>str</em>) – Path to the device private key (client.key) used to decrypt the returned token</p></li>
+<li><p><strong>cert_file_path</strong> (<em>str</em>) – Path to the client certificate file (client.crt) OR the certificate content directly</p></li>
+<li><p><strong>transport_key_file_path</strong> (<em>str</em>) – Path to the transport key file (transport.key) OR the transport key content directly</p></li>
+<li><p><strong>private_key_file_path</strong> (<em>str</em>) – Path to the device private key file (client.key) OR the private key content directly</p></li>
 <li><p><strong>device_name</strong> (<em>str</em>) – Human-readable device name (max 48 characters), defaults to Device</p></li>
 <li><p><strong>announce</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, announce the device to the dashboard after authorization, defaults to True</p></li>
 </ul>
@@ -376,9 +376,23 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="xq.api.subscription.user_management.load_file_content">
-<span class="sig-prename descclassname"><span class="pre">xq.api.subscription.user_management.</span></span><span class="sig-name descname"><span class="pre">load_file_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#xq.api.subscription.user_management.load_file_content" title="Link to this definition"></a></dt>
-<dd><p>Load content from a file</p>
+<dt class="sig sig-object py" id="xq.api.subscription.user_management.exchange_for_subscription_token">
+<span class="sig-prename descclassname"><span class="pre">xq.api.subscription.user_management.</span></span><span class="sig-name descname"><span class="pre">exchange_for_subscription_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.subscription.user_management.exchange_for_subscription_token" title="Link to this definition"></a></dt>
+<dd><p>Exchange a dashboard token for a subscription token</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="xq.api.html#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>dashboard_token</strong> (<em>str</em>) – dashboard token to exchange</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>subscription token</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

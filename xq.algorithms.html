@@ -144,7 +144,7 @@
 <dd><p>Encrypt a file payload with outer XQ header + inner body.
 - GCM (scheme==1): in-memory unless out_file handling upstream writes.
 - CTR (scheme==2): streams when out_file is provided.
-- OTP (scheme==’B’): now supported; can stream to out_file too.
+- OTP (scheme==ord(‘B’) or 66): now supported; can stream to out_file too.
 :param data: file-like or bytes/str</p>
 </dd></dl>
 

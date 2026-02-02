@@ -112,7 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="xq.api.subscription.html#xq.api.subscription.user_management.authorize_device"><code class="docutils literal notranslate"><span class="pre">authorize_device()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="xq.api.subscription.html#xq.api.subscription.user_management.authorize_device_cert"><code class="docutils literal notranslate"><span class="pre">authorize_device_cert()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="xq.api.subscription.html#xq.api.subscription.user_management.authorize_user"><code class="docutils literal notranslate"><span class="pre">authorize_user()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="xq.api.subscription.html#xq.api.subscription.user_management.load_file_content"><code class="docutils literal notranslate"><span class="pre">load_file_content()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="xq.api.subscription.html#xq.api.subscription.user_management.exchange_for_subscription_token"><code class="docutils literal notranslate"><span class="pre">exchange_for_subscription_token()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="xq.api.subscription.html#module-xq.api.subscription">Module contents</a></li>
@@ -145,6 +145,26 @@
 <dt class="sig sig-object py" id="xq.api.XQAPI.add_contact">
 <span class="sig-name descname"><span class="pre">add_contact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">firstName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lastName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">role</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notifications</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.add_contact" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.add_labels_to_locator_token">
+<span class="sig-name descname"><span class="pre">add_labels_to_locator_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locator_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.add_labels_to_locator_token" title="Link to this definition"></a></dt>
+<dd><p>Add labels to a communication by its locator token.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – invalid access token</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>validated</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.add_packet">
@@ -356,9 +376,9 @@ the device as a team member.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQ API client instance</p></li>
 <li><p><strong>cert_id</strong> (<em>int</em>) – Certificate identifier issued for the device/tenant</p></li>
-<li><p><strong>cert_file_path</strong> (<em>str</em>) – Path to the client certificate (client.crt)</p></li>
-<li><p><strong>transport_key_file_path</strong> (<em>str</em>) – Path to the transport key used to encrypt the request payload (transport.key)</p></li>
-<li><p><strong>private_key_file_path</strong> (<em>str</em>) – Path to the device private key (client.key) used to decrypt the returned token</p></li>
+<li><p><strong>cert_file_path</strong> (<em>str</em>) – Path to the client certificate file (client.crt) OR the certificate content directly</p></li>
+<li><p><strong>transport_key_file_path</strong> (<em>str</em>) – Path to the transport key file (transport.key) OR the transport key content directly</p></li>
+<li><p><strong>private_key_file_path</strong> (<em>str</em>) – Path to the device private key file (client.key) OR the private key content directly</p></li>
 <li><p><strong>device_name</strong> (<em>str</em>) – Human-readable device name (max 48 characters), defaults to Device</p></li>
 <li><p><strong>announce</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, announce the device to the dashboard after authorization, defaults to True</p></li>
 </ul>
@@ -624,6 +644,49 @@ WARNING: DELETE not supported by API</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.exchange_for_dashboard_token">
+<span class="sig-name descname"><span class="pre">exchange_for_dashboard_token</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.exchange_for_dashboard_token" title="Link to this definition"></a></dt>
+<dd><p>exchange current access token for dashboard token</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>subscription_token</strong> (<em>str</em>) – subscription token to exchange</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – error exchanging for dashboard token</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dashboard token</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.exchange_for_subscription_token">
+<span class="sig-name descname"><span class="pre">exchange_for_subscription_token</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.exchange_for_subscription_token" title="Link to this definition"></a></dt>
+<dd><p>Exchange a dashboard token for a subscription token</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>dashboard_token</strong> (<em>str</em>) – dashboard token to exchange</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>subscription token</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.exchange_key">
 <span class="sig-name descname"><span class="pre">exchange_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">business_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.exchange_key" title="Link to this definition"></a></dt>
 <dd><p>exchange pre-auth token for an access token, and update headers accordingly
@@ -644,6 +707,78 @@ WARNING: DELETE not supported by API</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.generate_device_certificate">
+<span class="sig-name descname"><span class="pre">generate_device_certificate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_key_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client_cert_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport_key_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.generate_device_certificate" title="Link to this definition"></a></dt>
+<dd><p>generate a device certificate for authentication
+<a class="reference external" href="https://dashboard.xqmsg.net/v2/certificate">https://dashboard.xqmsg.net/v2/certificate</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>tag</strong> (<em>str</em>) – tag/name for the device certificate</p></li>
+<li><p><strong>fence</strong> (<em>list</em><em>, </em><em>optional</em>) – optional fence/scope for the certificate, defaults to empty list</p></li>
+<li><p><strong>enabled</strong> (<em>bool</em><em>, </em><em>optional</em>) – whether the certificate is enabled, defaults to True</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – optional directory to save certificate files (client.key, client.crt, transport.key), defaults to None</p></li>
+<li><p><strong>client_key_path</strong> (<em>str</em><em>, </em><em>optional</em>) – optional custom path for client key file, overrides output_dir, defaults to None</p></li>
+<li><p><strong>client_cert_path</strong> (<em>str</em><em>, </em><em>optional</em>) – optional custom path for client certificate file, overrides output_dir, defaults to None</p></li>
+<li><p><strong>transport_key_path</strong> (<em>str</em><em>, </em><em>optional</em>) – optional custom path for transport key file, overrides output_dir, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – error generating device certificate</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>certificate data containing id, transportKey, clientCert, and clientKey</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.get_business_info">
+<span class="sig-name descname"><span class="pre">get_business_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_business_info" title="Link to this definition"></a></dt>
+<dd><p>get business information from the dashboard
+<a class="reference external" href="https://dashboard.xqmsg.net/v2/business">https://dashboard.xqmsg.net/v2/business</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – error retrieving business information</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>business information</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.get_businesses">
+<span class="sig-name descname"><span class="pre">get_businesses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_businesses" title="Link to this definition"></a></dt>
+<dd><p>get list of businesses the user is apart of from the dashboard
+<a class="reference external" href="https://dashboard.xqmsg.net/v2/businesses">https://dashboard.xqmsg.net/v2/businesses</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – error retrieving businesses</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of businesses</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -873,6 +1008,52 @@ WARNING: DELETE not supported by API</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.set_api_auth_token">
+<span class="sig-name descname"><span class="pre">set_api_auth_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.set_api_auth_token" title="Link to this definition"></a></dt>
+<dd><p>Set the authorization token for the regular API service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>string</em>) – Bearer token for API authorization</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.set_dashboard_auth_token">
+<span class="sig-name descname"><span class="pre">set_dashboard_auth_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.set_dashboard_auth_token" title="Link to this definition"></a></dt>
+<dd><p>Set the authorization token for the dashboard service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> (<em>string</em>) – Bearer token for dashboard authorization</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.switch_business">
+<span class="sig-name descname"><span class="pre">switch_business</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">business_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.switch_business" title="Link to this definition"></a></dt>
+<dd><p>switch to a different business context in the dashboard
+<a class="reference external" href="https://dashboard.xqmsg.net/v2/business/switch">https://dashboard.xqmsg.net/v2/business/switch</a>/{businessId}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>business_id</strong> (<em>str</em>) – business ID to switch to</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – error switching business context</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>success</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
