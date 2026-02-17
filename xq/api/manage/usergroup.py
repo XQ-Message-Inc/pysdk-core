@@ -32,15 +32,15 @@ def create_usergroup(api, name: str, members: List[str]):
         raise XQException(message=f"Error creating Dashboard usergroup: {res}")
 
 
-def get_usergroup(api, usergroup_id: int = None, groups: List[str] = None):
-    """get a usergroup by id
+def get_usergroup(api, usergroup_id: int = None, name: str = None):
+    """get usergroup(s) by id, by name, or all groups
 
     :param api: XQAPI instance
     :type api: XQAPI
     :param usergroup_id: id of usergroup, defaults to None
     :type usergroup_id: int, optional
-    :param groups: _description_ TODO, defaults to None
-    :type groups: List[str], optional
+    :param name: name of usergroup to search for, defaults to None
+    :type name: str, optional
     :raises XQException: error getting usergroup
     :return: usergroup(s)
     :rtype: dict
@@ -49,15 +49,16 @@ def get_usergroup(api, usergroup_id: int = None, groups: List[str] = None):
 
     if usergroup_id:
         endpoint = f"{endpoint}/{usergroup_id}"
-    # elif groups:
-    #     # TODO: what does groups do?
-    #     endpoint = f"{endpoint}/{groups}"
-    else:
-        pass  # return all usergroups
 
     status_code, res = api.api_get(endpoint, subdomain=API_SUBDOMAIN)
 
     if status_code == 200:
+        if name and not usergroup_id:
+            groups = res.get("groups", res if isinstance(res, list) else [])
+            matches = [g for g in groups if g.get("name") == name]
+            if not matches:
+                raise XQException(message=f"No usergroup found with name: {name}")
+            return matches[0] if len(matches) == 1 else matches
         return res
     else:
         raise XQException(message=f"Error getting Dashboard usergroup: {res}")
@@ -89,6 +90,78 @@ def update_usergroup(api, usergroup_id: int, name: str, members: List[str]):
         return res
     else:
         raise XQException(message=f"Error updating Dashbaord usergroup: {res}")
+    
+
+def add_usergroup_members(api, usergroup_id: int, members):
+    """add one or more members to an existing usergroup
+
+    Fetches the current group, merges in the new members, and patches the result.
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param usergroup_id: id of usergroup
+    :type usergroup_id: int
+    :param members: member email or list of member emails to add
+    :type members: Union[str, List[str]]
+    :raises XQException: error adding members to usergroup
+    :return: updated usergroup
+    :rtype: object
+    """
+    if isinstance(members, str):
+        members = [members]
+
+    # Fetch existing group to get current members and merge new members avoiding duplicates
+    existing = get_usergroup(api, usergroup_id=usergroup_id)
+    existing_members = [m["address"] for m in existing.get("members", []) if m.get("kind") == "address"]
+
+    merged = list(set(existing_members + members))
+
+    params = {"members": merged}
+
+    status_code, res = api.api_patch(
+        f"usergroup/{usergroup_id}", json=params, subdomain=API_SUBDOMAIN
+    )
+
+    if status_code == 204:
+        return res
+    else:
+        raise XQException(message=f"Error adding members to Dashboard usergroup: {res}")
+
+
+def remove_usergroup_members(api, usergroup_id: int, members):
+    """remove one or more members from an existing usergroup
+
+    Fetches the current group, removes the specified members, and patches the result.
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param usergroup_id: id of usergroup
+    :type usergroup_id: int
+    :param members: member email or list of member emails to remove
+    :type members: Union[str, List[str]]
+    :raises XQException: error removing members from usergroup
+    :return: updated usergroup
+    :rtype: object
+    """
+    if isinstance(members, str):
+        members = [members]
+
+    # Fetch existing group to get current members and remove specified members
+    existing = get_usergroup(api, usergroup_id=usergroup_id)
+    existing_members = [m["address"] for m in existing.get("members", []) if m.get("kind") == "address"]
+
+    updated = [m for m in existing_members if m not in members]
+
+    params = {"members": updated}
+
+    status_code, res = api.api_patch(
+        f"usergroup/{usergroup_id}", json=params, subdomain=API_SUBDOMAIN
+    )
+
+    if status_code == 204:
+        return res
+    else:
+        raise XQException(message=f"Error removing members from Dashboard usergroup: {res}")
 
 
 def delete_usergroup(api, usergroup_id: int):

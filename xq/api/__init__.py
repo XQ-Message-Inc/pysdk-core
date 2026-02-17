@@ -47,7 +47,9 @@ class XQAPI:
         get_businesses,
         get_business_info,
         switch_business,
-        generate_device_certificate
+        generate_device_certificate,
+        add_usergroup_members,
+        remove_usergroup_members
     )
 
     def __init__(
