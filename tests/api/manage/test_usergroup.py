@@ -16,13 +16,6 @@ def test_create_usergroup_success(mock_xqapi):
     assert result["name"] == "test"
     assert "a@example.com" in result["members"]
 
-
-def test_create_usergroup_error(mock_xqapi):
-    mock_xqapi.api_post = MagicMock(return_value=(500, "mock server error"))
-    with pytest.raises(XQException):
-        create_usergroup(mock_xqapi, name="mockname", members=["mockmember"])
-
-
 def test_create_usergroup_error(mock_xqapi):
     mock_xqapi.api_post = MagicMock(return_value=(500, "error"))
     with pytest.raises(XQException):
@@ -51,19 +44,6 @@ def test_get_usergroup_all(mock_xqapi):
     result = get_usergroup(mock_xqapi)
     assert isinstance(result, dict)
     assert "groups" in result
-
-
-def test_get_usergroup(mock_xqapi):
-    mock_xqapi.api_get = MagicMock(return_value=(500, "mock server error"))
-    with pytest.raises(XQException):
-        get_usergroup(mock_xqapi)
-
-
-def test_get_usergroup(mock_xqapi):
-    mock_xqapi.api_get = MagicMock(return_value=(500, "mock server error"))
-    with pytest.raises(XQException):
-        get_usergroup(mock_xqapi)
-
 
 def test_update_usergroup(mock_xqapi):
     mock_xqapi.api_patch = MagicMock(return_value=(204, "mock server success"))
