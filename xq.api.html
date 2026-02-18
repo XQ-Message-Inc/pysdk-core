@@ -191,6 +191,32 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.add_usergroup_members">
+<span class="sig-name descname"><span class="pre">add_usergroup_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.add_usergroup_members" title="Link to this definition"></a></dt>
+<dd><p>add one or more members to an existing usergroup</p>
+<p>Fetches the current group, merges in the new members, and patches the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>usergroup_id</strong> (<em>int</em><em>, </em><em>optional</em>) – id of usergroup, defaults to None</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – name of usergroup (alternative to usergroup_id), defaults to None</p></li>
+<li><p><strong>members</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – member email or list of member emails to add</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – error adding members to usergroup</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>updated usergroup</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.announce_device">
 <span class="sig-name descname"><span class="pre">announce_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">afirst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alast</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aphone</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.announce_device" title="Link to this definition"></a></dt>
 <dd><p>static method for announcing the trusted device to the dashboard, registering
@@ -878,14 +904,14 @@ WARNING: DELETE not supported by API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="xq.api.XQAPI.get_usergroup">
-<span class="sig-name descname"><span class="pre">get_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_usergroup" title="Link to this definition"></a></dt>
-<dd><p>get a usergroup by id</p>
+<span class="sig-name descname"><span class="pre">get_usergroup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.get_usergroup" title="Link to this definition"></a></dt>
+<dd><p>get usergroup(s) by id, by name, or all groups</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
 <li><p><strong>usergroup_id</strong> (<em>int</em><em>, </em><em>optional</em>) – id of usergroup, defaults to None</p></li>
-<li><p><strong>groups</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – _description_ TODO, defaults to None</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – name of usergroup to search for, defaults to None</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -935,6 +961,32 @@ WARNING: DELETE not supported by API</p>
 :raises XQException: unable to verify login
 :return: validated
 :rtype: boolean</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="xq.api.XQAPI.remove_usergroup_members">
+<span class="sig-name descname"><span class="pre">remove_usergroup_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">usergroup_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xq.api.XQAPI.remove_usergroup_members" title="Link to this definition"></a></dt>
+<dd><p>remove one or more members from an existing usergroup</p>
+<p>Fetches the current group, removes the specified members, and patches the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>api</strong> (<a class="reference internal" href="#xq.api.XQAPI" title="xq.api.XQAPI"><em>XQAPI</em></a>) – XQAPI instance</p></li>
+<li><p><strong>usergroup_id</strong> (<em>int</em><em>, </em><em>optional</em>) – id of usergroup, defaults to None</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – name of usergroup (alternative to usergroup_id), defaults to None</p></li>
+<li><p><strong>members</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – member email or list of member emails to remove</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="xq.exceptions.html#xq.exceptions.xq.XQException" title="xq.exceptions.xq.XQException"><strong>XQException</strong></a> – error removing members from usergroup</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>updated usergroup</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>object</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
