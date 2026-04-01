@@ -1,6 +1,5 @@
 import os
 from xq.exceptions import XQException
-from xq.api.manage import API_SUBDOMAIN
 
 
 def create_certificate(api, tag: str, fence: list[str] = None, enabled: bool = True, output_dir: str = None,
@@ -39,7 +38,7 @@ def create_certificate(api, tag: str, fence: list[str] = None, enabled: bool = T
         "enabled": enabled
     }
 
-    status_code, res = api.api_post(f"certificate", json=payload, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_post(f"certificate", json=payload)
     if status_code == 200:
         # Write certificate files if paths are provided
         if output_dir or client_key_path or client_cert_path or transport_key_path:
@@ -83,7 +82,7 @@ def delete_certificate(api, id: int):
 
     api.headers["X-Certificate-ID"] = str(id)
     status_code, res = api.api_delete(
-        f"certificate/{id}", subdomain=API_SUBDOMAIN
+        f"certificate/{id}"
     )
 
     if status_code == 204:
@@ -110,7 +109,7 @@ def send_login_link(api, email: str, host: str = None):
     if host:
         payload["host"] = host
 
-    status_code, res = api.api_post("login/link", json=payload, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_post("login/link", json=payload)
     if status_code == 200:
         api.headers.update({"code": res["code"]})
         return res
@@ -130,7 +129,7 @@ def login_alias(api, email: str, ):
     :rtype: boolean
     """
 
-    status_code, auth_token = api.api_post("login/alias", json={"user": email}, subdomain=API_SUBDOMAIN)
+    status_code, auth_token = api.api_post("login/alias", json={"user": email})
     if status_code == 200:
         api.headers.update({"authorization": f"Bearer {auth_token}"})
         return True
@@ -151,7 +150,7 @@ def login_verify(api, pin: str):
     """
     params = {"code": api.headers["code"], "pin": pin}
     status_code, res = api.api_get(
-        "login/verify", params=params, subdomain=API_SUBDOMAIN
+        "login/verify", params=params
     )
 
     if status_code == 204:
@@ -174,7 +173,7 @@ def validate_access_token(api):
     :rtype: boolean
     """
 
-    status_code, res = api.api_get("session", subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_get("session")
 
     if status_code == 204:
         return True
@@ -192,7 +191,7 @@ def get_registered_teams(api):
     :return: list of businesses
     :rtype: list
     """
-    status_code, res = api.api_get("registered", subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_get("registered")
 
     if status_code == 200:
         return res
@@ -210,7 +209,7 @@ def get_team(api):
     :return: business information
     :rtype: dict
     """
-    status_code, res = api.api_get("team", subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_get("team")
 
     if status_code == 200:
         return res

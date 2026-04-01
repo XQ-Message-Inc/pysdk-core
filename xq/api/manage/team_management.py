@@ -1,5 +1,4 @@
 from xq.exceptions import XQException
-from xq.api.subscription import API_SUBDOMAIN
 
 def create_team(api, name: str, domain: str = None, ownerEmail: str = None, permit: str = None, permitTeam: str = None):
     """create a team
@@ -31,7 +30,7 @@ def create_team(api, name: str, domain: str = None, ownerEmail: str = None, perm
     if permitTeam:
         payload["permitTeam"] = permitTeam
 
-    status_code, res = api.api_post("team", json=payload, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_post("team", json=payload)
 
     if status_code == 200:
         return res["id"]
@@ -49,7 +48,7 @@ def get_teams(api):
     :rtype: array of team dict
     """
 
-    status_code, res = api.api_get("teams/registered", subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_get("teams/registered")
 
     if status_code == 200:
         return res
@@ -69,7 +68,7 @@ def switch(api, teamId: str):
     :rtype: str
     """
     status_code, res = api.api_get(
-        "teams/switch", params={"id": teamId}, subdomain=API_SUBDOMAIN
+        "teams/switch", params={"id": teamId}
     )
 
     if status_code == 200:
@@ -94,7 +93,7 @@ def delete_team(api, team_id: int):
     :rtype: boolean
     """
     status_code, res = api.api_delete(
-        f"team?team={team_id}", subdomain=API_SUBDOMAIN
+        f"team?team={team_id}"
     )
 
     if status_code == 204:

@@ -1,7 +1,6 @@
 import urllib.parse
 from typing import List
 from xq.exceptions import XQException
-from xq.api.validation import API_SUBDOMAIN
 
 
 def get_packet(api, locator_token: str):
@@ -17,7 +16,7 @@ def get_packet(api, locator_token: str):
     :rtype: string
     """
     status_code, res = api.api_get(
-        f"key/{urllib.parse.quote_plus(locator_token)}", subdomain=API_SUBDOMAIN
+        f"key/{urllib.parse.quote_plus(locator_token)}"
     )
 
     if status_code == 200:
@@ -39,7 +38,7 @@ def get_packets(api, locator_tokens: List[str]):
     :rtype: dict
     """
     status_code, res = api.api_post(
-        f"keys", subdomain=API_SUBDOMAIN, json=locator_tokens
+        f"keys", json=locator_tokens
     )
 
     if status_code == 200:
@@ -61,7 +60,7 @@ def revoke_packet(api, locator_token: str):
     :rtype: bool
     """
     status_code, res = api.api_delete(
-        f"key/{urllib.parse.quote_plus(locator_token)}", subdomain=API_SUBDOMAIN
+        f"key/{urllib.parse.quote_plus(locator_token)}"
     )
 
     if str(status_code).startswith("20"):
@@ -91,8 +90,7 @@ def grant_users(api, locator_token: str, recipients: List[str], alias_access=Fal
 
     status_code, res = api.api_post(  # documentation says PATCH, but supports POST
         f"key/{urllib.parse.quote_plus(locator_token)}/recipients",
-        json={"recipients": recipients},
-        subdomain=API_SUBDOMAIN,
+        json={"recipients": recipients}
     )
 
     if str(status_code).startswith("20"):
@@ -122,8 +120,7 @@ def revoke_users(api, locator_token: str, recipients: List[str], alias_access=Fa
 
     status_code, res = api.api_delete(
         f"key/{urllib.parse.quote_plus(locator_token)}/recipients",
-        json={"recipients": recipients},
-        subdomain=API_SUBDOMAIN,
+        json={"recipients": recipients}
     )
 
     if str(status_code).startswith("20"):

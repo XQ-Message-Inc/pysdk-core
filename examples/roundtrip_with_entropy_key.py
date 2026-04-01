@@ -11,50 +11,57 @@
 ###############################################################################
 from xq import XQ
 
-# init SDK (creds from ENV or input params)
-xq = XQ()
 
-# get user authentication token
-email = input(f"Please provide the email address that will be used for authentication:")
-xq.api.authorize_user(email)  # returns success boolean
+def run(xq: XQ = None, email: str = None, access_token: str = None):
+    if xq is None:
+        # init SDK (creds from ENV or input params)
+        xq = XQ()
 
-# 2FA
-pin = input(f"Please provide the PIN sent to the email address '{email}':")
-xq.api.code_validate(pin)
+        # get user authentication token
+        email = input(f"Please provide the email address that will be used for authentication:")
+        xq.api.authorize_user(email)  # returns success boolean
 
-# exchange for token
-xq.api.exchange_key()
+        # 2FA
+        pin = input(f"Please provide the PIN sent to the email address '{email}':")
+        xq.api.code_validate(pin)
 
-#get the first team or create one
-teams = xq.api.get_teams()
+        # exchange for token
+        xq.api.exchange_key()
 
-if teams:
-    teamId = teams[0]["id"]
-else:
-    teamId = xq.api.create_team("New team")
+        #get the first team or create one
+        teams = xq.api.get_teams()
 
-#switch to team
-xq.api.switch(teamId)
+        if teams:
+            teamId = teams[0]["id"]
+        else:
+            teamId = xq.api.create_team("New team")
 
-# create key packet from qunatum entropy
-KEY = xq.generate_key_from_entropy()
+        #switch to team
+        xq.api.switch(teamId)
 
-# encrypt something
-message_to_encrypt = "sometexttoencrypt"
-print("\nencrypting message:", message_to_encrypt)
-encrypted_message = xq.encrypt_message(
-    message_to_encrypt, key=KEY, algorithm="AES"
-)
-print("\nencrypted_message", encrypted_message)
+    # create key packet from qunatum entropy
+    KEY = xq.generate_key_from_entropy()
 
-# Create and store the encrypted key packet
-locator_token = xq.api.create_and_store_packet(recipients=[email], key=KEY)
+    # encrypt something
+    message_to_encrypt = "sometexttoencrypt"
+    print("\nencrypting message:", message_to_encrypt)
+    encrypted_message = xq.encrypt_message(
+        message_to_encrypt, key=KEY, algorithm="AES"
+    )
+    print("\nencrypted_message", encrypted_message)
 
-# get key packet by lookup
-retrieved_key_packet = xq.api.get_packet(locator_token)
+    # Create and store the encrypted key packet
+    locator_token = xq.api.create_and_store_packet(recipients=[email], key=KEY)
 
-# deycrypt
-decrypted_message = xq.decrypt_message(
-    encrypted_message, key=retrieved_key_packet, algorithm="AES"
-)
-print("\ndecrypted message:", decrypted_message)
+    # get key packet by lookup
+    retrieved_key_packet = xq.api.get_packet(locator_token)
+
+    # deycrypt
+    decrypted_message = xq.decrypt_message(
+        encrypted_message, key=retrieved_key_packet, algorithm="AES"
+    )
+    print("\ndecrypted message:", decrypted_message)
+
+
+if __name__ == "__main__":
+    run()

@@ -1,5 +1,5 @@
 from xq.exceptions import SDKConfigurationException, XQException
-from xq.api.subscription import API_SUBDOMAIN
+
 
 
 def validate_api_key(api):
@@ -13,7 +13,7 @@ def validate_api_key(api):
     :return: api response
     :rtype: str OR json
     """
-    status_code, res = api.api_get("apikey", subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_get("apikey")
 
     if status_code == 200:
         return res
@@ -52,7 +52,7 @@ def exchange_key(api):
     """
     params = {"code": api.headers["code"]}
     status_code, auth_token = api.api_get(
-        "login/exchange", params=params, subdomain=API_SUBDOMAIN
+        "login/exchange", params=params
     )
 
     if status_code == 200:

@@ -1,5 +1,4 @@
 from xq.exceptions import SDKConfigurationException, XQException
-from xq.api.quantum import API_SUBDOMAIN
 
 
 def get_entropy(api, length=2, type="uint8"):
@@ -17,7 +16,7 @@ def get_entropy(api, length=2, type="uint8"):
     :rtype: base64 string
     """
     status_code, res = api.api_get(
-        "qrng", params={"length": length, "type": type}, subdomain=API_SUBDOMAIN
+        "qrng", params={"length": length, "type": type}
     )
 
     if status_code == 200:

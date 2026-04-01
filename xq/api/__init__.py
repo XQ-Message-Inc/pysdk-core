@@ -1,6 +1,6 @@
 import requests
 
-from xq.config import API_KEY, XQ_LOCATOR_KEY, API_BASE_URI, XQ_URI_SCHEME
+from xq.config import API_KEY, XQ_LOCATOR_KEY, API_BASE_URI
 from xq.exceptions import SDKConfigurationException
 
 class XQAPI:
@@ -36,6 +36,8 @@ class XQAPI:
         delete_usergroup,
         add_team_member,
         delete_team_member,
+        get_team_member,
+        get_team_members,
         send_login_link,
         login_alias,
         validate_access_token,
@@ -52,14 +54,12 @@ class XQAPI:
         self,
         api_key=API_KEY,
         locator_key=XQ_LOCATOR_KEY,
-        api_base_uri=API_BASE_URI,
-        api_scheme=XQ_URI_SCHEME,
+        api_base_uri=API_BASE_URI
     ):
 
         self.api_key = api_key
         self.locator_key = locator_key
         self.api_base_uri = api_base_uri
-        self.api_scheme = api_scheme
         self.session = requests.Session()
         self.headers = {
             "Content-Type": "application/json",
@@ -71,13 +71,11 @@ class XQAPI:
             self.headers["api-key"] = self.api_key
             self.validate_api_key()
 
-    def api_get(self, serviceEndpoint, subdomain, params={}):
+    def api_get(self, serviceEndpoint, params={}):
         """static method for interacting with the XQ API GET endpoints
 
         :param serviceEndpoint: uri service extension to hit
         :type serviceEndpoint: string
-        :param subdomain: subdomain of uri to use, api specific
-        :type subdomain: string
         :param params: optional parameters to pass, defaults to {}
         :type params: dict
         :param headers: optional headers to pass, defaults to {}
@@ -85,9 +83,9 @@ class XQAPI:
         :return: requests obj
         :rtype: requests response
         """
-        subdomainText = f"{subdomain}." if "/v2/" in self.api_base_uri else ""
+
         r = self.session.get(
-            f"{self.api_scheme}://{subdomainText}{self.api_base_uri}{serviceEndpoint}",
+            f"{self.api_base_uri}{serviceEndpoint}",
             params=params,
             headers=self.headers,
         )
@@ -99,13 +97,11 @@ class XQAPI:
 
         return r.status_code, res
 
-    def api_post(self, serviceEndpoint, subdomain, json=None, data=None):
+    def api_post(self, serviceEndpoint,json=None, data=None):
         """static method for interacting with XQ API POST endpoints
 
         :param serviceEndpoint: uri service extension to hit
         :type serviceEndpoint: string
-        :param subdomain: subdomain of uri to use, api specific
-        :type subdomain: string
         :param json: optional parameters to pass, POSTS as json contenttype, defaults to None
         :type json: dict, optional
         :param data: optional parameters to pass, defaults to None
@@ -113,9 +109,9 @@ class XQAPI:
         :return: status code, response
         :rtype: tuple(int, string)
         """
-        subdomainText = f"{subdomain}." if "/v2/" in self.api_base_uri else ""
+
         r = self.session.post(
-            f"{self.api_scheme}://{subdomainText}{self.api_base_uri}{serviceEndpoint}",
+            f"{self.api_base_uri}{serviceEndpoint}",
             json=json,
             data=data,
             headers=self.headers,
@@ -129,13 +125,11 @@ class XQAPI:
 
         return r.status_code, res
 
-    def api_put(self, serviceEndpoint, subdomain, json=None, data=None):
+    def api_put(self, serviceEndpoint, json=None, data=None):
         """static method for interacting with XQ API PUT endpoints
 
         :param serviceEndpoint: uri service extension to hit
         :type serviceEndpoint: string
-        :param subdomain: subdomain of uri to use, api specific
-        :type subdomain: string
         :param json: optional parameters to pass, POSTS as json contenttype, defaults to None
         :type json: dict, optional
         :param data: optional parameters to pass, defaults to None
@@ -144,10 +138,9 @@ class XQAPI:
         :rtype: tuple(int, string)
         """
 
-        subdomainText =  f"{subdomain}." if "/v2/" in self.api_base_uri else ""
 
         r = self.session.put(
-            f"{self.api_scheme}://{subdomainText}{self.api_base_uri}{serviceEndpoint}",
+            f"{self.api_base_uri}{serviceEndpoint}",
             json=json,
             data=data,
             headers=self.headers,
@@ -160,20 +153,17 @@ class XQAPI:
 
         return r.status_code, res
 
-    def api_delete(self, serviceEndpoint, subdomain, json=None):
+    def api_delete(self, serviceEndpoint, json=None):
         """static method for interacting with XQ API DELETE endpoints
 
         :param serviceEndpoint: uri service extension to hit
         :type serviceEndpoint: string
-        :param subdomain: subdomain of uri to use, api specific
-        :type subdomain: string
         :return: status code, response
         :rtype: tuple(int, string)
         """
-        subdomainText =  f"{subdomain}." if "/v2/" in self.api_base_uri else ""
 
         r = self.session.delete(
-            f"{self.api_scheme}://{subdomainText}{self.api_base_uri}{serviceEndpoint}",
+            f"{self.api_base_uri}{serviceEndpoint}",
             json=json,
             headers=self.headers,
         )
@@ -185,13 +175,11 @@ class XQAPI:
 
         return r.status_code, res
 
-    def api_patch(self, serviceEndpoint, subdomain, data=None, json=None):
+    def api_patch(self, serviceEndpoint, data=None, json=None):
         """static method for interacting with XQ API PATCH endpoints
 
         :param serviceEndpoint: uri service extension to hit
         :type serviceEndpoint: string
-        :param subdomain: subdomain of uri to use, api specific
-        :type subdomain: string
         :param data: optional parameters to pass, defaults to None
         :type data: dict, optional
         :param json: optional parameters to pass, POSTS as json contenttype, defaults to None
@@ -200,10 +188,9 @@ class XQAPI:
         :rtype: tuple(int, string)
         """
 
-        subdomainText =  f"{subdomain}." if "/v2/" in self.api_base_uri else ""
 
         r = self.session.patch(
-            f"{self.api_scheme}://{subdomainText}{self.api_base_uri}{serviceEndpoint}",
+            f"{self.api_base_uri}{serviceEndpoint}",
             data=data,
             json=json,
             headers=self.headers,

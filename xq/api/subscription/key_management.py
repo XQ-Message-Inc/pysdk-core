@@ -1,5 +1,4 @@
 from xq.exceptions import XQException
-from xq.api.subscription import API_SUBDOMAIN
 
 
 def create_and_store_packet(
@@ -58,7 +57,7 @@ def create_and_store_packet(
         "key": key.decode("utf-8") if isinstance(key, bytes) else key,
     }
 
-    status_code, res = api.api_post("packet/add", json=payload, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_post("packet/add", json=payload)
     if status_code == 200:
         return res
     else:
@@ -121,7 +120,7 @@ def create_and_store_packets(
         "keys": [key.decode("utf-8") if isinstance(key, bytes) else key for key in keys]
     }
 
-    status_code, res = api.api_post("packet/add", json=payload, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_post("packet/add", json=payload)
     if status_code == 200:
         return res
     else:
@@ -174,7 +173,7 @@ def create_and_store_packets_batch(
 
     payload = {"entries": entries}
 
-    status_code, res = api.api_post("packet/batch", json=payload, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_post("packet/batch", json=payload)
 
     if status_code == 200:
         return res

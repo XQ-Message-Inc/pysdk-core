@@ -232,7 +232,7 @@ def test_get_registered_teams_success(mock_xqapi):
 
     assert result == mock_response
     assert len(result) == 3
-    mock_xqapi.api_get.assert_called_once_with("registered", subdomain=API_SUBDOMAIN)
+    mock_xqapi.api_get.assert_called_once_with("registered")
 
 
 def test_get_registered_teams_empty_list(mock_xqapi):

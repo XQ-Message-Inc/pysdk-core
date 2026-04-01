@@ -25,7 +25,6 @@ def mock_xqapi():
     with mock.patch.object(XQAPI, "__init__", new=mock_init):
         xqapi = XQAPI()
         xqapi.headers = {}
-        xqapi.api_scheme = "http"
         xqapi.api_base_uri = "mockbaseuri"
         xqapi.session = requests.session()
         # obj.loaddata()  # This will call your mock method

@@ -1,4 +1,3 @@
-from xq.api.subscription import API_SUBDOMAIN
 from xq.algorithms.aes_encryption import AESEncryption
 from xq.exceptions import XQException
 from Crypto.PublicKey import RSA
@@ -144,8 +143,7 @@ or the authorization request is rejected
 
         try:
             status_code, time_response = api.api_get(
-                f"time",
-                subdomain=API_SUBDOMAIN,
+                f"time"
             )
             if status_code != 200:
                 raise XQException("Failed to get server time")
@@ -171,8 +169,7 @@ or the authorization request is rejected
             api.headers["X-Certificate-ID"] = str(cert_id)
             status_code, response_content = api.api_post(
                 f"login/cert",
-                data=enc_b64,
-                subdomain=API_SUBDOMAIN,
+                data=enc_b64
             )
             del api.headers["X-Certificate-ID"]
             if status_code != 200:

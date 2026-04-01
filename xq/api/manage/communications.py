@@ -1,5 +1,4 @@
 from xq.exceptions import XQException
-from xq.api.manage import API_SUBDOMAIN
 import urllib.parse
 
 def get_communication_by_locator_token(api, locator_token: str):
@@ -13,7 +12,7 @@ def get_communication_by_locator_token(api, locator_token: str):
     :rtype: boolean
     """
     status_code, res = api.api_get(
-        f"communication/{urllib.parse.quote_plus(locator_token)}", subdomain=API_SUBDOMAIN
+        f"communication/{urllib.parse.quote_plus(locator_token)}"
     )
 
     if status_code == 200:
@@ -36,7 +35,7 @@ def add_labels_to_locator_token(api, locator_token: str, labels: list):
     }
 
     status_code, res = api.api_patch(
-        f"communication/{urllib.parse.quote_plus(locator_token)}/labels", json=payload, subdomain=API_SUBDOMAIN
+        f"communication/{urllib.parse.quote_plus(locator_token)}/labels", json=payload
     )
 
     if status_code == 204:

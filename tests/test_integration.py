@@ -87,7 +87,7 @@ def test_roundtrip_create_and_add_packets():
 
 if __name__ == "__main__":
     test_roundtrip_create_and_add_packet()
-    test_roundtrip_create_and_add_packets
+    test_roundtrip_create_and_add_packets()
 
 
 #the following actions in the followling 2 methods  is now run interactively in examples/packet.py

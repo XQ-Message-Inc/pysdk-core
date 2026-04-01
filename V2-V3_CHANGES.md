@@ -1,6 +1,6 @@
 # @xqmsg/pysdk-core
 
-The following APIs have changes, semantics, paramaters or return type. 
+The following APIs have changes, semantics, parameters or return type. 
 - [authorize_alias](xq/api/subscription/user_management.py)
 - [authorize_user](xq/api/subscription/user_management.py)
 - [authorize_device_cert](xq/api/subscription/user_management.py) changed name to login_certificate

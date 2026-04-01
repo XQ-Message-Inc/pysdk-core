@@ -12,40 +12,58 @@
 from xq import XQ
 import os
 
-# init SDK (creds from ENV or input params)
-xq = XQ()
 
-# get user authentication token
-email = input(f"Please provide the email address that will be used for authentication:")
-xq.api.authorize_user(email)  # returns success boolean
+def run(xq: XQ = None, email: str = None, access_token: str = None):
+    if xq is None:
+        # init SDK (creds from ENV or input params)
+        xq = XQ()
 
-# 2FA
-pin = input(f"Please provide the PIN sent to the email address '{email}':")
-xq.api.code_validate(pin)
+        # get user authentication token
+        email = input(f"Please provide the email address that will be used for authentication:")
+        xq.api.authorize_user(email)  # returns success boolean
 
-# exchange for token
-xq.api.exchange_key()
+        # 2FA
+        pin = input(f"Please provide the PIN sent to the email address '{email}':")
+        xq.api.code_validate(pin)
 
-#get the first team or create one
-teams = xq.api.get_teams()
+        # exchange for token
+        xq.api.exchange_key()
 
-if teams:
-    teamId = teams[0]["id"]
-else:
-    teamId = xq.api.create_team("New team")
+        #get the first team or create one
+        teams = xq.api.get_teams()
 
-xq.api.switch(teamId)
+        if teams:
+            teamId = teams[0]["id"]
+        else:
+            teamId = xq.api.create_team("New team")
 
-# create key packet from qunatum entropy
-KEY = xq.generate_key_from_entropy()
+        xq.api.switch(teamId)
 
-# make a file
-tmp_file_path = os.path.dirname(os.path.abspath(__file__)) + "/fileToEncrypt.txt"
-with open(tmp_file_path, "w") as fh_write:
-    fh_write.write("A test file that will get encrypted with XQ")
+    # create key packet from qunatum entropy
+    KEY = xq.generate_key_from_entropy()
 
-# encrypt file
-test = xq.encrypt_file(tmp_file_path, KEY, algorithm="OTP", recipients=[email], out_file=tmp_file_path + ".xqf")
+    # make a file
+    tmp_file_path = os.path.dirname(os.path.abspath(__file__)) + "/fileToEncrypt.txt"
+    original_content = "A test file that will get encrypted with XQ"
+    with open(tmp_file_path, "w") as fh_write:
+        fh_write.write(original_content)
 
-# decrypt file
-test_out = xq.decrypt_file(tmp_file_path + ".xqf", out_file=tmp_file_path)
+    # encrypt file
+    test = xq.encrypt_file(tmp_file_path, KEY, algorithm="OTP", recipients=[email], out_file=tmp_file_path + ".xqf")
+
+    # decrypt file
+    test_out = xq.decrypt_file(tmp_file_path + ".xqf", out_file=tmp_file_path)
+
+    with open(tmp_file_path, 'r') as fh_read:
+        read_content = fh_read.read()
+
+    assert original_content == read_content
+
+    # delete files
+    os.remove(tmp_file_path + ".xqf")
+    os.remove(tmp_file_path)
+
+
+
+if __name__ == "__main__":
+    run()

@@ -6,7 +6,6 @@
 from typing import List
 
 from xq.exceptions import XQException
-from xq.api.manage import API_SUBDOMAIN
 
 
 def create_usergroup(api, name: str, members: List[str]):
@@ -25,7 +24,7 @@ def create_usergroup(api, name: str, members: List[str]):
     """
     params = {"members": members, "name": name}
 
-    status_code, res = api.api_post("group", json=params, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_post("group", json=params)
 
     if status_code == 200:
         return res
@@ -33,7 +32,7 @@ def create_usergroup(api, name: str, members: List[str]):
         raise XQException(message=f"Error creating Dashboard usergroup: {res}")
 
 
-def get_usergroup(api, usergroup_id: int = None):
+def get_usergroup(api, usergroup_id: int = None, name: str = None, includeEmailAddress: bool = False):
     """get a usergroup by id
     https://xqmsg.com/docs/delta/#tag/user-group-management/get/v3/group/{id}
 
@@ -41,27 +40,36 @@ def get_usergroup(api, usergroup_id: int = None):
     :type api: XQAPI
     :param usergroup_id: id of usergroup, defaults to None
     :type usergroup_id: int, optional
-    :param groups: _description_ TODO, defaults to None
-    :type groups: List[str], optional
+    :param name: name of usergroup to search for, defaults to None
+    :type name: str, optional
+    :param includeEmailAddress: should include email address in response, defaults to False
+    :type includeEmailAddress: bool, optional
     :raises XQException: error getting usergroup
     :return: usergroup(s)
     :rtype: dict
     """
 
     if usergroup_id:
-        endpoint = f"group/{usergroup_id}"
+        endpoint, params = f"group/{usergroup_id}", {"includeEmailAddress": includeEmailAddress}
     else:
-        endpoint = "groups"
+        endpoint, params = "groups", {"includeEmailAddress": includeEmailAddress, "includeMembers": True}
 
-    status_code, res = api.api_get(endpoint, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_get(endpoint, params=params)
 
     if status_code == 200:
+        if name and not usergroup_id:
+            groups = res if isinstance(res, list) else []
+            matches = [g for g in groups if g.get("name") == name]
+            if not matches:
+                raise XQException(message=f"No usergroup found with name: {name}")
+            return matches[0]
         return res
     else:
         raise XQException(message=f"Error getting Dashboard usergroup: {res}")
 
 
-def update_usergroup(api, usergroup_id: int, name: str = None, members: List[str] = []):
+def update_usergroup(api, usergroup_id: int, name: str = None,
+                     addMembers: List[str] = None, removeMembers: List[str] = None, addMissing: bool = None):
     """update a usergroup by id
     https://xqmsg.com/docs/delta/#tag/user-group-management/patch/v3/group/{id}
 
@@ -71,27 +79,45 @@ def update_usergroup(api, usergroup_id: int, name: str = None, members: List[str
     :type usergroup_id: int
     :param name: new name of usergroup
     :type name: str
-    :param members: new usergroup members
-    :type members: List[str]
+    :param addMembers:  usergroup members to be added
+    :type addMembers: List[str]
+    :param removeMembers:  usergroup members to be added
+    :type removeMembers: List[str]
+    :param addMissing: if added members should be added to the team if not a member
+    :type addMissing: bool
     :raises XQException: error updating usergroup
     :return: updated usergroup
     :rtype: object
     """
     params = {}
-    if members:
-        params["addMembers"] = members
+    if addMembers:
+        params["addMembers"] = addMembers
     if name:
         params["name"] = name
+    if addMissing:
+        params["addMissing"] = addMissing
+
+    if removeMembers:
+        group = api.get_usergroup(usergroup_id, name, includeEmailAddress=True)
+        existingMembers = group["members"]
+        emailToId = {}
+        removeMemberIds = []
+        for item in existingMembers:
+            emailToId[item["email"]] = item["id"]
+        for email in removeMembers:
+            id = emailToId.get(email, -1)
+            if id != -1:
+                removeMemberIds.append(id)
+        params["removeMemberIds"] = removeMemberIds
 
     status_code, res = api.api_patch(
-        f"group/{usergroup_id}", json=params, subdomain=API_SUBDOMAIN
+        f"group/{usergroup_id}", json=params
     )
 
     if status_code == 200:
         return res
     else:
         raise XQException(message=f"Error updating  usergroup: {res}")
-
 
 def delete_usergroup(api, usergroup_id: int):
     """delete a usergroup by id
@@ -106,7 +132,7 @@ def delete_usergroup(api, usergroup_id: int):
     :rtype: boolean
     """
     status_code, res = api.api_delete(
-        f"group/{usergroup_id}", subdomain=API_SUBDOMAIN
+        f"group/{usergroup_id}"
     )
 
     if status_code == 204:

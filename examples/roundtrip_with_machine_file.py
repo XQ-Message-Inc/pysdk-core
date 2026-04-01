@@ -10,64 +10,74 @@
 #
 ###############################################################################
 from xq import XQ
-import os 
+import os
 
-# Initialize the SDK using environment variables or input parameters
-xq = XQ()
 
-email = input(f"Please provide the email address that will be used for authentication:")
+def run(xq: XQ = None, email: str = None, access_token: str = None):
+    if xq is None:
+        # Initialize the SDK using environment variables or input parameters
+        xq = XQ()
 
-xq.api.send_login_link(email=email)
-pin = input(f"Please provide the PIN sent to the email address '{email}':")
+        email = input(f"Please provide the email address that will be used for authentication:")
 
-xq.api.login_verify(pin)  #
+        xq.api.send_login_link(email=email)
+        pin = input(f"Please provide the PIN sent to the email address '{email}':")
 
-xq.api.exchange_key()
+        xq.api.login_verify(pin)  #
 
-assert xq.api.validate_access_token()  # verify access token
+        xq.api.exchange_key()
 
-#get the first team or create one
-teams = xq.api.get_teams()
+        assert xq.api.validate_access_token()  # verify access token
 
-if teams:
-    teamId = teams[0]["id"]
-else:
-    teamId = xq.api.create_team("New team")
+        #get the first team or create one
+        teams = xq.api.get_teams()
 
-access_token = xq.api.switch(teamId)
+        if teams:
+            teamId = teams[0]["id"]
+        else:
+            teamId = xq.api.create_team("New team")
 
-res = xq.api.create_certificate("new certificate", ["127.0.0.1", "0.0.0.0"], True)
-cert_id = res["id"]
-cert_data = res["clientCert"]
-transport_key = res["transportKey"]
-private_key_content = res["clientKey"]
-xq.api.login_certificate(cert_id, cert_data, transport_key, private_key_content)
+        access_token = xq.api.switch(teamId)
 
-# Generate a key packet and store it
-MYSUPERSECRETKEY = xq.generate_key_from_entropy()
+    res = xq.api.create_certificate("new certificate", ["127.0.0.1", "0.0.0.0"], True)
+    cert_id = res["id"]
+    cert_data = res["clientCert"]
+    transport_key = res["transportKey"]
+    private_key_content = res["clientKey"]
+    xq.api.login_certificate(cert_id, cert_data, transport_key, private_key_content)
 
-# make a file
-tmp_file_path = os.path.dirname(os.path.abspath(__file__)) + "/fileToEncrypt.txt"
-with open(tmp_file_path, "w") as fh_write:
-    fh_write.write("A test file that will get encrypted with XQ")
+    # Generate a key packet and store it
+    MYSUPERSECRETKEY = xq.generate_key_from_entropy()
 
-# encrypt file
-with open(tmp_file_path, "r+b") as file:
-    encryptedText = xq.encrypt_file(file, MYSUPERSECRETKEY, algorithm="GCM", recipients=[email])
-    file.seek(0)
-    file.write(encryptedText)
-    file.truncate()
+    # make a file
+    tmp_file_path = os.path.dirname(os.path.abspath(__file__)) + "/fileToEncrypt.txt"
+    with open(tmp_file_path, "w") as fh_write:
+        fh_write.write("A test file that will get encrypted with XQ")
 
-# Rename the file to add the .xqf extension
-new_file_path = tmp_file_path + ".xqf"
-os.rename(tmp_file_path, new_file_path)
+    # encrypt file
+    with open(tmp_file_path, "r+b") as file:
+        encryptedText = xq.encrypt_file(file, MYSUPERSECRETKEY, algorithm="GCM", recipients=[email])
+        file.seek(0)
+        file.write(encryptedText)
+        file.truncate()
 
-with open(new_file_path, "rb") as file:
-    decrypted_file = xq.decrypt_file(file, algorithm="GCM")
-    print("\nDecrypted File Contents:", decrypted_file.decode())
+    # Rename the file to add the .xqf extension
+    new_file_path = tmp_file_path + ".xqf"
+    os.rename(tmp_file_path, new_file_path)
 
-#switch back to token used to create the certificate
-xq.api.headers.update({"authorization": f"Bearer {access_token}"})
+    with open(new_file_path, "rb") as file:
+        decrypted_file = xq.decrypt_file(file, algorithm="GCM")
+        print("\nDecrypted File Contents:", decrypted_file.decode())
 
-# Delete the certificate
-xq.api.delete_certificate(cert_id)
+    # delete file
+    os.remove(tmp_file_path + ".xqf")
+
+    #switch back to token used to create the certificate
+    xq.api.headers.update({"authorization": f"Bearer {access_token}"})
+
+    # Delete the certificate
+    xq.api.delete_certificate(cert_id)
+
+
+if __name__ == "__main__":
+    run()

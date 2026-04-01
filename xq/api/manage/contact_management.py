@@ -1,5 +1,4 @@
 from xq.exceptions import XQException
-from xq.api.manage import API_SUBDOMAIN
 
 
 ROLES = {
@@ -15,13 +14,14 @@ ROLES = {
     10: "AliasUser"
 }
 
+
 def add_team_member(
     api,
     firstName: str,
     lastName: str,
     email: str,
     title: str,
-    role: int,
+    role: str,
     phone: str = None,
     requiresAuth: bool = None,
     host: str = None,
@@ -41,8 +41,8 @@ def add_team_member(
     :type email: str
     :param title: business title of team member
     :type title: str
-    :param role: user role to assign team member, {str(ROLES)}
-    :type role: int
+    :param role: user role to assign team member
+    :type role: sir
     :param phone: phone of team member
     :type phone: str
     :param host: the host URL from where this request was triggered
@@ -81,16 +81,17 @@ def add_team_member(
     if requiresAuth:
         payload["requiresAuth"] = requiresAuth
 
-    status_code, res = api.api_post("team/invite", json=payload, subdomain=API_SUBDOMAIN)
+    status_code, res = api.api_post("team/invite", json=payload)
 
     if status_code == 200:
         return res
     else:
         raise XQException(message=f"Error adding team member  user: {res}")
 
+
 def delete_team_member(api, id: int):
     f"""delete a team member 
-    https://xqmsg.com/docs/delta/#tag/team-management/delete/v3/team/member/{id}
+    https://xqmsg.com/docs/delta/#tag/user-group-management/DELETE/v3/group/{id}
 
     :param api: XQAPI instance
     :type api: XQAPI
@@ -99,11 +100,45 @@ def delete_team_member(api, id: int):
     :return: success
     :rtype: boolean
     """
-    status_code, res = api.api_delete(
-        f"team/member/{id}", subdomain=API_SUBDOMAIN
-    )
+    status_code, res = api.api_delete(f"team/member/{id}")
 
     if status_code == 204:
         return True
     else:
         raise XQException(message=f"Error deleting team member {res}")
+
+
+def get_team_member(api, id: int):
+    f"""Retrieve a team member 
+    https://xqmsg.com/docs/delta/#tag/user-group-management/GET/v3/group/{id}
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :param id: id of team member to be retreived 
+    :type id: int
+    :return: team_member dict
+    :rtype: dict
+    """
+    status_code, res = api.api_get(f"team/member/{id}")
+
+    if status_code == 200:
+        return res
+    else:
+        raise XQException(message=f"Error retrieving team member {res}")
+
+
+def get_team_members(api):
+    f"""Retrieve all team members
+    https://xqmsg.com/docs/delta/#tag/user-group-management/GET/v3/groups
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :return: dict of team_members
+    :rtype: dict
+    """
+    status_code, res = api.api_get(f"team/members")
+
+    if status_code == 200:
+        return res
+    else:
+        raise XQException(message=f"Error retrieving team members {res}")

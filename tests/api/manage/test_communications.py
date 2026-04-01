@@ -25,9 +25,7 @@ def test_get_communication_by_locator_token_success(mock_xqapi):
 
     assert result == mock_response
     mock_xqapi.api_get.assert_called_once_with(
-        f"communication/{urllib.parse.quote_plus('test_token_abc123')}",
-        subdomain=API_SUBDOMAIN
-    )
+        f"communication/{urllib.parse.quote_plus('test_token_abc123')}")
 
 
 def test_get_communication_by_locator_token_with_special_chars(mock_xqapi):
@@ -39,9 +37,7 @@ def test_get_communication_by_locator_token_with_special_chars(mock_xqapi):
 
     # Verify token was URL encoded
     mock_xqapi.api_get.assert_called_once_with(
-        f"communication/{urllib.parse.quote_plus(token_with_special_chars)}",
-        subdomain=API_SUBDOMAIN
-    )
+        f"communication/{urllib.parse.quote_plus(token_with_special_chars)}")
 
 
 def test_get_communication_by_locator_token_error_404(mock_xqapi):
@@ -103,9 +99,7 @@ def test_add_labels_to_locator_token_with_special_char_token(mock_xqapi):
     # Verify token was URL encoded in the path
     mock_xqapi.api_patch.assert_called_once_with(
         f"communication/{urllib.parse.quote_plus(token_with_special_chars)}/labels",
-        json={"labels": ["label1"]},
-        subdomain=API_SUBDOMAIN
-    )
+        json={"labels": ["label1"]})
 
 
 def test_add_labels_to_locator_token_error_400(mock_xqapi):
