@@ -32,13 +32,12 @@ In order to utilize the XQ SDK and interact with XQ servers you will need both t
 1. Go to your [XQ management portal](https://manage.xqmsg.com/applications).
 2. Select or create an application.
 3. Create a **`General`** key for the XQ framework API.
-4. Create a **`Dashboard`** key for the XQ dashboard API.
 
 ## Basic Usage
 
 #### Initializing the SDK
 
-To initialize an XQ SDK instance in your Python application, provide the generated `XQ_API_KEY` (General) and/or `XQ_DASHBOARD_API_KEY` (Dashboard) API keys to the `XQ` class.
+To initialize an XQ SDK instance in your Python application, provide the generated `XQ_API_KEY`  to the `XQ` class.
 
 This can be done via:
 
@@ -50,8 +49,7 @@ This can be done via:
 import xq
 
 xq = XQ(
-  api_key="YOUR_XQ_API_KEY",
-  dashboard_api_key="YOUR_DASHBOARD_API_KEY"
+  api_key="YOUR_XQ_API_KEY"
 )
 ```
 
@@ -60,15 +58,19 @@ xq = XQ(
 #### Examples
 
 There are detailed usage examples available in the [examples folder](https://github.com/XQ-Message-Inc/python-sdk/tree/main/examples) of this project.
+The example All will invoke all the examples.
 
 **Roundtrip Encryption Examples:**
 
+- [All](examples/all.py)
 - [BYOK w/ 2FA](examples/roundtrip_with_2fa.py)
 - [XQ Generated Entropy Key](examples/roundtrip_with_entropy_key.py)
 - [File Encryption](examples/roundtrip_otp_file.py)
+- [Key Roundtrip](examples/packet.py)
 - [Message Encryption Roundtrip w/ Machine Authentication](examples/roundtrip_with_machine.py)
 - [File Encryption Roundtrip w/ Machine Authentication](examples/roundtrip_with_machine.py)
 - [Dashboard (Beta)](examples/dashboard.py)
+- 
 
 ## Development
 

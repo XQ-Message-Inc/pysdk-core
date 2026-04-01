@@ -4,8 +4,9 @@ import base64
 import pytest
 
 from xq import XQ
-import xq 
+import xq
 from xq.exceptions import XQException
+
 
 # ---------------------- Dummy reversible algorithm ---------------------------
 
@@ -19,8 +20,8 @@ class DummyAlgo:
     @staticmethod
     def _xor(b: bytes) -> bytes:
         b = bytes(b)
-        return bytes(ch ^ 0x5A for ch in b)  
-    
+        return bytes(ch ^ 0x5A for ch in b)
+
     def encrypt(self, text):
         if hasattr(text, "read"):
             text = text.read()
@@ -33,19 +34,19 @@ class DummyAlgo:
             data = data.read()
         return self._xor(data)
 
-    def encryptFile(self, filename, data, token, password, scheme, out_file=None, chunk_size=1024*1024):
+    def encryptFile(self, filename, data, token, password, scheme, out_file=None, chunk_size=1024 * 1024):
         token_43 = (token if isinstance(token, str) else token.decode()).ljust(43, "x")[:43].encode()
         name_bytes = (filename or "file").encode()
         version = 1
         header = bytearray(4 + 43 + 4 + len(name_bytes) + 1)
         header[0:4] = (43 + version).to_bytes(4, "little")
-        header[4:4+43] = token_43
+        header[4:4 + 43] = token_43
         off = 4 + 43
-        header[off:off+4] = len(name_bytes).to_bytes(4, "little")
+        header[off:off + 4] = len(name_bytes).to_bytes(4, "little")
         off += 4
-        header[off:off+len(name_bytes)] = name_bytes
+        header[off:off + len(name_bytes)] = name_bytes
         off += len(name_bytes)
-        header[off:off+1] = (scheme if isinstance(scheme, int) else ord(scheme)).to_bytes(1, "little")
+        header[off:off + 1] = (scheme if isinstance(scheme, int) else ord(scheme)).to_bytes(1, "little")
 
         if hasattr(data, "read"):
             body = data.read()
@@ -60,26 +61,26 @@ class DummyAlgo:
             out_file.write(header)
             view = memoryview(enc_body)
             for i in range(0, len(view), chunk_size):
-                out_file.write(view[i:i+chunk_size])
+                out_file.write(view[i:i + chunk_size])
             return None
 
         return bytes(header) + enc_body
 
-    def decryptFile(self, blob, password, out_file=None, chunk_size=1024*1024):
+    def decryptFile(self, blob, password, out_file=None, chunk_size=1024 * 1024):
         if hasattr(blob, "read"):
             data = blob.read()
         else:
             data = bytes(blob)
 
-        v = int.from_bytes(data[0:4], "little") 
+        v = int.from_bytes(data[0:4], "little")
         token_size = 43
         version = v - token_size
         assert version in (0, 1)
         off = 4 + token_size
-        name_len = int.from_bytes(data[off:off+4], "little")
+        name_len = int.from_bytes(data[off:off + 4], "little")
         off += 4 + name_len
         if version > 0:
-            off += 1 
+            off += 1
         body = data[off:]
 
         pt = self._xor(body)
@@ -94,23 +95,59 @@ class DummyAlgo:
 @pytest.fixture(autouse=True)
 def patch_xqapi_constructor(monkeypatch):
     """Replace the XQAPI class that XQ() instantiates with a no-op dummy."""
+
     class DummyAPI:
-        def __init__(self, api_key, dashboard_api_key, locator_key):
+        def __init__(self, api_key, locator_key):
             self.api_key = api_key
-            self.dashboard_api_key = dashboard_api_key
             self.locator_key = locator_key
 
-        def create_and_store_packet(self, recipients, key, type, subject, expires_hours):
+        # Single-packet endpoint used by encrypt_auto / encrypt_file
+        def create_and_store_packet(self, recipients, key, type, subject, expires_period):
             return "L" * 43
+
+            # Multi-packet endpoint used by generate_multiple_keys_and_store_packets
+
+        def create_and_store_packets(self, recipients, keys, type, subject, expires_period, time_unit, meta=None):
+            tokens = []
+            for i, _ in enumerate(keys):
+                tokens.append(
+                    {
+                        "locator_token": ("L" * 43),
+                        "index": i,
+                    }
+                )
+            return {"tokens": tokens}
+
+        # Batch endpoint used by generate_multiple_keys_and_store_packets_database
+        def create_and_store_packets_batch(
+                self,
+                keys,
+                recipients=None,
+                metadata_list=None,
+                expires_period=1,
+                time_unit="d",
+                type="Database",
+        ):
+            tokens = []
+            for i, _ in enumerate(keys):
+                tokens.append(
+                    {
+                        "locator_token": ("L" * 43),
+                        "index": i,
+                    }
+                )
+            return tokens
 
         def get_packet(self, locator):
             return b".1dummykey"
 
-        def get_entropy(self, entropy_bits=128):
-            return base64.b64encode(b"A" * 16).decode()
+        def get_entropy(self, length=16, type="uint8"):
+            num_bytes = length // 8
+            return base64.b64encode(b"A" * num_bytes).decode()
 
     monkeypatch.setattr(xq, "XQAPI", DummyAPI, raising=True)
     yield
+
 
 @pytest.fixture(autouse=True)
 def patch_algorithms(monkeypatch):
@@ -123,52 +160,60 @@ def patch_algorithms(monkeypatch):
     monkeypatch.setattr(xq, "Algorithms", dummy_map, raising=True)
     yield
 
+
 # ------------------------------ SDK fixture ----------------------------------
 
 @pytest.fixture
 def xqsdk():
-    return XQ(api_key="k", dashboard_api_key="d", locator_key="l")
+    return XQ(api_key="k", locator_key="l")
 
 
 # ------------------------------- Tests ---------------------------------------
 
 def test_init_no_validation_runs():
-    x = XQ(api_key="a", dashboard_api_key="b", locator_key="c")
+    x = XQ(api_key="a", locator_key="c")
     assert hasattr(x, "api")
+
 
 def test_generate_key_from_entropy_length(xqsdk):
     key = xqsdk.generate_key_from_entropy()
     assert isinstance(key, (bytes, bytearray))
-    assert len(key) == 16   
+    assert len(key) == 12
+
 
 def test_expand_key_fallback_returns_key_when_shorter(xqsdk):
     data = b"abc"
     key = b"abcdef"
     assert xqsdk.expand_key(data, key) == key
 
+
 def test_encrypt_decrypt_message(xqsdk):
     ct = xqsdk.encrypt_message("hello", key=b"k", algorithm="GCM")
     pt = xqsdk.decrypt_message(ct, key=b"k", algorithm="GCM")
     assert pt == b"hello"
+
 
 def test_encrypt_decrypt_message_with_str_key(xqsdk):
     ct = xqsdk.encrypt_message("hello", key="k", algorithm="GCM")
     pt = xqsdk.decrypt_message(ct, key="k", algorithm="GCM")
     assert pt == b"hello"
 
+
 def test_parse_file_for_decrypt_bytes_path(xqsdk):
     payload = b"pfd-bytes"
     blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM")
-    locator, name_enc, content = xqsdk.parse_file_for_decrypt(blob)  
+    locator, name_enc, content = xqsdk.parse_file_for_decrypt(blob)
     assert isinstance(locator, str) and len(locator) == 43
     assert isinstance(name_enc, (bytes, bytearray))
     assert isinstance(content, (bytes, bytearray))
+
 
 def test_encrypt_file_gcm_inmemory_and_decrypt(xqsdk):
     payload = b"file-bytes"
     out = xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM")
     pt = xqsdk.decrypt_file(out, key=b".1k", algorithm=None)
     assert pt == payload
+
 
 def test_encrypt_file_with_path_input_and_outfile_non_ctr(xqsdk, tmp_path):
     src = tmp_path / "src.bin"
@@ -183,12 +228,14 @@ def test_encrypt_file_with_path_input_and_outfile_non_ctr(xqsdk, tmp_path):
     pt = xqsdk.decrypt_file(blob, key=b".1k", algorithm=None)
     assert pt == b"PAYLOAD"
 
+
 def test_encrypt_file_ctr_inmemory_returns_bytes(xqsdk):
     payload = b"ctr-bytes" * 100
     blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="CTR")
     assert isinstance(blob, (bytes, bytearray))
     pt = xqsdk.decrypt_file(blob, key=b".2k", algorithm=None)
     assert pt == payload
+
 
 def test_decrypt_file_outfile_handle_non_ctr(xqsdk, tmp_path):
     payload = b"abcXYZ"
@@ -199,17 +246,96 @@ def test_decrypt_file_outfile_handle_non_ctr(xqsdk, tmp_path):
         assert ret is None
     assert out_handle_path.read_bytes() == payload
 
+
 def test_decrypt_file_from_bytes_source(xqsdk):
     payload = b"bytes-src"
-    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="OTP") 
-    pt = xqsdk.decrypt_file(blob, key=b".Bk", algorithm=None)      
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="OTP")
+    pt = xqsdk.decrypt_file(blob, key=b".Bk", algorithm=None)
     assert pt == payload
+
 
 def test_decrypt_file_raises_when_no_prefix_and_no_algorithm(xqsdk):
     payload = b"no-prefix"
     blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM")
     with pytest.raises(XQException, match="Unable to determine algorithm"):
         xqsdk.decrypt_file(blob, key=b"k", algorithm=None)
+
+
+def test_decrypt_file_key_none_uses_api_and_prefix_inference(xqsdk):
+    """Covers key is None → uses api.get_packet(locator)."""
+    payload = b"via-api"
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM")
+    pt = xqsdk.decrypt_file(blob, key=None, algorithm=None)
+    assert pt == payload
+
+
+def test_decrypt_file_from_file_like_source(xqsdk):
+    """Covers encryptedText being a file-like object (has .read)."""
+    payload = b"file-like"
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM")
+    fh = io.BytesIO(blob)
+    pt = xqsdk.decrypt_file(fh, key=b".1k", algorithm=None)
+    assert pt == payload
+
+
+def test_decrypt_file_outfile_path_non_ctr(xqsdk, tmp_path):
+    """Covers out_file as path + non-CTR scheme in the out_file-path branch."""
+    payload = b"path-non-ctr"
+    enc_path = tmp_path / "enc.bin"
+    xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM", out_file=str(enc_path))
+
+    dec_path = tmp_path / "dec.bin"
+    result = xqsdk.decrypt_file(str(enc_path), key=b".1k", algorithm=None, out_file=str(dec_path))
+    assert result == str(dec_path)
+    assert dec_path.read_bytes() == payload
+
+
+def test_decrypt_file_ctr_outfile_handle_streams(xqsdk):
+    """Covers out_file as handle + CTR scheme in the handle branch."""
+    payload = b"ctr-stream" * 10
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="CTR")
+    out = io.BytesIO()
+    ret = xqsdk.decrypt_file(blob, key=b".2k", algorithm=None, out_file=out)
+    assert ret is None
+    assert out.getvalue() == payload
+
+
+def test_decrypt_file_with_explicit_algorithm_unprefixed_key_gcm(xqsdk):
+    """Covers explicit algorithm with unprefixed key (GCM) skipping prefix inference."""
+    payload = b"explicit-gcm"
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM")
+    pt = xqsdk.decrypt_file(blob, key=b"k", algorithm="GCM")
+    assert pt == payload
+
+
+def test_decrypt_file_with_explicit_algorithm_unprefixed_key_otp(xqsdk):
+    """Covers explicit algorithm == OTP using default scheme 'B'."""
+    payload = b"otp-explicit"
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="OTP")
+    pt = xqsdk.decrypt_file(blob, key=b"k", algorithm="OTP")
+    assert pt == payload
+
+
+def test_decrypt_file_encodes_str_result(monkeypatch, xqsdk):
+    """
+    Force algo.decryptFile to return a str so we hit the
+    `if not isinstance(pt, (bytes, bytearray)):` → encode() branch.
+    """
+    payload = b"needs-encode"
+    blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="GCM")
+
+    original = DummyAlgo.decryptFile
+
+    def fake_decrypt(self, blob, password, out_file=None, chunk_size=1024 * 1024):
+        # Ignore real decryption, just return a string
+        return "decoded-as-string"
+
+    monkeypatch.setattr(DummyAlgo, "decryptFile", fake_decrypt)
+
+    pt = xqsdk.decrypt_file(blob, key=b".1k", algorithm=None)
+    assert isinstance(pt, bytes)
+    assert pt == b"decoded-as-string"
+
 
 def test_encrypt_file_ctr_streams_to_handle_and_decrypt(xqsdk, tmp_path):
     payload = b"file-streaming-payload" * 1000
@@ -222,6 +348,7 @@ def test_encrypt_file_ctr_streams_to_handle_and_decrypt(xqsdk, tmp_path):
     out = xqsdk.decrypt_file(enc_path, key=b".2k", algorithm=None, out_file=dec_path)
     assert out == str(dec_path)
     assert dec_path.read_bytes() == payload
+
 
 def test_decrypt_infers_prefixes(xqsdk):
     payload = b"abc123"
@@ -240,3 +367,92 @@ def test_decrypt_infers_prefixes(xqsdk):
     blob = xqsdk.encrypt_file(payload, key=b"k", algorithm="CTR")
     pt = xqsdk.decrypt_file(blob, key=b".2k", algorithm=None)
     assert pt == payload
+
+
+def test_generate_multiple_keys_and_store_packets_returns_count(xqsdk):
+    tokens = xqsdk.generate_multiple_keys_and_store_packets(
+        count=3,
+        algorithm="GCM",
+        recipients=["alice@example.com"],
+        subject="test",
+        expires_period=12,
+    )
+    assert isinstance(tokens, list)
+    assert len(tokens) == 3
+
+
+def test_generate_multiple_keys_and_store_packets_rejects_zero_count(xqsdk):
+    with pytest.raises(XQException, match="Count must be at least 1"):
+        xqsdk.generate_multiple_keys_and_store_packets(count=0)
+
+
+def test_generate_multiple_keys_and_store_packets_unknown_algorithm(xqsdk):
+    with pytest.raises(XQException, match="Unknown algorithm"):
+        xqsdk.generate_multiple_keys_and_store_packets(count=1, algorithm="NOPE")
+
+
+def test_generate_multiple_keys_and_store_packets_database_basic(xqsdk):
+    metadata_list = [
+        {"title": "row-1", "labels": ["a"]},
+        {"title": "row-2", "labels": ["b"]},
+    ]
+    tokens = xqsdk.generate_multiple_keys_and_store_packets_database(
+        count=2,
+        algorithm="OTP",
+        recipients=["bob@example.com"],
+        metadata_list=metadata_list,
+        expires_period=2,
+        time_unit="d",
+        type="database",
+    )
+    assert isinstance(tokens, list)
+    assert len(tokens) == 2
+
+
+def test_generate_multiple_keys_and_store_packets_database_metadata_mismatch(xqsdk):
+    with pytest.raises(XQException, match="metadata_list length"):
+        xqsdk.generate_multiple_keys_and_store_packets_database(
+            count=2,
+            metadata_list=[{"title": "only one"}],
+        )
+
+
+def test_parse_key_and_scheme_with_prefixed_key(xqsdk):
+    algo, raw = xqsdk._parse_key_and_scheme(b".1secretkey", scheme_byte=99)
+    assert algo == "GCM"
+    assert raw == b"secretkey"
+
+
+def test_parse_key_and_scheme_without_prefix_uses_scheme(xqsdk):
+    algo, raw = xqsdk._parse_key_and_scheme(b"plainkey", scheme_byte=2)
+    assert algo == "CTR"
+    assert raw == b"plainkey"
+
+
+def test_parse_key_and_scheme_unknown_prefix_raises(xqsdk):
+    with pytest.raises(XQException, match="Unknown key prefix"):
+        xqsdk._parse_key_and_scheme(b".Xwhatever", scheme_byte=1)
+
+
+def test_parse_key_and_scheme_unknown_scheme_raises(xqsdk):
+    with pytest.raises(XQException, match="Unknown scheme byte"):
+        xqsdk._parse_key_and_scheme(b"key-without-prefix", scheme_byte=99)
+
+
+def test_encrypt_auto_and_decrypt_auto_roundtrip(xqsdk):
+    msg = "hello auto"
+    blob = xqsdk.encrypt_auto(msg, algorithm="GCM")
+    pt = xqsdk.decrypt_auto(blob)
+    assert pt == msg.encode()
+
+
+def test_encrypt_auto_with_prefixed_key_overrides_algorithm(xqsdk):
+    msg = "prefixed"
+    blob = xqsdk.encrypt_auto(msg, algorithm="OTP", key=b".2mykey")
+    pt = xqsdk.decrypt_auto(blob)
+    assert pt == msg.encode()
+
+
+def test_decrypt_auto_rejects_short_message(xqsdk):
+    with pytest.raises(XQException, match="Message too short"):
+        xqsdk.decrypt_auto(b"tiny")
