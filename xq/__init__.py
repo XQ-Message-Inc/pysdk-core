@@ -498,7 +498,7 @@ class XQ:
         return encryptionAlgorithm.decrypt(ciphertext)
 
     def encrypt_file(
-        self, fileObj: Union[str, BinaryIO, bytes, bytearray], key: Union[bytes, str], algorithm: Algorithms = "OTP", recipients: List[str] = None, expires_hours: int = 24, out_file: Union[str, os.PathLike, BinaryIO, None] = None, chunk_size: int = 1024 * 1024
+        self, fileObj: Union[str, BinaryIO, bytes, bytearray], key: Union[bytes, str], algorithm: Algorithms = "OTP", recipients: List[str] = None, expires_hours: int = 24, out_file: Union[str, os.PathLike, BinaryIO, None] = None, chunk_size: int = 1024 * 1024, labels: list = None
     ) -> Union[bytearray, str, None]:
         """
         Encrypt the contents of a given file/path/bytes.
@@ -544,6 +544,7 @@ class XQ:
             type="file",
             subject=filename_for_header,
             expires_hours=expires_hours,
+            labels=labels
         )
 
         encryptionAlgorithm = (

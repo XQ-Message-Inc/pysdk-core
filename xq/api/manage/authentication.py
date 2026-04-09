@@ -379,3 +379,25 @@ def switch_business(api, business_id: str):
         return res
     else:
         raise XQException(message=f"Error switching business context: {res}")
+
+
+def get_policy_attributes(api):
+    """get policy attributes from the dashboard
+    https://dashboard.xqmsg.net/v2/policy/attributes
+
+    :param api: XQAPI instance
+    :type api: XQAPI
+    :raises XQException: error retrieving policy attributes
+    :return: policy attributes
+    :rtype: dict
+    """
+    api.headers.update(
+        {"api-key": DASHBOARD_API_KEY}
+    )
+
+    status_code, res = api.api_get("policy/attributes", subdomain=API_SUBDOMAIN)
+
+    if status_code == 200:
+        return res
+    else:
+        raise XQException(message=f"Error retrieving policy attributes: {res}")

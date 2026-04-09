@@ -148,7 +148,122 @@ def test_add_labels_to_locator_token_error_404(mock_xqapi):
 
 def test_add_labels_to_locator_token_error_500(mock_xqapi):
     mock_xqapi.api_patch = MagicMock(return_value=(500, "Internal Server Error"))
-    
+
     with pytest.raises(XQException) as exc_info:
         add_labels_to_locator_token(mock_xqapi, "test_token", ["label"])
     assert "Adding labels failed" in str(exc_info.value)
+
+
+# --- list_communications tests ---
+
+def test_list_communications_no_filters(mock_xqapi):
+    mock_response = {"status": "OK", "communications": [], "total": 0}
+    mock_xqapi.api_get = MagicMock(return_value=(200, mock_response))
+
+    result = list_communications(mock_xqapi)
+
+    assert result == mock_response
+    mock_xqapi.api_get.assert_called_once_with(
+        "communications", subdomain=API_SUBDOMAIN, params={}
+    )
+
+
+def test_list_communications_with_pagination(mock_xqapi):
+    mock_response = {"status": "OK", "communications": [{"id": 1}], "total": 50}
+    mock_xqapi.api_get = MagicMock(return_value=(200, mock_response))
+
+    result = list_communications(mock_xqapi, page=2, limit=10)
+
+    assert result == mock_response
+    mock_xqapi.api_get.assert_called_once_with(
+        "communications", subdomain=API_SUBDOMAIN, params={"page": 2, "limit": 10}
+    )
+
+
+def test_list_communications_with_time_range(mock_xqapi):
+    mock_response = {"status": "OK", "communications": [{"id": 1}], "total": 1}
+    mock_xqapi.api_get = MagicMock(return_value=(200, mock_response))
+
+    result = list_communications(
+        mock_xqapi, from_time=1704067200000, to_time=1711929600000, tz=-6
+    )
+
+    assert result == mock_response
+    mock_xqapi.api_get.assert_called_once_with(
+        "communications",
+        subdomain=API_SUBDOMAIN,
+        params={"from": 1704067200000, "to": 1711929600000, "tz": -6},
+    )
+
+
+def test_list_communications_with_filters(mock_xqapi):
+    mock_response = {"status": "OK", "communications": [{"id": 1}], "total": 1}
+    mock_xqapi.api_get = MagicMock(return_value=(200, mock_response))
+
+    result = list_communications(
+        mock_xqapi,
+        recipients="alice@example.com,bob@example.com",
+        users="sender@example.com",
+        search="quarterly report",
+        status="0,1",
+        comm_type="2",
+    )
+
+    assert result == mock_response
+    call_params = mock_xqapi.api_get.call_args[1]["params"]
+    assert call_params["recipients"] == "alice@example.com,bob@example.com"
+    assert call_params["users"] == "sender@example.com"
+    assert call_params["search"] == "quarterly report"
+    assert call_params["status"] == "0,1"
+    assert call_params["type"] == "2"
+
+
+def test_list_communications_all_params(mock_xqapi):
+    mock_response = {"status": "OK", "communications": [], "total": 0}
+    mock_xqapi.api_get = MagicMock(return_value=(200, mock_response))
+
+    list_communications(
+        mock_xqapi,
+        page=1,
+        limit=25,
+        from_time=1000,
+        to_time=2000,
+        tz=-6,
+        recipients="a@b.com",
+        users="c@d.com",
+        search="test",
+        status="0",
+        comm_type="1",
+    )
+
+    expected_params = {
+        "page": 1,
+        "limit": 25,
+        "from": 1000,
+        "to": 2000,
+        "tz": -6,
+        "recipients": "a@b.com",
+        "users": "c@d.com",
+        "search": "test",
+        "status": "0",
+        "type": "1",
+    }
+    mock_xqapi.api_get.assert_called_once_with(
+        "communications", subdomain=API_SUBDOMAIN, params=expected_params
+    )
+
+
+def test_list_communications_error_401(mock_xqapi):
+    mock_xqapi.api_get = MagicMock(return_value=(401, "Unauthorized"))
+
+    with pytest.raises(XQException) as exc_info:
+        list_communications(mock_xqapi)
+    assert "Listing communications failed" in str(exc_info.value)
+
+
+def test_list_communications_error_500(mock_xqapi):
+    mock_xqapi.api_get = MagicMock(return_value=(500, "Internal Server Error"))
+
+    with pytest.raises(XQException) as exc_info:
+        list_communications(mock_xqapi)
+    assert "Listing communications failed" in str(exc_info.value)

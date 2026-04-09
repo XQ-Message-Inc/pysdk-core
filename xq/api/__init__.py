@@ -37,6 +37,8 @@ class XQAPI:
         update_usergroup,
         delete_usergroup,
         add_contact,
+        update_contact,
+        get_contacts,
         send_login_link,
         validate_access_token,
         login_verify,
@@ -49,7 +51,9 @@ class XQAPI:
         switch_business,
         generate_device_certificate,
         add_usergroup_members,
-        remove_usergroup_members
+        remove_usergroup_members,
+        get_policy_attributes,
+        list_communications
     )
 
     def __init__(
