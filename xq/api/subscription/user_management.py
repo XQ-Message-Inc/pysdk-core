@@ -59,7 +59,7 @@ def authorize_user(
         return False
 
 
-def authorize_alias(api, user_email: str, firstName: str, lastName: str):
+def authorize_alias(api, user_email: str, firstName: str, lastName: str, unique: bool = True):
     """request an access token for the given user information
     https://subscription.xqmsg.net/v2/authorizealias
 
@@ -71,12 +71,19 @@ def authorize_alias(api, user_email: str, firstName: str, lastName: str):
     :type firstName: str
     :param lastName: last name of user
     :type lastName: str
+    :param unique: whether to request a unique alias, defaults to True
+    :type unique: bool, optional
     :return: access token
     :rtype: str
     """
     status_code, auth_token = api.api_post(
         "authorizealias",
-        json={"user": user_email, "firstName": firstName, "lastName": lastName},
+        json={
+            "user": user_email,
+            "firstName": firstName,
+            "lastName": lastName,
+            "unique": unique,
+        },
         subdomain=API_SUBDOMAIN,
     )
 
